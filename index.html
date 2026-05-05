@@ -6,622 +6,364 @@
   <title>Tracker de Atividades</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #F5F5F5;
-      --surface: #FFFFFF;
-      --border: #E0E0E0;
-      --border-dark: #BDBDBD;
-      --text: #212121;
-      --muted: #757575;
-      --hint: #9E9E9E;
-      --radius: 4px;
-      --accent: #1565C0;
-      --accent-hover: #0D47A1;
-      --accent-light: #E3F2FD;
-      --success: #2E7D32;
-      --success-light: #E8F5E9;
-      --warning: #E65100;
-      --warning-light: #FFF3E0;
-      --danger: #B71C1C;
-      --danger-light: #FFEBEE;
-      --purple: #4527A0;
-      --purple-light: #EDE7F6;
-      --header-bg: #1A237E;
-      --row-alt: #FAFAFA;
-      --group-bg: #F0F4FF;
-      font-family: 'Inter', sans-serif;
+      --bg: #F4F2EC;
+      --card: #FFFFFF;
+      --border: rgba(0,0,0,0.12);
+      --border-med: rgba(0,0,0,0.22);
+      --text: #1A1A18;
+      --muted: #5F5E5A;
+      --hint: #888780;
+      --radius: 8px;
+      --radius-lg: 12px;
+      --accent: #185FA5;
+      --accent-light: #E6F1FB;
+      --success: #3B6D11;
+      --success-light: #EAF3DE;
+      --warning: #854F0B;
+      --warning-light: #FAEEDA;
+      --danger: #A32D2D;
+      --danger-light: #FCEBEB;
+      --purple: #534AB7;
+      --purple-light: #EEEDFE;
+      --gray-light: #F1EFE8;
+      --bg-secondary: #F1EFE8;
+      font-family: 'Sora', sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1A1A18;
+        --card: #242422;
+        --border: rgba(255,255,255,0.1);
+        --border-med: rgba(255,255,255,0.2);
+        --text: #F1EFE8;
+        --muted: #B4B2A9;
+        --hint: #888780;
+        --accent: #378ADD;
+        --accent-light: #042C53;
+        --success-light: #173404;
+        --success: #97C459;
+        --warning-light: #412402;
+        --warning: #EF9F27;
+        --danger-light: #501313;
+        --danger: #F09595;
+        --purple: #AFA9EC;
+        --purple-light: #26215C;
+        --gray-light: #2C2C2A;
+        --bg-secondary: #2C2C2A;
+      }
     }
 
     body {
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      font-size: 13px;
+      padding: 2rem 1rem;
     }
 
-    /* ── Top bar ── */
-    .topbar {
-      background: var(--header-bg);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      padding: 0 20px;
-      height: 44px;
-      gap: 10px;
-      flex-shrink: 0;
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
     }
 
-    .topbar-logo {
-      font-size: 15px;
+    .page-header {
+      margin-bottom: 2rem;
+    }
+
+    .page-title {
+      font-size: 22px;
       font-weight: 600;
-      letter-spacing: 0.04em;
-      color: #fff;
-      margin-right: 8px;
+      color: var(--text);
+      letter-spacing: -0.02em;
     }
 
-    .topbar-sep { width: 1px; height: 20px; background: rgba(255,255,255,0.25); }
-
-    .topbar-title {
-      font-size: 13px;
-      color: rgba(255,255,255,0.85);
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 4px;
     }
 
-    /* ── User bar ── */
-    .userbar {
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-      padding: 8px 20px;
-      display: flex;
-      align-items: baseline;
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .form-card {
+      background: var(--card);
+      border: 0.5px solid var(--border-med);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
 
-    .user-name {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
+    @media (max-width: 540px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: 1; }
     }
 
-    .user-period {
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
       font-size: 12px;
+      font-weight: 500;
       color: var(--muted);
     }
 
-    .hours-badge {
-      font-size: 12px;
+    input, select, textarea {
+      font-family: 'Sora', sans-serif;
+      font-size: 14px;
+      background: var(--bg-secondary);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      padding: 8px 12px;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      width: 100%;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(24, 95, 165, 0.15);
+    }
+
+    input::placeholder { color: var(--hint); }
+
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      padding: 9px 20px;
+      font-family: 'Sora', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-primary:active { transform: scale(0.98); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 0.5px solid var(--border-med);
+      border-radius: var(--radius);
+      padding: 9px 16px;
+      font-family: 'Sora', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-ghost:hover { background: var(--bg-secondary); }
+
+    .btn-export {
+      background: transparent;
+      color: var(--muted);
+      border: 0.5px solid var(--border-med);
+      border-radius: var(--radius);
+      padding: 9px 16px;
+      font-family: 'Sora', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-left: auto;
+    }
+    .btn-export:hover { background: var(--bg-secondary); }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--bg-secondary);
+      border-radius: var(--radius);
+      padding: 0.85rem 1rem;
+      text-align: center;
+    }
+
+    .stat-num { font-size: 24px; font-weight: 600; color: var(--text); }
+    .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    .list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .count-badge {
+      font-size: 11px;
       font-weight: 500;
       background: var(--accent-light);
       color: var(--accent);
+      border-radius: 20px;
       padding: 2px 10px;
-      border-radius: 12px;
     }
 
-    .user-info {
+    .search-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-row input { flex: 1; min-width: 160px; }
+
+    select.filter-select {
+      width: auto;
+      min-width: 140px;
+    }
+
+    .tasks-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .task-card {
+      background: var(--card);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.25rem;
+      position: relative;
+      transition: border-color 0.15s, background 0.1s;
+    }
+
+    .task-card:hover { border-color: var(--border-med); }
+
+    .task-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      gap: 8px;
+    }
+
+    .task-empresa {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--hint);
+    }
+
+    .task-jira {
+      font-family: 'JetBrains Mono', monospace;
       font-size: 12px;
-      color: var(--muted);
-      margin-left: auto;
+      font-weight: 500;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 2px 8px;
+      border-radius: 4px;
     }
 
-    /* ── Filter bar ── */
-    .filterbar {
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-      padding: 8px 20px;
+    .task-funcional {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 8px;
+      line-height: 1.45;
+      padding-right: 24px;
+    }
+
+    .task-meta {
       display: flex;
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
     }
 
-    .filter-group {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .filter-label {
-      font-size: 10px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .filter-group select,
-    .filter-group input {
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      border: 1px solid var(--border-dark);
-      border-radius: var(--radius);
-      padding: 5px 8px;
-      background: #fff;
-      color: var(--text);
-      outline: none;
-      height: 28px;
-    }
-
-    .filter-group select:focus,
-    .filter-group input:focus {
-      border-color: var(--accent);
-    }
-
-    .filter-group select { min-width: 110px; }
-    .filter-group input  { min-width: 130px; }
-
-    .btn-iniciar {
-      margin-left: auto;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
-      padding: 6px 18px;
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      height: 28px;
-      display: flex;
-      align-items: center;
-    }
-    .btn-iniciar:hover { background: var(--accent-hover); }
-
-    .btn-filtros {
-      font-size: 12px;
-      color: var(--accent);
-      background: none;
-      border: none;
-      cursor: pointer;
-      white-space: nowrap;
-      padding: 0 4px;
-    }
-
-    /* ── Main layout ── */
-    .main-layout {
-      display: flex;
-      gap: 0;
-      padding: 16px 20px;
-      align-items: flex-start;
-    }
-
-    /* ── Table area ── */
-    .table-area { flex: 1; min-width: 0; }
-
-    .table-toprow {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .table-month {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .view-badge {
+    .task-date {
       font-size: 12px;
       color: var(--muted);
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 2px 10px;
-    }
-
-    .btn-add-horas {
-      margin-left: auto;
-      font-size: 12px;
-      color: var(--accent);
-      background: none;
-      border: none;
-      cursor: pointer;
       display: flex;
       align-items: center;
       gap: 4px;
     }
 
-    .btn-add-horas:hover { text-decoration: underline; }
+    .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-med); display: inline-block; }
 
-    .btn-icon {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      width: 26px;
-      height: 26px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .btn-icon:hover { background: var(--border); }
-
-    /* ── Add form row ── */
-    .add-form {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 10px 12px;
-      margin-bottom: 10px;
-      display: none;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items: flex-end;
-    }
-
-    .add-form.open { display: flex; }
-
-    .af-group { display: flex; flex-direction: column; gap: 3px; }
-    .af-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
-
-    .af-group input,
-    .af-group select {
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      border: 1px solid var(--border-dark);
-      border-radius: var(--radius);
-      padding: 5px 8px;
-      background: #fff;
-      color: var(--text);
-      outline: none;
-      height: 28px;
-    }
-
-    .af-group input:focus,
-    .af-group select:focus { border-color: var(--accent); }
-
-    .af-group.w-date input  { width: 120px; }
-    .af-group.w-emp  input  { width: 80px; }
-    .af-group.w-proj input  { width: 160px; }
-    .af-group.w-jira input  { width: 130px; font-family: 'JetBrains Mono', monospace; }
-    .af-group.w-hrs  input  { width: 60px; }
-    .af-group.w-stat select { width: 140px; }
-
-    .af-actions { display: flex; gap: 6px; align-items: flex-end; }
-
-    .btn-af-add {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
-      padding: 5px 14px;
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      height: 28px;
-      font-family: 'Inter', sans-serif;
-    }
-    .btn-af-add:hover { background: var(--accent-hover); }
-
-    .btn-af-cancel {
-      background: none;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 5px 10px;
-      font-size: 12px;
-      cursor: pointer;
-      height: 28px;
-      font-family: 'Inter', sans-serif;
-    }
-
-    /* ── Table ── */
-    .ts-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      font-size: 12px;
-    }
-
-    .ts-table thead th {
-      background: #F5F5F5;
-      border-bottom: 1px solid var(--border);
-      padding: 7px 10px;
-      text-align: left;
+    .status-badge {
       font-size: 11px;
       font-weight: 500;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      white-space: nowrap;
-    }
-
-    .ts-table thead th.th-center { text-align: center; }
-
-    .ts-table tr.group-row td {
-      background: var(--group-bg);
-      padding: 5px 10px;
-      font-weight: 600;
-      font-size: 11px;
-      color: var(--accent);
+      padding: 2px 9px;
+      border-radius: 20px;
       letter-spacing: 0.03em;
-      border-bottom: 1px solid var(--border);
-      border-top: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+      transition: opacity 0.15s;
     }
+    .status-badge:hover { opacity: 0.75; }
 
-    .ts-table tr.data-row td {
-      padding: 7px 10px;
-      border-bottom: 1px solid var(--border);
-      color: var(--text);
-      vertical-align: middle;
-    }
+    .s-backlog    { background: var(--gray-light);   color: #5F5E5A; }
+    .s-andamento  { background: var(--accent-light);  color: var(--accent); }
+    .s-revisao    { background: var(--purple-light);  color: var(--purple); }
+    .s-aguardando { background: var(--warning-light); color: var(--warning); }
+    .s-concluido  { background: var(--success-light); color: var(--success); }
+    .s-bloqueado  { background: var(--danger-light);  color: var(--danger); }
 
-    .ts-table tr.data-row:nth-child(even) td { background: var(--row-alt); }
-    .ts-table tr.data-row:hover td { background: #EEF3FF; }
-
-    .td-date { color: var(--muted); white-space: nowrap; }
-    .td-emp  { font-weight: 500; }
-    .td-proj { color: var(--muted); max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .td-hrs  { text-align: center; font-family: 'JetBrains Mono', monospace; font-weight: 500; }
-
-    .td-jira {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      max-width: 180px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .jira-link {
-      color: var(--accent);
-      font-weight: 500;
-      text-decoration: none;
-    }
-    .jira-link:hover { text-decoration: underline; }
-
-    .td-center { text-align: center; }
-
-    .del-btn-tbl {
+    .del-btn {
+      position: absolute;
+      top: 10px; right: 10px;
       background: none;
       border: none;
       color: var(--hint);
       cursor: pointer;
-      font-size: 13px;
-      padding: 2px 6px;
-      border-radius: 3px;
+      font-size: 14px;
+      padding: 3px 6px;
+      border-radius: 4px;
       opacity: 0;
       transition: opacity 0.15s, color 0.15s;
     }
-    .ts-table tr.data-row:hover .del-btn-tbl { opacity: 1; }
-    .del-btn-tbl:hover { color: var(--danger); background: var(--danger-light); }
+    .task-card:hover .del-btn { opacity: 1; }
+    .del-btn:hover { color: var(--danger); background: var(--danger-light); }
 
-    .status-chip {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 500;
-      padding: 2px 8px;
-      border-radius: 10px;
-      cursor: pointer;
-      user-select: none;
-      white-space: nowrap;
-    }
-    .status-chip:hover { opacity: 0.8; }
-
-    .s-backlog    { background: #EEEEEE;            color: #616161; }
-    .s-andamento  { background: var(--accent-light); color: var(--accent); }
-    .s-revisao    { background: var(--purple-light); color: var(--purple); }
-    .s-aguardando { background: var(--warning-light);color: var(--warning); }
-    .s-concluido  { background: var(--success-light);color: var(--success); }
-    .s-bloqueado  { background: var(--danger-light); color: var(--danger); }
-
-    .empty-row td {
+    .empty-state {
       text-align: center;
-      padding: 40px;
+      padding: 3rem 1rem;
       color: var(--muted);
+      font-size: 14px;
+      border: 0.5px dashed var(--border-med);
+      border-radius: var(--radius-lg);
     }
 
-    /* ── Right sidebar (mini calendar) ── */
-    .sidebar {
-      width: 220px;
-      flex-shrink: 0;
-      margin-left: 16px;
-    }
+    .empty-icon { font-size: 28px; margin-bottom: 8px; }
 
-    .cal-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-
-    .cal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 10px;
-      background: #F5F5F5;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .cal-month-name {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--accent);
-    }
-
-    .cal-year {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .cal-grid {
-      padding: 6px 8px 8px;
-    }
-
-    .cal-dow {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      margin-bottom: 2px;
-    }
-
-    .cal-dow span {
-      font-size: 9px;
-      font-weight: 600;
-      text-align: center;
-      color: var(--muted);
-      text-transform: uppercase;
-      padding: 2px 0;
-    }
-
-    .cal-weeks { display: flex; flex-direction: column; gap: 1px; }
-
-    .cal-week {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 1px;
-    }
-
-    .cal-week .wk-num {
-      font-size: 9px;
-      color: var(--hint);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 4px 0;
-    }
-
-    .cal-day {
-      font-size: 11px;
-      text-align: center;
-      padding: 4px 2px;
-      border-radius: 3px;
-      cursor: default;
-      color: var(--text);
-      line-height: 1;
-    }
-
-    .cal-day.other-month { color: var(--hint); }
-    .cal-day.today {
-      background: var(--accent);
-      color: #fff;
-      font-weight: 600;
-    }
-    .cal-day.has-entry { border-bottom: 2px solid #43A047; font-weight: 500; }
-    .cal-day.has-entry.today { border-bottom: 2px solid rgba(255,255,255,0.6); }
-    .cal-day.weekend { color: var(--muted); }
-    .cal-day.incomplete { border-bottom: 2px solid #E53935; }
-
-    .cal-legend {
-      display: flex;
-      gap: 12px;
-      padding: 6px 10px 8px;
-      border-top: 1px solid var(--border);
-      font-size: 10px;
-      color: var(--muted);
-    }
-    .leg-dot {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-radius: 2px;
-      margin-right: 4px;
-      vertical-align: middle;
-    }
-    .leg-complete   { background: #43A047; }
-    .leg-incomplete { background: #E53935; }
-
-    /* ── Stats below calendar ── */
-    .stats-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      margin-top: 10px;
-      padding: 10px;
-    }
-
-    .stats-title {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-
-    .stat-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 4px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 12px;
-    }
-    .stat-row:last-child { border-bottom: none; }
-
-    .stat-val {
-      font-weight: 600;
-      color: var(--text);
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    /* ── Search bar ── */
-    .search-bar {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-      align-items: center;
-    }
-
-    .search-bar input {
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      border: 1px solid var(--border-dark);
-      border-radius: var(--radius);
-      padding: 5px 8px;
-      background: #fff;
-      color: var(--text);
-      outline: none;
-      height: 28px;
-      flex: 1;
-    }
-    .search-bar input:focus { border-color: var(--accent); }
-
-    .search-bar select {
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      border: 1px solid var(--border-dark);
-      border-radius: var(--radius);
-      padding: 5px 8px;
-      background: #fff;
-      color: var(--text);
-      outline: none;
-      height: 28px;
-      min-width: 130px;
-    }
-
-    /* ── Export ── */
-    .btn-export-csv {
-      background: none;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 4px 10px;
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      cursor: pointer;
-      height: 28px;
-    }
-    .btn-export-csv:hover { background: var(--bg); }
-
-    /* ── Toast ── */
     .toast {
       position: fixed;
       bottom: 1.5rem;
       left: 50%;
       transform: translateX(-50%) translateY(8px);
-      background: #212121;
-      color: #fff;
-      font-size: 12px;
-      padding: 7px 16px;
+      background: var(--text);
+      color: var(--bg);
+      font-size: 13px;
+      padding: 8px 18px;
       border-radius: 20px;
       opacity: 0;
       transition: opacity 0.2s, transform 0.2s;
@@ -633,188 +375,86 @@
   </style>
 </head>
 <body>
+  <div class="container">
 
-  <!-- Top bar -->
-  <div class="topbar">
-    <span class="topbar-logo">&#9632; TRACKER</span>
-    <div class="topbar-sep"></div>
-    <span class="topbar-title">Tracker de Atividades</span>
-  </div>
+    <div class="page-header">
+      <h1 class="page-title">Tracker de Atividades</h1>
+      <p class="page-subtitle">Registre e acompanhe o que está sendo feito</p>
+    </div>
 
-  <!-- User bar -->
-  <div class="userbar">
-    <span class="user-name" id="ub-name">GBALTAZAR</span>
-    <span class="user-period" id="ub-period">—</span>
-    <span class="hours-badge" id="ub-hours">0 horas</span>
-    <span class="user-info" id="ub-meta"></span>
-  </div>
+    <p class="section-label">Nova atividade</p>
 
-  <!-- Filter bar -->
-  <div class="filterbar">
-    <div class="filter-group">
-      <span class="filter-label">Mês do calendário</span>
-      <select id="fb-mes" onchange="onFilterChange()">
-        <option value="0">Janeiro</option><option value="1">Fevereiro</option>
-        <option value="2">Março</option><option value="3">Abril</option>
-        <option value="4">Maio</option><option value="5">Junho</option>
-        <option value="6">Julho</option><option value="7">Agosto</option>
-        <option value="8">Setembro</option><option value="9">Outubro</option>
-        <option value="10">Novembro</option><option value="11">Dezembro</option>
-      </select>
+    <div class="form-card">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="f-empresa">Empresa</label>
+          <input type="text" id="f-empresa" placeholder="ex: MAINGOAL" />
+        </div>
+        <div class="form-group">
+          <label for="f-jira">Ticket Jira</label>
+          <input type="text" id="f-jira" placeholder="ex: YFI00577" class="mono" />
+        </div>
+        <div class="form-group full">
+          <label for="f-funcional">Funcional / Descrição</label>
+          <input type="text" id="f-funcional" placeholder="Descreva o que está sendo feito..." />
+        </div>
+        <div class="form-group">
+          <label for="f-data">Recebido em</label>
+          <input type="date" id="f-data" />
+        </div>
+        <div class="form-group">
+          <label for="f-status">Status</label>
+          <select id="f-status">
+            <option value="backlog">Backlog</option>
+            <option value="andamento" selected>Em andamento</option>
+            <option value="revisao">Em revisão</option>
+            <option value="aguardando">Aguardando retorno</option>
+            <option value="concluido">Concluído</option>
+            <option value="bloqueado">Bloqueado</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="addTask()">+ Adicionar</button>
+        <button class="btn-ghost" onclick="clearForm()">Limpar</button>
+        <button class="btn-export" onclick="exportCSV()">↓ Exportar CSV</button>
+      </div>
     </div>
-    <div class="filter-group">
-      <span class="filter-label">Ano civil</span>
-      <input type="number" id="fb-ano" min="2020" max="2040" style="width:80px;" onchange="onFilterChange()" />
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" id="st-total">0</div>
+        <div class="stat-lbl">Total</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="st-andamento">0</div>
+        <div class="stat-lbl">Em andamento</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="st-concluido">0</div>
+        <div class="stat-lbl">Concluídos</div>
+      </div>
     </div>
-    <div class="filter-group">
-      <span class="filter-label">Empresa</span>
-      <input type="text" id="fb-empresa" placeholder="Filtrar…" oninput="onFilterChange()" style="width:110px;" />
+
+    <div class="list-header">
+      <p class="section-label" style="margin:0;">Atividades registradas</p>
+      <span class="count-badge" id="count-badge">0 registros</span>
     </div>
-    <div class="filter-group">
-      <span class="filter-label">Status</span>
-      <select id="fb-status" onchange="onFilterChange()">
-        <option value="">Todos</option>
+
+    <div class="search-row">
+      <input type="text" id="search-input" placeholder="Buscar por empresa, jira ou funcional..." oninput="renderList()" />
+      <select class="filter-select" id="filter-status" onchange="renderList()">
+        <option value="">Todos os status</option>
         <option value="backlog">Backlog</option>
         <option value="andamento">Em andamento</option>
         <option value="revisao">Em revisão</option>
-        <option value="aguardando">Aguardando</option>
+        <option value="aguardando">Aguardando retorno</option>
         <option value="concluido">Concluído</option>
         <option value="bloqueado">Bloqueado</option>
       </select>
     </div>
-    <button class="btn-filtros" onclick="clearFilters()">Limpar filtros</button>
-    <button class="btn-iniciar" onclick="toggleForm()">+ Adicionar horas</button>
-  </div>
 
-  <!-- Main layout -->
-  <div class="main-layout">
-
-    <!-- Table area -->
-    <div class="table-area">
-
-      <!-- Table top row -->
-      <div class="table-toprow">
-        <span class="table-month" id="tbl-month-label">—</span>
-        <span class="view-badge">Padrão</span>
-        <button class="btn-add-horas" onclick="toggleForm()">+ Adicionar horas</button>
-        <div class="btn-icon" title="Exportar CSV" onclick="exportCSV()">↓</div>
-      </div>
-
-      <!-- Add form -->
-      <div class="add-form" id="add-form">
-        <div class="af-group w-date">
-          <span class="af-label">Data</span>
-          <input type="date" id="f-data" />
-        </div>
-        <div class="af-group w-emp">
-          <span class="af-label">Empresa</span>
-          <input type="text" id="f-empresa" placeholder="ex: JM00" />
-        </div>
-        <div class="af-group w-proj">
-          <span class="af-label">Projeto</span>
-          <input type="text" id="f-projeto" placeholder="ex: HCM Carve-out" />
-        </div>
-        <div class="af-group w-hrs">
-          <span class="af-label">Horas</span>
-          <input type="number" id="f-horas" min="0.5" max="24" step="0.5" value="8" />
-        </div>
-        <div class="af-group w-jira">
-          <span class="af-label">Observação / Jira</span>
-          <input type="text" id="f-jira" placeholder="ex: Jira - GFASWIFT-20" />
-        </div>
-        <div class="af-group w-stat">
-          <span class="af-label">Status</span>
-          <select id="f-status">
-            <option value="andamento" selected>Em andamento</option>
-            <option value="concluido">Concluído</option>
-            <option value="revisao">Em revisão</option>
-            <option value="aguardando">Aguardando retorno</option>
-            <option value="backlog">Backlog</option>
-            <option value="bloqueado">Bloqueado</option>
-          </select>
-        </div>
-        <div class="af-actions">
-          <button class="btn-af-add" onclick="addTask()">Adicionar</button>
-          <button class="btn-af-cancel" onclick="toggleForm()">Cancelar</button>
-        </div>
-      </div>
-
-      <!-- Search -->
-      <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Buscar por empresa, projeto ou jira…" oninput="renderAll()" />
-        <select id="sb-status" onchange="renderAll()">
-          <option value="">Todos os status</option>
-          <option value="backlog">Backlog</option>
-          <option value="andamento">Em andamento</option>
-          <option value="revisao">Em revisão</option>
-          <option value="aguardando">Aguardando</option>
-          <option value="concluido">Concluído</option>
-          <option value="bloqueado">Bloqueado</option>
-        </select>
-      </div>
-
-      <!-- Table -->
-      <table class="ts-table" id="ts-table">
-        <thead>
-          <tr>
-            <th style="width:90px;">Dia</th>
-            <th style="width:70px;">Empresa</th>
-            <th>Projeto</th>
-            <th class="th-center" style="width:60px;">Horas</th>
-            <th>Observação / Jira</th>
-            <th style="width:120px;">Status</th>
-            <th class="th-center" style="width:50px;">Delete</th>
-          </tr>
-        </thead>
-        <tbody id="ts-body"></tbody>
-      </table>
-
-    </div>
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="cal-card">
-        <div class="cal-header">
-          <span class="cal-month-name" id="cal-month-name">—</span>
-          <span class="cal-year" id="cal-year">—</span>
-        </div>
-        <div class="cal-grid">
-          <div class="cal-dow">
-            <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
-          </div>
-          <div class="cal-weeks" id="cal-weeks"></div>
-        </div>
-        <div class="cal-legend">
-          <div><span class="leg-dot leg-complete"></span>Dia Completo</div>
-          <div><span class="leg-dot leg-incomplete"></span>Incompleto</div>
-        </div>
-      </div>
-
-      <div class="stats-card">
-        <div class="stats-title">Resumo do mês</div>
-        <div class="stat-row">
-          <span>Total de registros</span>
-          <span class="stat-val" id="st-total">0</span>
-        </div>
-        <div class="stat-row">
-          <span>Horas registradas</span>
-          <span class="stat-val" id="st-horas">0h</span>
-        </div>
-        <div class="stat-row">
-          <span>Em andamento</span>
-          <span class="stat-val" id="st-andamento">0</span>
-        </div>
-        <div class="stat-row">
-          <span>Concluídos</span>
-          <span class="stat-val" id="st-concluido">0</span>
-        </div>
-        <div class="stat-row">
-          <span>Bloqueados</span>
-          <span class="stat-val" id="st-bloqueado">0</span>
-        </div>
-      </div>
-    </div>
-
+    <div class="tasks-list" id="tasks-list"></div>
   </div>
 
   <div class="toast" id="toast"></div>
@@ -830,13 +470,12 @@
     };
 
     const STATUS_ORDER = ['backlog','andamento','revisao','aguardando','concluido','bloqueado'];
-    const MONTH_NAMES  = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
     let tasks = [];
-    try { tasks = JSON.parse(localStorage.getItem('tracker_v2') || '[]'); } catch(e) {}
+    try { tasks = JSON.parse(localStorage.getItem('tracker_atividades') || '[]'); } catch(e) {}
 
     function save() {
-      try { localStorage.setItem('tracker_v2', JSON.stringify(tasks)); } catch(e) {}
+      try { localStorage.setItem('tracker_atividades', JSON.stringify(tasks)); } catch(e) {}
     }
 
     function todayStr() {
@@ -846,7 +485,7 @@
     function fmtDate(d) {
       if (!d) return '—';
       const [y, m, day] = d.split('-');
-      return `${day}.${m}.${y}`;
+      return `${day}/${m}/${y}`;
     }
 
     function showToast(msg) {
@@ -856,42 +495,38 @@
       setTimeout(() => t.classList.remove('show'), 2000);
     }
 
-    function toggleForm() {
-      const f = document.getElementById('add-form');
-      f.classList.toggle('open');
-      if (f.classList.contains('open')) {
-        document.getElementById('f-data').focus();
+    function addTask() {
+      const empresa   = document.getElementById('f-empresa').value.trim();
+      const jira      = document.getElementById('f-jira').value.trim().toUpperCase();
+      const funcional = document.getElementById('f-funcional').value.trim();
+      const data      = document.getElementById('f-data').value;
+      const status    = document.getElementById('f-status').value;
+
+      if (!funcional) {
+        document.getElementById('f-funcional').focus();
+        return;
       }
+
+      tasks.unshift({ id: Date.now(), empresa, jira, funcional, data, status });
+      save();
+      clearForm();
+      renderList();
+      showToast('Atividade adicionada');
     }
 
-    function addTask() {
-      const data    = document.getElementById('f-data').value;
-      const empresa = document.getElementById('f-empresa').value.trim().toUpperCase();
-      const projeto = document.getElementById('f-projeto').value.trim();
-      const horas   = parseFloat(document.getElementById('f-horas').value) || 8;
-      const jira    = document.getElementById('f-jira').value.trim();
-      const status  = document.getElementById('f-status').value;
-
-      if (!data) { document.getElementById('f-data').focus(); return; }
-
-      tasks.push({ id: Date.now(), data, empresa, projeto, horas, jira, status });
-      tasks.sort((a, b) => a.data.localeCompare(b.data));
-      save();
-      renderAll();
-      showToast('Atividade adicionada');
-
-      // reset minimal fields, keep empresa/projeto for quick repeat
-      document.getElementById('f-jira').value = '';
-      document.getElementById('f-horas').value = '8';
-      document.getElementById('f-data').value = data;
+    function clearForm() {
+      ['f-empresa','f-jira','f-funcional'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('f-data').value = todayStr();
+      document.getElementById('f-status').value = 'andamento';
+      document.getElementById('f-funcional').focus();
     }
 
     function deleteTask(id) {
       if (!confirm('Remover esta atividade?')) return;
       tasks = tasks.filter(t => t.id !== id);
       save();
-      renderAll();
-      showToast('Removida');
+      renderList();
+      showToast('Atividade removida');
     }
 
     function cycleStatus(id) {
@@ -900,17 +535,17 @@
       const idx = STATUS_ORDER.indexOf(task.status);
       task.status = STATUS_ORDER[(idx + 1) % STATUS_ORDER.length];
       save();
-      renderAll();
+      renderList();
       showToast('Status: ' + STATUS_MAP[task.status].label);
     }
 
     function exportCSV() {
-      if (!tasks.length) { showToast('Nenhuma atividade'); return; }
-      const header = ['Data','Empresa','Projeto','Horas','Observação/Jira','Status'];
+      if (!tasks.length) { showToast('Nenhuma atividade para exportar'); return; }
+      const header = ['Empresa','Jira','Funcional','Recebido em','Status'];
       const rows = tasks.map(t => [
-        fmtDate(t.data), t.empresa, t.projeto, t.horas, t.jira, STATUS_MAP[t.status]?.label || t.status
+        t.empresa, t.jira, t.funcional, fmtDate(t.data), STATUS_MAP[t.status]?.label || t.status
       ]);
-      const csv = [header, ...rows].map(r => r.map(c => `"${(c||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
+      const csv = [header, ...rows].map(r => r.map(c => `"${(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
       const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
@@ -919,190 +554,56 @@
       showToast('CSV exportado');
     }
 
-    function clearFilters() {
-      const now = new Date();
-      document.getElementById('fb-mes').value     = now.getMonth();
-      document.getElementById('fb-ano').value     = now.getFullYear();
-      document.getElementById('fb-empresa').value = '';
-      document.getElementById('fb-status').value  = '';
-      document.getElementById('search-input').value = '';
-      document.getElementById('sb-status').value  = '';
-      renderAll();
-    }
+    function renderList() {
+      const q  = document.getElementById('search-input').value.toLowerCase();
+      const sf = document.getElementById('filter-status').value;
 
-    function onFilterChange() { renderAll(); }
-
-    function getFiltered() {
-      const mes     = parseInt(document.getElementById('fb-mes').value);
-      const ano     = parseInt(document.getElementById('fb-ano').value);
-      const empresa = document.getElementById('fb-empresa').value.trim().toLowerCase();
-      const fbSt    = document.getElementById('fb-status').value;
-      const q       = document.getElementById('search-input').value.toLowerCase();
-      const sbSt    = document.getElementById('sb-status').value;
-
-      return tasks.filter(t => {
-        const d = t.data ? new Date(t.data + 'T00:00:00') : null;
-        if (d) {
-          if (d.getFullYear() !== ano) return false;
-          if (d.getMonth()    !== mes) return false;
-        }
-        if (empresa && !(t.empresa||'').toLowerCase().includes(empresa)) return false;
-        if (fbSt   && t.status !== fbSt) return false;
-        if (sbSt   && t.status !== sbSt) return false;
-        if (q) {
-          const hay = [t.empresa, t.projeto, t.jira].join(' ').toLowerCase();
-          if (!hay.includes(q)) return false;
-        }
-        return true;
+      let filtered = tasks.filter(t => {
+        const matchQ = !q || [t.empresa, t.jira, t.funcional].join(' ').toLowerCase().includes(q);
+        const matchS = !sf || t.status === sf;
+        return matchQ && matchS;
       });
-    }
 
-    function renderAll() {
-      const mes = parseInt(document.getElementById('fb-mes').value);
-      const ano = parseInt(document.getElementById('fb-ano').value);
+      const n = filtered.length;
+      document.getElementById('count-badge').textContent = `${n} registro${n !== 1 ? 's' : ''}`;
+      document.getElementById('st-total').textContent     = tasks.length;
+      document.getElementById('st-andamento').textContent = tasks.filter(t => t.status === 'andamento').length;
+      document.getElementById('st-concluido').textContent = tasks.filter(t => t.status === 'concluido').length;
 
-      // Header labels
-      document.getElementById('tbl-month-label').textContent = `${MONTH_NAMES[mes]}/${ano} (${getFiltered().length})`;
-      document.getElementById('cal-month-name').textContent  = MONTH_NAMES[mes];
-      document.getElementById('cal-year').textContent        = ano;
-      document.getElementById('ub-period').textContent       = `${MONTH_NAMES[mes]}/${ano}`;
-
-      const filtered = getFiltered();
-      const totalHrs = filtered.reduce((s, t) => s + (t.horas || 0), 0);
-      document.getElementById('ub-hours').textContent     = `${totalHrs}h`;
-      document.getElementById('st-total').textContent     = filtered.length;
-      document.getElementById('st-horas').textContent     = `${totalHrs}h`;
-      document.getElementById('st-andamento').textContent = filtered.filter(t => t.status === 'andamento').length;
-      document.getElementById('st-concluido').textContent = filtered.filter(t => t.status === 'concluido').length;
-      document.getElementById('st-bloqueado').textContent = filtered.filter(t => t.status === 'bloqueado').length;
-
-      renderTable(filtered);
-      renderCalendar(mes, ano, filtered);
-    }
-
-    function renderTable(filtered) {
-      const tbody = document.getElementById('ts-body');
+      const list = document.getElementById('tasks-list');
 
       if (!filtered.length) {
-        tbody.innerHTML = `<tr class="empty-row"><td colspan="7" style="text-align:center;padding:40px;color:#9E9E9E;">Nenhuma atividade no período. Clique em "+ Adicionar horas" para começar.</td></tr>`;
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📋</div>
+            ${tasks.length ? 'Nenhuma atividade encontrada para o filtro.' : 'Nenhuma atividade registrada ainda.'}
+          </div>`;
         return;
       }
 
-      // Group by date
-      const groups = {};
-      filtered.forEach(t => {
-        const key = t.data || '(sem data)';
-        if (!groups[key]) groups[key] = [];
-        groups[key].push(t);
-      });
-
-      const today = todayStr();
-      let html = '';
-
-      Object.keys(groups).sort().forEach(dateKey => {
-        const entries = groups[dateKey];
-        const dayTotal = entries.reduce((s, t) => s + (t.horas || 0), 0);
-        const label = dateKey === '(sem data)' ? '(sem data)' : `DateHour: ${fmtDate(dateKey)}-${dayTotal}Horas`;
-        html += `<tr class="group-row"><td colspan="7">${label}</td></tr>`;
-
-        entries.forEach(t => {
-          const s = STATUS_MAP[t.status] || STATUS_MAP['backlog'];
-          const isToday = t.data === today ? 'style="font-weight:500;"' : '';
-          html += `
-            <tr class="data-row">
-              <td class="td-date" ${isToday}>${fmtDate(t.data)}</td>
-              <td class="td-emp">${t.empresa || '—'}</td>
-              <td class="td-proj">${t.projeto || '—'}</td>
-              <td class="td-hrs">${t.horas || '—'}</td>
-              <td class="td-jira">${t.jira ? `<span class="jira-link">${escHtml(t.jira)}</span>` : '—'}</td>
-              <td><span class="status-chip ${s.cls}" onclick="cycleStatus(${t.id})" title="Clique para avançar">${s.label}</span></td>
-              <td class="td-center"><button class="del-btn-tbl" onclick="deleteTask(${t.id})" title="Remover">✕</button></td>
-            </tr>`;
-        });
-      });
-
-      tbody.innerHTML = html;
-    }
-
-    function renderCalendar(mes, ano, filtered) {
-      const entryDates = new Set(filtered.map(t => t.data));
-      const dayHours   = {};
-      filtered.forEach(t => {
-        if (!t.data) return;
-        dayHours[t.data] = (dayHours[t.data] || 0) + (t.horas || 0);
-      });
-
-      const today    = new Date();
-      const todayISO = todayStr();
-
-      const firstDay = new Date(ano, mes, 1);
-      const lastDay  = new Date(ano, mes + 1, 0);
-
-      // Build weeks
-      let weeks = [];
-      let week  = [];
-      let cur   = new Date(firstDay);
-
-      // Pad beginning
-      const startDow = firstDay.getDay(); // 0=Sun
-      for (let i = 0; i < startDow; i++) {
-        const d = new Date(ano, mes, 1 - (startDow - i));
-        week.push({ date: d, otherMonth: true });
-      }
-
-      while (cur <= lastDay) {
-        week.push({ date: new Date(cur), otherMonth: false });
-        if (week.length === 7) { weeks.push(week); week = []; }
-        cur.setDate(cur.getDate() + 1);
-      }
-
-      // Pad end
-      if (week.length > 0) {
-        while (week.length < 7) {
-          const d = new Date(cur);
-          week.push({ date: d, otherMonth: true });
-          cur.setDate(cur.getDate() + 1);
-        }
-        weeks.push(week);
-      }
-
-      const weeksEl = document.getElementById('cal-weeks');
-      weeksEl.innerHTML = weeks.map((wk, wi) => {
-        const cells = wk.map(({ date, otherMonth }) => {
-          const iso = date.toISOString().split('T')[0];
-          const isToday     = iso === todayISO;
-          const isWeekend   = date.getDay() === 0 || date.getDay() === 6;
-          const hrs          = dayHours[iso] || 0;
-          const hasEntry     = entryDates.has(iso) && !otherMonth;
-          const isIncomplete = hasEntry && hrs < 8;
-          const isComplete   = hasEntry && hrs >= 8;
-
-          let cls = 'cal-day';
-          if (otherMonth)   cls += ' other-month';
-          if (isToday)      cls += ' today';
-          if (isWeekend && !otherMonth) cls += ' weekend';
-          if (isComplete)   cls += ' has-entry';
-          if (isIncomplete) cls += ' incomplete';
-
-          return `<div class="${cls}" title="${iso}${hasEntry ? ` — ${hrs}h` : ''}">${date.getDate()}</div>`;
-        }).join('');
-        return `<div class="cal-week">${cells}</div>`;
+      list.innerHTML = filtered.map(t => {
+        const s = STATUS_MAP[t.status] || STATUS_MAP['backlog'];
+        return `
+          <div class="task-card">
+            <button class="del-btn" onclick="deleteTask(${t.id})" title="Remover">✕</button>
+            <div class="task-top">
+              <span class="task-empresa">${t.empresa || '—'}</span>
+              ${t.jira ? `<span class="task-jira">${t.jira}</span>` : ''}
+            </div>
+            <div class="task-funcional">${t.funcional}</div>
+            <div class="task-meta">
+              <span class="status-badge ${s.cls}" onclick="cycleStatus(${t.id})" title="Clique para avançar o status">${s.label}</span>
+              ${t.data ? `<span class="dot"></span><span class="task-date">Recebido ${fmtDate(t.data)}</span>` : ''}
+            </div>
+          </div>`;
       }).join('');
     }
 
-    function escHtml(s) {
-      return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    }
-
-    // Init
-    const now = new Date();
-    document.getElementById('fb-mes').value = now.getMonth();
-    document.getElementById('fb-ano').value = now.getFullYear();
     document.getElementById('f-data').value = todayStr();
+    document.getElementById('f-jira').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('f-funcional').focus(); });
+    document.getElementById('f-funcional').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
 
-    document.getElementById('f-jira').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
-
-    renderAll();
+    renderList();
   </script>
 </body>
 </html>
