@@ -372,6 +372,179 @@
       white-space: nowrap;
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── Edit modal ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.35);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.18s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: var(--card);
+      border: 0.5px solid var(--border-med);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 480px;
+      margin: 1rem;
+      transform: translateY(8px);
+      transition: transform 0.18s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+
+    .modal-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .modal .form-grid { gap: 10px; }
+    .modal .btn-row { margin-top: 1rem; }
+
+    /* ── Done button on card ── */
+    .done-btn {
+      background: var(--success-light);
+      color: var(--success);
+      border: none;
+      border-radius: var(--radius);
+      padding: 3px 10px;
+      font-family: 'Sora', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .done-btn:hover { opacity: 0.8; }
+
+    .edit-btn {
+      background: none;
+      border: none;
+      color: var(--hint);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 3px 6px;
+      border-radius: 4px;
+      opacity: 0;
+      transition: opacity 0.15s, color 0.15s;
+    }
+    .task-card:hover .edit-btn { opacity: 1; }
+    .edit-btn:hover { color: var(--accent); background: var(--accent-light); }
+
+    /* ── History section ── */
+    .history-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .history-toggle:hover .section-label { color: var(--text); }
+
+    .history-caret {
+      font-size: 10px;
+      color: var(--hint);
+      transition: transform 0.2s;
+    }
+    .history-caret.open { transform: rotate(90deg); }
+
+    .history-list { display: flex; flex-direction: column; gap: 6px; }
+
+    .task-card.done {
+      opacity: 0.65;
+      border-color: var(--border);
+    }
+    .task-card.done:hover { opacity: 0.9; }
+
+    .done-date {
+      font-size: 11px;
+      color: var(--success);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── Quick input ── */
+    .quick-card {
+      background: var(--card);
+      border: 1.5px solid var(--accent);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .quick-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .quick-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .quick-input {
+      flex: 1;
+      font-family: 'Sora', sans-serif;
+      font-size: 14px;
+      background: var(--bg-secondary);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .quick-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(24, 95, 165, 0.15);
+    }
+    .quick-input::placeholder { color: var(--hint); }
+
+    .quick-hint {
+      font-size: 11px;
+      color: var(--hint);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+    .quick-hint code {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-secondary);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+
+    .quick-preview {
+      margin-top: 10px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font-size: 12px;
+      display: none;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .quick-preview.show { display: flex; }
+
+    .qp-field { display: flex; flex-direction: column; gap: 2px; }
+    .qp-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--hint); }
+    .qp-val { font-size: 13px; font-weight: 500; color: var(--text); }
+    .qp-val.mono { font-family: 'JetBrains Mono', monospace; color: var(--accent); }
+    .qp-empty { color: var(--hint); font-style: italic; }
   </style>
 </head>
 <body>
@@ -380,6 +553,32 @@
     <div class="page-header">
       <h1 class="page-title">Tracker de Atividades</h1>
       <p class="page-subtitle">Registre e acompanhe o que está sendo feito</p>
+    </div>
+
+    <!-- Quick input -->
+    <div class="quick-card">
+      <p class="quick-label">⚡ Entrada rápida</p>
+      <div class="quick-row">
+        <input
+          class="quick-input"
+          id="quick-input"
+          placeholder="ex: Marco me passou o GFATR-282, 3 dias pra fazer, funcional Joana, empresa JM00"
+          oninput="quickParse()"
+          onkeydown="if(event.key==='Enter') quickAdd()"
+          autocomplete="off"
+        />
+        <button class="btn-primary" onclick="quickAdd()" style="white-space:nowrap;">Registrar</button>
+      </div>
+      <div class="quick-hint">
+        Fale naturalmente. Exemplos: <code>GFATR-282</code> · <code>3 dias</code> · <code>funcional Joana</code> · <code>empresa JM00</code> · <code>bloqueado</code> · <code>urgente</code>
+      </div>
+      <div class="quick-preview" id="quick-preview">
+        <div class="qp-field"><span class="qp-lbl">Empresa</span><span class="qp-val" id="qp-empresa">—</span></div>
+        <div class="qp-field"><span class="qp-lbl">Jira</span><span class="qp-val mono" id="qp-jira">—</span></div>
+        <div class="qp-field" style="flex:1"><span class="qp-lbl">Descrição</span><span class="qp-val" id="qp-funcional">—</span></div>
+        <div class="qp-field"><span class="qp-lbl">Prazo</span><span class="qp-val" id="qp-prazo">—</span></div>
+        <div class="qp-field"><span class="qp-lbl">Status</span><span class="qp-val" id="qp-status">—</span></div>
+      </div>
     </div>
 
     <p class="section-label">Nova atividade</p>
@@ -455,6 +654,55 @@
     </div>
 
     <div class="tasks-list" id="tasks-list"></div>
+
+    <!-- Histórico -->
+    <div class="history-toggle" onclick="toggleHistory()">
+      <span class="history-caret" id="history-caret">▶</span>
+      <p class="section-label" style="margin:0;">Histórico — concluídos</p>
+      <span class="count-badge" id="history-badge">0</span>
+    </div>
+    <div class="history-list" id="history-list" style="display:none;"></div>
+
+  </div>
+
+  <!-- Edit modal -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+    <div class="modal">
+      <p class="modal-title">Editar atividade</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="e-empresa">Empresa</label>
+          <input type="text" id="e-empresa" />
+        </div>
+        <div class="form-group">
+          <label for="e-jira">Ticket Jira</label>
+          <input type="text" id="e-jira" class="mono" />
+        </div>
+        <div class="form-group full">
+          <label for="e-funcional">Funcional / Descrição</label>
+          <input type="text" id="e-funcional" />
+        </div>
+        <div class="form-group">
+          <label for="e-data">Recebido em</label>
+          <input type="date" id="e-data" />
+        </div>
+        <div class="form-group">
+          <label for="e-status">Status</label>
+          <select id="e-status">
+            <option value="backlog">Backlog</option>
+            <option value="andamento">Em andamento</option>
+            <option value="revisao">Em revisão</option>
+            <option value="aguardando">Aguardando retorno</option>
+            <option value="concluido">Concluído</option>
+            <option value="bloqueado">Bloqueado</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="saveEdit()">Salvar</button>
+        <button class="btn-ghost" onclick="closeModal()">Cancelar</button>
+      </div>
+    </div>
   </div>
 
   <div class="toast" id="toast"></div>
@@ -494,6 +742,159 @@
       t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 2000);
     }
+
+    // ── Quick input parser ──────────────────────────────────────────────
+
+    function quickParse() {
+      const raw = document.getElementById('quick-input').value;
+      const p   = parseNatural(raw);
+      const pre = document.getElementById('quick-preview');
+
+      if (!raw.trim()) { pre.classList.remove('show'); return; }
+      pre.classList.add('show');
+
+      document.getElementById('qp-empresa').textContent  = p.empresa  || '—';
+      document.getElementById('qp-jira').textContent     = p.jira     || '—';
+      document.getElementById('qp-funcional').textContent= p.funcional|| '—';
+      document.getElementById('qp-prazo').textContent    = p.prazoLabel|| '—';
+      document.getElementById('qp-status').textContent   = p.statusLabel|| 'Em andamento';
+    }
+
+    function quickAdd() {
+      const raw = document.getElementById('quick-input').value.trim();
+      if (!raw) return;
+
+      const p = parseNatural(raw);
+
+      if (!p.funcional && !p.jira) {
+        showToast('Não consegui identificar o que registrar. Inclua uma descrição ou ticket.');
+        return;
+      }
+
+      tasks.unshift({
+        id:       Date.now(),
+        empresa:  p.empresa  || '',
+        jira:     p.jira     || '',
+        funcional: p.funcional || p.jira || raw,
+        data:     todayStr(),
+        status:   p.status   || 'andamento',
+        prazo:    p.prazo    || null,
+      });
+
+      save();
+      renderList();
+
+      document.getElementById('quick-input').value = '';
+      document.getElementById('quick-preview').classList.remove('show');
+      showToast('✓ Registrado' + (p.jira ? ` — ${p.jira}` : ''));
+    }
+
+    function parseNatural(text) {
+      const t = text;
+      const result = {};
+
+      // Jira ticket: letras-números (ex: GFATR-282, YFI-100, PDPCP-11)
+      const jiraMatch = t.match(/\b([A-Z]{2,10}-\d{1,6})\b/i);
+      if (jiraMatch) result.jira = jiraMatch[1].toUpperCase();
+
+      // Empresa: "empresa JM00" ou "cliente PD00" ou tokens all-caps curtos sem hífen
+      const empresaMatch = t.match(/(?:empresa|cliente|emp\.?)\s+([A-Z0-9]{2,8})\b/i);
+      if (empresaMatch) {
+        result.empresa = empresaMatch[1].toUpperCase();
+      } else {
+        // fallback: token all-caps de 2-6 chars que não seja o jira
+        const caps = t.match(/\b([A-Z]{2,6}\d{0,4})\b/g);
+        if (caps) {
+          const filtered = caps.filter(c => c !== (result.jira || '').split('-')[0]);
+          if (filtered.length) result.empresa = filtered[0];
+        }
+      }
+
+      // Prazo: "X dias", "X semanas", "até dd/mm", "até sexta"
+      const diasMatch = t.match(/(\d+)\s*dia[s]?/i);
+      const semMatch  = t.match(/(\d+)\s*semana[s]?/i);
+      const ateMatch  = t.match(/até\s+(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)/i);
+      const weekdayMatch = t.match(/(?:até\s+)?(segunda|terça|quarta|quinta|sexta|sábado|domingo)/i);
+
+      if (diasMatch) {
+        const d = new Date();
+        d.setDate(d.getDate() + parseInt(diasMatch[1]));
+        result.prazo      = d.toISOString().split('T')[0];
+        result.prazoLabel = `${diasMatch[1]} dia(s) — ${fmtDateSimple(result.prazo)}`;
+      } else if (semMatch) {
+        const d = new Date();
+        d.setDate(d.getDate() + parseInt(semMatch[1]) * 7);
+        result.prazo      = d.toISOString().split('T')[0];
+        result.prazoLabel = `${semMatch[1]} semana(s) — ${fmtDateSimple(result.prazo)}`;
+      } else if (ateMatch) {
+        const parts = ateMatch[1].split('/');
+        const year  = parts[2] ? (parts[2].length === 2 ? '20' + parts[2] : parts[2]) : new Date().getFullYear();
+        result.prazo      = `${year}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+        result.prazoLabel = ateMatch[1];
+      } else if (weekdayMatch) {
+        const days = { segunda:1, terça:2, quarta:3, quinta:4, sexta:5, sábado:6, domingo:0 };
+        const target = days[weekdayMatch[1].toLowerCase()];
+        const d = new Date();
+        const diff = (target - d.getDay() + 7) % 7 || 7;
+        d.setDate(d.getDate() + diff);
+        result.prazo      = d.toISOString().split('T')[0];
+        result.prazoLabel = `${weekdayMatch[1]} — ${fmtDateSimple(result.prazo)}`;
+      }
+
+      // Status
+      const statusWords = {
+        'bloqueado|bloqueada|blocked':            'bloqueado',
+        'conclu[ií]do|conclu[ií]da|done|feito':  'concluido',
+        'revis[aã]o|revisando|review':            'revisao',
+        'aguardando|esperando|waiting':           'aguardando',
+        'backlog':                                'backlog',
+        'urgente|urgência|priority|priorit[aá]rio':'andamento',
+      };
+      for (const [pattern, val] of Object.entries(statusWords)) {
+        if (new RegExp(pattern, 'i').test(t)) {
+          result.status      = val;
+          result.statusLabel = STATUS_MAP[val]?.label;
+          break;
+        }
+      }
+      if (!result.status) {
+        result.status      = 'andamento';
+        result.statusLabel = 'Em andamento';
+      }
+
+      // Funcional: "funcional X" ou "responsável X" ou "com X" (nome próprio)
+      const funcMatch = t.match(/(?:funcional|responsável|resp\.?|com|pra|para)\s+([A-ZÀ-Ú][a-zà-ú]+(?:\s+[A-ZÀ-Ú][a-zà-ú]+)*)/i);
+      if (funcMatch) {
+        result.funcional = funcMatch[1];
+      } else {
+        // fallback: monta descrição limpando tokens já extraídos
+        let desc = t
+          .replace(/\b([A-Z]{2,10}-\d{1,6})\b/gi, '')
+          .replace(/(?:empresa|cliente|emp\.?)\s+\S+/gi, '')
+          .replace(/\d+\s*dia[s]?/gi, '')
+          .replace(/\d+\s*semana[s]?/gi, '')
+          .replace(/até\s+\S+/gi, '')
+          .replace(/\b(bloqueado|concluído|revisão|aguardando|backlog|urgente)\b/gi, '')
+          .replace(/\b(me passou|passou|mandou|enviou|pediu)\b/gi, '')
+          .replace(/\b(o|a|os|as|um|uma)\b/gi, '')
+          .replace(/\s{2,}/g, ' ')
+          .trim();
+
+        // Tenta extrair nome próprio livre (palavra capitalizada)
+        const nomeMatch = desc.match(/\b([A-ZÀ-Ú][a-zà-ú]{2,})\b/);
+        if (nomeMatch && !result.funcional) result.funcional = nomeMatch[1];
+      }
+
+      return result;
+    }
+
+    function fmtDateSimple(iso) {
+      if (!iso) return '';
+      const [, m, d] = iso.split('-');
+      return `${d}/${m}`;
+    }
+
+    // ── End quick parser ────────────────────────────────────────────────
 
     function addTask() {
       const empresa   = document.getElementById('f-empresa').value.trim();
@@ -539,11 +940,104 @@
       showToast('Status: ' + STATUS_MAP[task.status].label);
     }
 
+    // ── Concluir → move para histórico ──
+    function completeTask(id) {
+      const task = tasks.find(t => t.id === id);
+      if (!task) return;
+      task.status      = 'concluido';
+      task.dataConcluido = todayStr();
+      save();
+      renderList();
+      showToast('✓ Concluído em ' + fmtDate(task.dataConcluido));
+    }
+
+    // ── Edição ──
+    let editingId = null;
+
+    function openEdit(id) {
+      const task = tasks.find(t => t.id === id);
+      if (!task) return;
+      editingId = id;
+      document.getElementById('e-empresa').value  = task.empresa  || '';
+      document.getElementById('e-jira').value     = task.jira     || '';
+      document.getElementById('e-funcional').value= task.funcional|| '';
+      document.getElementById('e-data').value     = task.data     || '';
+      document.getElementById('e-status').value   = task.status   || 'andamento';
+      document.getElementById('modal-overlay').classList.add('open');
+      setTimeout(() => document.getElementById('e-funcional').focus(), 80);
+    }
+
+    function saveEdit() {
+      const task = tasks.find(t => t.id === editingId);
+      if (!task) return;
+      task.empresa   = document.getElementById('e-empresa').value.trim();
+      task.jira      = document.getElementById('e-jira').value.trim().toUpperCase();
+      task.funcional = document.getElementById('e-funcional').value.trim();
+      task.data      = document.getElementById('e-data').value;
+      task.status    = document.getElementById('e-status').value;
+      if (task.status === 'concluido' && !task.dataConcluido) {
+        task.dataConcluido = todayStr();
+      }
+      save();
+      closeModal();
+      renderList();
+      showToast('Salvo');
+    }
+
+    function closeModal(e) {
+      if (e && e.target !== document.getElementById('modal-overlay')) return;
+      document.getElementById('modal-overlay').classList.remove('open');
+      editingId = null;
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ── Histórico ──
+    let historyOpen = false;
+
+    function toggleHistory() {
+      historyOpen = !historyOpen;
+      document.getElementById('history-list').style.display = historyOpen ? 'flex' : 'none';
+      document.getElementById('history-caret').classList.toggle('open', historyOpen);
+      if (historyOpen) renderHistory();
+    }
+
+    function renderHistory() {
+      const done = tasks.filter(t => t.status === 'concluido');
+      const list = document.getElementById('history-list');
+
+      if (!done.length) {
+        list.innerHTML = `<div class="empty-state" style="padding:1.5rem;"><div class="empty-icon">✅</div>Nenhum concluído ainda.</div>`;
+        return;
+      }
+
+      list.innerHTML = done
+        .sort((a, b) => (b.dataConcluido || '').localeCompare(a.dataConcluido || ''))
+        .map(t => `
+          <div class="task-card done">
+            <button class="del-btn" onclick="deleteTask(${t.id})" title="Remover">✕</button>
+            <button class="edit-btn" onclick="openEdit(${t.id})" title="Editar" style="position:absolute;top:10px;right:34px;">✎</button>
+            <div class="task-top">
+              <span class="task-empresa">${t.empresa || '—'}</span>
+              ${t.jira ? `<span class="task-jira">${t.jira}</span>` : ''}
+            </div>
+            <div class="task-funcional">${t.funcional}</div>
+            <div class="task-meta">
+              <span class="status-badge s-concluido">Concluído</span>
+              ${t.dataConcluido ? `<span class="dot"></span><span class="done-date">✓ ${fmtDate(t.dataConcluido)}</span>` : ''}
+              ${t.data ? `<span class="dot"></span><span class="task-date">Recebido ${fmtDate(t.data)}</span>` : ''}
+            </div>
+          </div>`).join('');
+    }
+
+    // ── Export ──
     function exportCSV() {
       if (!tasks.length) { showToast('Nenhuma atividade para exportar'); return; }
-      const header = ['Empresa','Jira','Funcional','Recebido em','Status'];
+      const header = ['Empresa','Jira','Funcional','Recebido em','Status','Concluído em'];
       const rows = tasks.map(t => [
-        t.empresa, t.jira, t.funcional, fmtDate(t.data), STATUS_MAP[t.status]?.label || t.status
+        t.empresa, t.jira, t.funcional, fmtDate(t.data),
+        STATUS_MAP[t.status]?.label || t.status,
+        t.dataConcluido ? fmtDate(t.dataConcluido) : ''
       ]);
       const csv = [header, ...rows].map(r => r.map(c => `"${(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
       const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
@@ -554,21 +1048,26 @@
       showToast('CSV exportado');
     }
 
+    // ── Render ──
     function renderList() {
       const q  = document.getElementById('search-input').value.toLowerCase();
       const sf = document.getElementById('filter-status').value;
 
-      let filtered = tasks.filter(t => {
+      const active = tasks.filter(t => t.status !== 'concluido');
+      const done   = tasks.filter(t => t.status === 'concluido');
+
+      let filtered = active.filter(t => {
         const matchQ = !q || [t.empresa, t.jira, t.funcional].join(' ').toLowerCase().includes(q);
         const matchS = !sf || t.status === sf;
         return matchQ && matchS;
       });
 
       const n = filtered.length;
-      document.getElementById('count-badge').textContent = `${n} registro${n !== 1 ? 's' : ''}`;
-      document.getElementById('st-total').textContent     = tasks.length;
-      document.getElementById('st-andamento').textContent = tasks.filter(t => t.status === 'andamento').length;
-      document.getElementById('st-concluido').textContent = tasks.filter(t => t.status === 'concluido').length;
+      document.getElementById('count-badge').textContent  = `${n} registro${n !== 1 ? 's' : ''}`;
+      document.getElementById('history-badge').textContent = done.length;
+      document.getElementById('st-total').textContent     = active.length;
+      document.getElementById('st-andamento').textContent = active.filter(t => t.status === 'andamento').length;
+      document.getElementById('st-concluido').textContent = done.length;
 
       const list = document.getElementById('tasks-list');
 
@@ -576,32 +1075,36 @@
         list.innerHTML = `
           <div class="empty-state">
             <div class="empty-icon">📋</div>
-            ${tasks.length ? 'Nenhuma atividade encontrada para o filtro.' : 'Nenhuma atividade registrada ainda.'}
+            ${active.length ? 'Nenhuma atividade encontrada para o filtro.' : 'Nenhuma atividade ativa. Adicione uma acima!'}
           </div>`;
-        return;
+      } else {
+        list.innerHTML = filtered.map(t => {
+          const s = STATUS_MAP[t.status] || STATUS_MAP['backlog'];
+          return `
+            <div class="task-card">
+              <button class="edit-btn" onclick="openEdit(${t.id})" title="Editar" style="position:absolute;top:10px;right:34px;">✎</button>
+              <button class="del-btn" onclick="deleteTask(${t.id})" title="Remover">✕</button>
+              <div class="task-top">
+                <span class="task-empresa">${t.empresa || '—'}</span>
+                ${t.jira ? `<span class="task-jira">${t.jira}</span>` : ''}
+              </div>
+              <div class="task-funcional">${t.funcional}</div>
+              <div class="task-meta">
+                <span class="status-badge ${s.cls}" onclick="cycleStatus(${t.id})" title="Clique para avançar o status">${s.label}</span>
+                ${t.data ? `<span class="dot"></span><span class="task-date">Recebido ${fmtDate(t.data)}</span>` : ''}
+                <button class="done-btn" onclick="completeTask(${t.id})">✓ Concluir</button>
+              </div>
+            </div>`;
+        }).join('');
       }
 
-      list.innerHTML = filtered.map(t => {
-        const s = STATUS_MAP[t.status] || STATUS_MAP['backlog'];
-        return `
-          <div class="task-card">
-            <button class="del-btn" onclick="deleteTask(${t.id})" title="Remover">✕</button>
-            <div class="task-top">
-              <span class="task-empresa">${t.empresa || '—'}</span>
-              ${t.jira ? `<span class="task-jira">${t.jira}</span>` : ''}
-            </div>
-            <div class="task-funcional">${t.funcional}</div>
-            <div class="task-meta">
-              <span class="status-badge ${s.cls}" onclick="cycleStatus(${t.id})" title="Clique para avançar o status">${s.label}</span>
-              ${t.data ? `<span class="dot"></span><span class="task-date">Recebido ${fmtDate(t.data)}</span>` : ''}
-            </div>
-          </div>`;
-      }).join('');
+      if (historyOpen) renderHistory();
     }
 
     document.getElementById('f-data').value = todayStr();
     document.getElementById('f-jira').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('f-funcional').focus(); });
     document.getElementById('f-funcional').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
+    document.getElementById('e-funcional').addEventListener('keydown', e => { if (e.key === 'Enter') saveEdit(); });
 
     renderList();
   </script>
