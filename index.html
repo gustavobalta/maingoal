@@ -37,438 +37,28 @@
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #1A1A18;
-        --card: #242422;
-        --border: rgba(255,255,255,0.1);
-        --border-med: rgba(255,255,255,0.2);
-        --text: #F1EFE8;
-        --muted: #B4B2A9;
-        --hint: #888780;
-        --accent: #378ADD;
-        --accent-light: #042C53;
-        --success-light: #173404;
-        --success: #97C459;
-        --warning-light: #412402;
-        --warning: #EF9F27;
-        --danger-light: #501313;
-        --danger: #F09595;
-        --purple: #AFA9EC;
-        --purple-light: #26215C;
-        --gray-light: #2C2C2A;
-        --bg-secondary: #2C2C2A;
+        --bg: #1A1A18; --card: #242422;
+        --border: rgba(255,255,255,0.1); --border-med: rgba(255,255,255,0.2);
+        --text: #F1EFE8; --muted: #B4B2A9; --hint: #888780;
+        --accent: #378ADD; --accent-light: #042C53;
+        --success-light: #173404; --success: #97C459;
+        --warning-light: #412402; --warning: #EF9F27;
+        --danger-light: #501313; --danger: #F09595;
+        --purple: #AFA9EC; --purple-light: #26215C;
+        --gray-light: #2C2C2A; --bg-secondary: #2C2C2A;
       }
     }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 2rem 1rem;
-    }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 2rem 1rem; }
+    .container { max-width: 780px; margin: 0 auto; }
 
-    .container {
-      max-width: 760px;
-      margin: 0 auto;
-    }
-
-    .page-header {
-      margin-bottom: 2rem;
-    }
-
-    .page-title {
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: -0.02em;
-    }
-
-    .page-subtitle {
-      font-size: 14px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
+    .page-header { margin-bottom: 2rem; }
+    .page-title { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+    .page-subtitle { font-size: 14px; color: var(--muted); margin-top: 4px; }
 
     .section-label {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.75rem;
-    }
-
-    .form-card {
-      background: var(--card);
-      border: 0.5px solid var(--border-med);
-      border-radius: var(--radius-lg);
-      padding: 1.25rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    @media (max-width: 540px) {
-      .form-grid { grid-template-columns: 1fr; }
-      .form-group.full { grid-column: 1; }
-    }
-
-    .form-group { display: flex; flex-direction: column; gap: 5px; }
-    .form-group.full { grid-column: 1 / -1; }
-
-    label {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--muted);
-    }
-
-    input, select, textarea {
-      font-family: 'Sora', sans-serif;
-      font-size: 14px;
-      background: var(--bg-secondary);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text);
-      padding: 8px 12px;
-      outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
-      width: 100%;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(24, 95, 165, 0.15);
-    }
-
-    input::placeholder { color: var(--hint); }
-
-    .mono { font-family: 'JetBrains Mono', monospace; }
-
-    .btn-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 14px;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
-      padding: 9px 20px;
-      font-family: 'Sora', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: opacity 0.15s, transform 0.1s;
-    }
-    .btn-primary:hover { opacity: 0.88; }
-    .btn-primary:active { transform: scale(0.98); }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--muted);
-      border: 0.5px solid var(--border-med);
-      border-radius: var(--radius);
-      padding: 9px 16px;
-      font-family: 'Sora', sans-serif;
-      font-size: 13px;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .btn-ghost:hover { background: var(--bg-secondary); }
-
-    .btn-export {
-      background: transparent;
-      color: var(--muted);
-      border: 0.5px solid var(--border-med);
-      border-radius: var(--radius);
-      padding: 9px 16px;
-      font-family: 'Sora', sans-serif;
-      font-size: 13px;
-      cursor: pointer;
-      transition: background 0.15s;
-      margin-left: auto;
-    }
-    .btn-export:hover { background: var(--bg-secondary); }
-
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 1.5rem;
-    }
-
-    .stat-card {
-      background: var(--bg-secondary);
-      border-radius: var(--radius);
-      padding: 0.85rem 1rem;
-      text-align: center;
-    }
-
-    .stat-num { font-size: 24px; font-weight: 600; color: var(--text); }
-    .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-    .list-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.75rem;
-    }
-
-    .count-badge {
-      font-size: 11px;
-      font-weight: 500;
-      background: var(--accent-light);
-      color: var(--accent);
-      border-radius: 20px;
-      padding: 2px 10px;
-    }
-
-    .search-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 1rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .search-row input { flex: 1; min-width: 160px; }
-
-    select.filter-select {
-      width: auto;
-      min-width: 140px;
-    }
-
-    .tasks-list { display: flex; flex-direction: column; gap: 8px; }
-
-    .task-card {
-      background: var(--card);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1rem 1.25rem;
-      position: relative;
-      transition: border-color 0.15s, background 0.1s;
-    }
-
-    .task-card:hover { border-color: var(--border-med); }
-
-    .task-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 6px;
-      gap: 8px;
-    }
-
-    .task-empresa {
-      font-size: 11px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--hint);
-    }
-
-    .task-jira {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--accent);
-      background: var(--accent-light);
-      padding: 2px 8px;
-      border-radius: 4px;
-    }
-
-    .task-funcional {
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--text);
-      margin-bottom: 8px;
-      line-height: 1.45;
-      padding-right: 24px;
-    }
-
-    .task-meta {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .task-date {
-      font-size: 12px;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-med); display: inline-block; }
-
-    .status-badge {
-      font-size: 11px;
-      font-weight: 500;
-      padding: 2px 9px;
-      border-radius: 20px;
-      letter-spacing: 0.03em;
-      cursor: pointer;
-      user-select: none;
-      transition: opacity 0.15s;
-    }
-    .status-badge:hover { opacity: 0.75; }
-
-    .s-backlog    { background: var(--gray-light);   color: #5F5E5A; }
-    .s-andamento  { background: var(--accent-light);  color: var(--accent); }
-    .s-revisao    { background: var(--purple-light);  color: var(--purple); }
-    .s-aguardando { background: var(--warning-light); color: var(--warning); }
-    .s-concluido  { background: var(--success-light); color: var(--success); }
-    .s-bloqueado  { background: var(--danger-light);  color: var(--danger); }
-
-    .del-btn {
-      position: absolute;
-      top: 10px; right: 10px;
-      background: none;
-      border: none;
-      color: var(--hint);
-      cursor: pointer;
-      font-size: 14px;
-      padding: 3px 6px;
-      border-radius: 4px;
-      opacity: 0;
-      transition: opacity 0.15s, color 0.15s;
-    }
-    .task-card:hover .del-btn { opacity: 1; }
-    .del-btn:hover { color: var(--danger); background: var(--danger-light); }
-
-    .empty-state {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: var(--muted);
-      font-size: 14px;
-      border: 0.5px dashed var(--border-med);
-      border-radius: var(--radius-lg);
-    }
-
-    .empty-icon { font-size: 28px; margin-bottom: 8px; }
-
-    .toast {
-      position: fixed;
-      bottom: 1.5rem;
-      left: 50%;
-      transform: translateX(-50%) translateY(8px);
-      background: var(--text);
-      color: var(--bg);
-      font-size: 13px;
-      padding: 8px 18px;
-      border-radius: 20px;
-      opacity: 0;
-      transition: opacity 0.2s, transform 0.2s;
-      pointer-events: none;
-      z-index: 999;
-      white-space: nowrap;
-    }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* ── Edit modal ── */
-    .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.35);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 1000;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.18s;
-    }
-    .modal-overlay.open { opacity: 1; pointer-events: all; }
-
-    .modal {
-      background: var(--card);
-      border: 0.5px solid var(--border-med);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem;
-      width: 100%;
-      max-width: 480px;
-      margin: 1rem;
-      transform: translateY(8px);
-      transition: transform 0.18s;
-    }
-    .modal-overlay.open .modal { transform: translateY(0); }
-
-    .modal-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 1rem;
-    }
-
-    .modal .form-grid { gap: 10px; }
-    .modal .btn-row { margin-top: 1rem; }
-
-    /* ── Done button on card ── */
-    .done-btn {
-      background: var(--success-light);
-      color: var(--success);
-      border: none;
-      border-radius: var(--radius);
-      padding: 3px 10px;
-      font-family: 'Sora', sans-serif;
-      font-size: 11px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: opacity 0.15s;
-    }
-    .done-btn:hover { opacity: 0.8; }
-
-    .edit-btn {
-      background: none;
-      border: none;
-      color: var(--hint);
-      cursor: pointer;
-      font-size: 13px;
-      padding: 3px 6px;
-      border-radius: 4px;
-      opacity: 0;
-      transition: opacity 0.15s, color 0.15s;
-    }
-    .task-card:hover .edit-btn { opacity: 1; }
-    .edit-btn:hover { color: var(--accent); background: var(--accent-light); }
-
-    /* ── History section ── */
-    .history-toggle {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 2rem;
-      margin-bottom: 0.75rem;
-      cursor: pointer;
-      user-select: none;
-    }
-    .history-toggle:hover .section-label { color: var(--text); }
-
-    .history-caret {
-      font-size: 10px;
-      color: var(--hint);
-      transition: transform 0.2s;
-    }
-    .history-caret.open { transform: rotate(90deg); }
-
-    .history-list { display: flex; flex-direction: column; gap: 6px; }
-
-    .task-card.done {
-      opacity: 0.65;
-      border-color: var(--border);
-    }
-    .task-card.done:hover { opacity: 0.9; }
-
-    .done-date {
-      font-size: 11px;
-      color: var(--success);
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem;
     }
 
     /* ── Quick input ── */
@@ -479,702 +69,752 @@
       padding: 1rem 1.25rem;
       margin-bottom: 1rem;
     }
-
     .quick-label {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.5rem;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem;
     }
-
-    .quick-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
+    .quick-row { display: flex; gap: 8px; align-items: center; }
     .quick-input {
-      flex: 1;
-      font-family: 'Sora', sans-serif;
-      font-size: 14px;
-      background: var(--bg-secondary);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text);
-      padding: 10px 14px;
-      outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
+      flex: 1; font-family: 'Sora', sans-serif; font-size: 14px;
+      background: var(--bg-secondary); border: 0.5px solid var(--border);
+      border-radius: var(--radius); color: var(--text); padding: 10px 14px;
+      outline: none; transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .quick-input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(24, 95, 165, 0.15);
-    }
+    .quick-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(24,95,165,0.15); }
     .quick-input::placeholder { color: var(--hint); }
 
-    .quick-hint {
-      font-size: 11px;
-      color: var(--hint);
-      margin-top: 6px;
-      line-height: 1.5;
+    .mic-btn {
+      background: var(--bg-secondary); border: 0.5px solid var(--border);
+      border-radius: var(--radius); width: 42px; height: 42px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 18px; transition: background 0.15s, border-color 0.15s;
+      flex-shrink: 0;
     }
-    .quick-hint code {
-      font-family: 'JetBrains Mono', monospace;
-      background: var(--bg-secondary);
-      padding: 1px 5px;
-      border-radius: 4px;
-      font-size: 11px;
-    }
+    .mic-btn:hover { background: var(--accent-light); border-color: var(--accent); }
+    .mic-btn.listening { background: var(--danger-light); border-color: var(--danger); animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
 
+    .quick-hint { font-size: 11px; color: var(--hint); margin-top: 6px; line-height: 1.5; }
+    .quick-hint code {
+      font-family: 'JetBrains Mono', monospace; background: var(--bg-secondary);
+      padding: 1px 5px; border-radius: 4px; font-size: 11px;
+    }
     .quick-preview {
-      margin-top: 10px;
-      background: var(--bg-secondary);
-      border-radius: var(--radius);
-      padding: 10px 12px;
-      font-size: 12px;
-      display: none;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
+      margin-top: 10px; background: var(--bg-secondary); border-radius: var(--radius);
+      padding: 10px 12px; font-size: 12px; display: none; gap: 12px; flex-wrap: wrap; align-items: center;
     }
     .quick-preview.show { display: flex; }
-
     .qp-field { display: flex; flex-direction: column; gap: 2px; }
     .qp-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--hint); }
     .qp-val { font-size: 13px; font-weight: 500; color: var(--text); }
     .qp-val.mono { font-family: 'JetBrains Mono', monospace; color: var(--accent); }
-    .qp-empty { color: var(--hint); font-style: italic; }
+
+    /* ── Form card ── */
+    .form-card {
+      background: var(--card); border: 0.5px solid var(--border-med);
+      border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1.5rem;
+    }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 540px) { .form-grid { grid-template-columns: 1fr; } .form-group.full { grid-column: 1; } }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    label { font-size: 12px; font-weight: 500; color: var(--muted); }
+
+    input, select, textarea {
+      font-family: 'Sora', sans-serif; font-size: 14px;
+      background: var(--bg-secondary); border: 0.5px solid var(--border);
+      border-radius: var(--radius); color: var(--text); padding: 8px 12px;
+      outline: none; transition: border-color 0.15s, box-shadow 0.15s; width: 100%;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent); box-shadow: 0 0 0 2px rgba(24,95,165,0.15);
+    }
+    input::placeholder { color: var(--hint); }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    .btn-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent); color: #fff; border: none; border-radius: var(--radius);
+      padding: 9px 20px; font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-ghost {
+      background: transparent; color: var(--muted); border: 0.5px solid var(--border-med);
+      border-radius: var(--radius); padding: 9px 16px; font-family: 'Sora', sans-serif;
+      font-size: 13px; cursor: pointer; transition: background 0.15s;
+    }
+    .btn-ghost:hover { background: var(--bg-secondary); }
+    .btn-export {
+      background: transparent; color: var(--muted); border: 0.5px solid var(--border-med);
+      border-radius: var(--radius); padding: 9px 16px; font-family: 'Sora', sans-serif;
+      font-size: 13px; cursor: pointer; transition: background 0.15s; margin-left: auto;
+    }
+    .btn-export:hover { background: var(--bg-secondary); }
+
+    /* ── Stats ── */
+    .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 1.5rem; }
+    .stat-card { background: var(--bg-secondary); border-radius: var(--radius); padding: 0.85rem 1rem; text-align: center; }
+    .stat-num { font-size: 24px; font-weight: 600; }
+    .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* ── List ── */
+    .list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+    .count-badge { font-size: 11px; font-weight: 500; background: var(--accent-light); color: var(--accent); border-radius: 20px; padding: 2px 10px; }
+    .search-row { display: flex; gap: 8px; margin-bottom: 1rem; align-items: center; flex-wrap: wrap; }
+    .search-row input { flex: 1; min-width: 160px; }
+    select.filter-select { width: auto; min-width: 140px; }
+    .tasks-list { display: flex; flex-direction: column; gap: 8px; }
+
+    /* ── Task card ── */
+    .task-card {
+      background: var(--card); border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1rem 1.25rem;
+      position: relative; transition: border-color 0.15s;
+    }
+    .task-card:hover { border-color: var(--border-med); }
+
+    .task-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; gap: 8px; }
+    .task-empresa { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--hint); }
+    .task-jira { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--accent); background: var(--accent-light); padding: 2px 8px; border-radius: 4px; }
+    .task-ambiente { font-size: 11px; color: var(--purple); background: var(--purple-light); padding: 2px 8px; border-radius: 4px; }
+
+    .task-desc { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 4px; line-height: 1.45; padding-right: 56px; }
+    .task-funcional { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+
+    .task-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .task-date { font-size: 12px; color: var(--muted); }
+    .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-med); display: inline-block; }
+
+    .status-badge {
+      font-size: 11px; font-weight: 500; padding: 2px 9px; border-radius: 20px;
+      letter-spacing: 0.03em; cursor: pointer; user-select: none; transition: opacity 0.15s;
+    }
+    .status-badge:hover { opacity: 0.75; }
+    .s-backlog    { background: var(--gray-light);    color: #5F5E5A; }
+    .s-andamento  { background: var(--accent-light);  color: var(--accent); }
+    .s-revisao    { background: var(--purple-light);  color: var(--purple); }
+    .s-aguardando { background: var(--warning-light); color: var(--warning); }
+    .s-concluido  { background: var(--success-light); color: var(--success); }
+    .s-bloqueado  { background: var(--danger-light);  color: var(--danger); }
+
+    .done-btn {
+      background: var(--success-light); color: var(--success); border: none;
+      border-radius: var(--radius); padding: 3px 10px; font-family: 'Sora', sans-serif;
+      font-size: 11px; font-weight: 500; cursor: pointer; transition: opacity 0.15s;
+    }
+    .done-btn:hover { opacity: 0.8; }
+
+    .card-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 4px; opacity: 0; transition: opacity 0.15s; }
+    .task-card:hover .card-actions { opacity: 1; }
+    .act-btn {
+      background: none; border: none; color: var(--hint); cursor: pointer;
+      font-size: 13px; padding: 3px 6px; border-radius: 4px; transition: color 0.15s, background 0.15s;
+    }
+    .act-btn:hover { color: var(--accent); background: var(--accent-light); }
+    .act-btn.del:hover { color: var(--danger); background: var(--danger-light); }
+
+    /* ── History ── */
+    .history-toggle {
+      display: flex; align-items: center; gap: 8px;
+      margin-top: 2rem; margin-bottom: 0.75rem; cursor: pointer; user-select: none;
+    }
+    .history-caret { font-size: 10px; color: var(--hint); transition: transform 0.2s; }
+    .history-caret.open { transform: rotate(90deg); }
+    .history-list { display: flex; flex-direction: column; gap: 6px; }
+    .task-card.done { opacity: 0.6; }
+    .task-card.done:hover { opacity: 0.9; }
+    .done-date { font-size: 11px; color: var(--success); }
+
+    /* ── Empty ── */
+    .empty-state {
+      text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 14px;
+      border: 0.5px dashed var(--border-med); border-radius: var(--radius-lg);
+    }
+    .empty-icon { font-size: 28px; margin-bottom: 8px; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.35);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.18s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--card); border: 0.5px solid var(--border-med);
+      border-radius: var(--radius-lg); padding: 1.5rem; width: 100%;
+      max-width: 520px; margin: 1rem; transform: translateY(8px); transition: transform 0.18s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-title { font-size: 14px; font-weight: 600; margin-bottom: 1rem; }
+    .modal .form-grid { gap: 10px; }
+    .modal .btn-row { margin-top: 1rem; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 1.5rem; left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      background: var(--text); color: var(--bg); font-size: 13px;
+      padding: 8px 18px; border-radius: 20px; opacity: 0;
+      transition: opacity 0.2s, transform 0.2s; pointer-events: none; z-index: 999; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
-  <div class="container">
+<div class="container">
 
-    <div class="page-header">
-      <h1 class="page-title">Tracker de Atividades</h1>
-      <p class="page-subtitle">Registre e acompanhe o que está sendo feito</p>
-    </div>
-
-    <!-- Quick input -->
-    <div class="quick-card">
-      <p class="quick-label">⚡ Entrada rápida</p>
-      <div class="quick-row">
-        <input
-          class="quick-input"
-          id="quick-input"
-          placeholder="ex: Marco me passou o GFATR-282, 3 dias pra fazer, funcional Joana, empresa JM00"
-          oninput="quickParse()"
-          onkeydown="if(event.key==='Enter') quickAdd()"
-          autocomplete="off"
-        />
-        <button class="btn-primary" onclick="quickAdd()" style="white-space:nowrap;">Registrar</button>
-      </div>
-      <div class="quick-hint">
-        Fale naturalmente. Exemplos: <code>GFATR-282</code> · <code>3 dias</code> · <code>funcional Joana</code> · <code>empresa JM00</code> · <code>bloqueado</code> · <code>urgente</code>
-      </div>
-      <div class="quick-preview" id="quick-preview">
-        <div class="qp-field"><span class="qp-lbl">Empresa</span><span class="qp-val" id="qp-empresa">—</span></div>
-        <div class="qp-field"><span class="qp-lbl">Jira</span><span class="qp-val mono" id="qp-jira">—</span></div>
-        <div class="qp-field" style="flex:1"><span class="qp-lbl">Descrição</span><span class="qp-val" id="qp-funcional">—</span></div>
-        <div class="qp-field"><span class="qp-lbl">Prazo</span><span class="qp-val" id="qp-prazo">—</span></div>
-        <div class="qp-field"><span class="qp-lbl">Status</span><span class="qp-val" id="qp-status">—</span></div>
-      </div>
-    </div>
-
-    <p class="section-label">Nova atividade</p>
-
-    <div class="form-card">
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="f-empresa">Empresa</label>
-          <input type="text" id="f-empresa" placeholder="ex: MAINGOAL" />
-        </div>
-        <div class="form-group">
-          <label for="f-jira">Ticket Jira</label>
-          <input type="text" id="f-jira" placeholder="ex: YFI00577" class="mono" />
-        </div>
-        <div class="form-group full">
-          <label for="f-funcional">Funcional / Descrição</label>
-          <input type="text" id="f-funcional" placeholder="Descreva o que está sendo feito..." />
-        </div>
-        <div class="form-group">
-          <label for="f-data">Recebido em</label>
-          <input type="date" id="f-data" />
-        </div>
-        <div class="form-group">
-          <label for="f-status">Status</label>
-          <select id="f-status">
-            <option value="backlog">Backlog</option>
-            <option value="andamento" selected>Em andamento</option>
-            <option value="revisao">Em revisão</option>
-            <option value="aguardando">Aguardando retorno</option>
-            <option value="concluido">Concluído</option>
-            <option value="bloqueado">Bloqueado</option>
-          </select>
-        </div>
-      </div>
-      <div class="btn-row">
-        <button class="btn-primary" onclick="addTask()">+ Adicionar</button>
-        <button class="btn-ghost" onclick="clearForm()">Limpar</button>
-        <button class="btn-export" onclick="exportCSV()">↓ Exportar CSV</button>
-      </div>
-    </div>
-
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-num" id="st-total">0</div>
-        <div class="stat-lbl">Total</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" id="st-andamento">0</div>
-        <div class="stat-lbl">Em andamento</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" id="st-concluido">0</div>
-        <div class="stat-lbl">Concluídos</div>
-      </div>
-    </div>
-
-    <div class="list-header">
-      <p class="section-label" style="margin:0;">Atividades registradas</p>
-      <span class="count-badge" id="count-badge">0 registros</span>
-    </div>
-
-    <div class="search-row">
-      <input type="text" id="search-input" placeholder="Buscar por empresa, jira ou funcional..." oninput="renderList()" />
-      <select class="filter-select" id="filter-status" onchange="renderList()">
-        <option value="">Todos os status</option>
-        <option value="backlog">Backlog</option>
-        <option value="andamento">Em andamento</option>
-        <option value="revisao">Em revisão</option>
-        <option value="aguardando">Aguardando retorno</option>
-        <option value="concluido">Concluído</option>
-        <option value="bloqueado">Bloqueado</option>
-      </select>
-    </div>
-
-    <div class="tasks-list" id="tasks-list"></div>
-
-    <!-- Histórico -->
-    <div class="history-toggle" onclick="toggleHistory()">
-      <span class="history-caret" id="history-caret">▶</span>
-      <p class="section-label" style="margin:0;">Histórico — concluídos</p>
-      <span class="count-badge" id="history-badge">0</span>
-    </div>
-    <div class="history-list" id="history-list" style="display:none;"></div>
-
+  <div class="page-header">
+    <h1 class="page-title">Tracker de Atividades</h1>
+    <p class="page-subtitle">Registre e acompanhe o que está sendo feito</p>
   </div>
 
-  <!-- Edit modal -->
-  <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
-    <div class="modal">
-      <p class="modal-title">Editar atividade</p>
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="e-empresa">Empresa</label>
-          <input type="text" id="e-empresa" />
-        </div>
-        <div class="form-group">
-          <label for="e-jira">Ticket Jira</label>
-          <input type="text" id="e-jira" class="mono" />
-        </div>
-        <div class="form-group full">
-          <label for="e-funcional">Funcional / Descrição</label>
-          <input type="text" id="e-funcional" />
-        </div>
-        <div class="form-group">
-          <label for="e-data">Recebido em</label>
-          <input type="date" id="e-data" />
-        </div>
-        <div class="form-group">
-          <label for="e-status">Status</label>
-          <select id="e-status">
-            <option value="backlog">Backlog</option>
-            <option value="andamento">Em andamento</option>
-            <option value="revisao">Em revisão</option>
-            <option value="aguardando">Aguardando retorno</option>
-            <option value="concluido">Concluído</option>
-            <option value="bloqueado">Bloqueado</option>
-          </select>
-        </div>
-      </div>
-      <div class="btn-row">
-        <button class="btn-primary" onclick="saveEdit()">Salvar</button>
-        <button class="btn-ghost" onclick="closeModal()">Cancelar</button>
-      </div>
+  <!-- Quick input -->
+  <div class="quick-card">
+    <p class="quick-label">⚡ Entrada rápida</p>
+    <div class="quick-row">
+      <input class="quick-input" id="quick-input"
+        placeholder="ex: Marco me passou o GFATR-282, 3 dias, funcional Joana, ambiente SAP, ajustar tela de login"
+        oninput="quickParse()" onkeydown="if(event.key==='Enter') quickAdd()" autocomplete="off" />
+      <button class="mic-btn" id="mic-btn" onclick="toggleMic()" title="Falar">🎤</button>
+      <button class="btn-primary" onclick="quickAdd()" style="white-space:nowrap;">Registrar</button>
+    </div>
+    <div class="quick-hint">
+      Fale ou digite naturalmente: <code>GFATR-282</code> · <code>3 dias</code> · <code>funcional Joana</code> · <code>ambiente SAP</code> · <code>ajustar tela de login</code> · <code>bloqueado</code>
+    </div>
+    <div class="quick-preview" id="quick-preview">
+      <div class="qp-field"><span class="qp-lbl">Empresa</span><span class="qp-val" id="qp-empresa">—</span></div>
+      <div class="qp-field"><span class="qp-lbl">Jira</span><span class="qp-val mono" id="qp-jira">—</span></div>
+      <div class="qp-field"><span class="qp-lbl">Funcional</span><span class="qp-val" id="qp-funcional">—</span></div>
+      <div class="qp-field"><span class="qp-lbl">Ambiente</span><span class="qp-val" id="qp-ambiente">—</span></div>
+      <div class="qp-field" style="flex:1"><span class="qp-lbl">Descrição</span><span class="qp-val" id="qp-descricao">—</span></div>
+      <div class="qp-field"><span class="qp-lbl">Prazo</span><span class="qp-val" id="qp-prazo">—</span></div>
+      <div class="qp-field"><span class="qp-lbl">Status</span><span class="qp-val" id="qp-status">—</span></div>
     </div>
   </div>
 
-  <div class="toast" id="toast"></div>
+  <p class="section-label">Nova atividade</p>
 
-  <script>
-    const WORKER = 'https://maingoal.g-oli-baltazar.workers.dev';
+  <div class="form-card">
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="f-empresa">Empresa</label>
+        <input type="text" id="f-empresa" placeholder="ex: JM00" />
+      </div>
+      <div class="form-group">
+        <label for="f-jira">Ticket Jira</label>
+        <input type="text" id="f-jira" placeholder="ex: GFATR-282" class="mono" />
+      </div>
+      <div class="form-group">
+        <label for="f-funcional">Funcional</label>
+        <input type="text" id="f-funcional" placeholder="ex: Joana" />
+      </div>
+      <div class="form-group">
+        <label for="f-ambiente">Ambiente</label>
+        <input type="text" id="f-ambiente" placeholder="ex: SAP, HCM, Produção" />
+      </div>
+      <div class="form-group full">
+        <label for="f-descricao">Descrição</label>
+        <input type="text" id="f-descricao" placeholder="O que precisa ser feito..." />
+      </div>
+      <div class="form-group">
+        <label for="f-data">Recebido em</label>
+        <input type="date" id="f-data" />
+      </div>
+      <div class="form-group">
+        <label for="f-status">Status</label>
+        <select id="f-status">
+          <option value="backlog">Backlog</option>
+          <option value="andamento" selected>Em andamento</option>
+          <option value="revisao">Em revisão</option>
+          <option value="aguardando">Aguardando retorno</option>
+          <option value="concluido">Concluído</option>
+          <option value="bloqueado">Bloqueado</option>
+        </select>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="addTask()">+ Adicionar</button>
+      <button class="btn-ghost" onclick="clearForm()">Limpar</button>
+      <button class="btn-export" onclick="exportCSV()">↓ Exportar CSV</button>
+    </div>
+  </div>
 
-    const STATUS_MAP = {
-      backlog:    { label: 'Backlog',            cls: 's-backlog',    next: 'andamento' },
-      andamento:  { label: 'Em andamento',       cls: 's-andamento',  next: 'revisao' },
-      revisao:    { label: 'Em revisão',         cls: 's-revisao',    next: 'concluido' },
-      aguardando: { label: 'Aguardando retorno', cls: 's-aguardando', next: 'andamento' },
-      concluido:  { label: 'Concluído',          cls: 's-concluido',  next: 'backlog' },
-      bloqueado:  { label: 'Bloqueado',          cls: 's-bloqueado',  next: 'andamento' },
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num" id="st-total">0</div><div class="stat-lbl">Total</div></div>
+    <div class="stat-card"><div class="stat-num" id="st-andamento">0</div><div class="stat-lbl">Em andamento</div></div>
+    <div class="stat-card"><div class="stat-num" id="st-concluido">0</div><div class="stat-lbl">Concluídos</div></div>
+  </div>
+
+  <div class="list-header">
+    <p class="section-label" style="margin:0;">Atividades registradas</p>
+    <span class="count-badge" id="count-badge">0 registros</span>
+  </div>
+
+  <div class="search-row">
+    <input type="text" id="search-input" placeholder="Buscar por empresa, jira, funcional, ambiente..." oninput="renderList()" />
+    <select class="filter-select" id="filter-status" onchange="renderList()">
+      <option value="">Todos os status</option>
+      <option value="backlog">Backlog</option>
+      <option value="andamento">Em andamento</option>
+      <option value="revisao">Em revisão</option>
+      <option value="aguardando">Aguardando retorno</option>
+      <option value="concluido">Concluído</option>
+      <option value="bloqueado">Bloqueado</option>
+    </select>
+  </div>
+
+  <div class="tasks-list" id="tasks-list"></div>
+
+  <!-- Histórico -->
+  <div class="history-toggle" onclick="toggleHistory()">
+    <span class="history-caret" id="history-caret">▶</span>
+    <p class="section-label" style="margin:0;">Histórico — concluídos</p>
+    <span class="count-badge" id="history-badge">0</span>
+  </div>
+  <div class="history-list" id="history-list" style="display:none;"></div>
+
+</div>
+
+<!-- Edit modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <p class="modal-title">Editar atividade</p>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="e-empresa">Empresa</label>
+        <input type="text" id="e-empresa" />
+      </div>
+      <div class="form-group">
+        <label for="e-jira">Ticket Jira</label>
+        <input type="text" id="e-jira" class="mono" />
+      </div>
+      <div class="form-group">
+        <label for="e-funcional">Funcional</label>
+        <input type="text" id="e-funcional" />
+      </div>
+      <div class="form-group">
+        <label for="e-ambiente">Ambiente</label>
+        <input type="text" id="e-ambiente" />
+      </div>
+      <div class="form-group full">
+        <label for="e-descricao">Descrição</label>
+        <input type="text" id="e-descricao" />
+      </div>
+      <div class="form-group">
+        <label for="e-data">Recebido em</label>
+        <input type="date" id="e-data" />
+      </div>
+      <div class="form-group">
+        <label for="e-status">Status</label>
+        <select id="e-status">
+          <option value="backlog">Backlog</option>
+          <option value="andamento">Em andamento</option>
+          <option value="revisao">Em revisão</option>
+          <option value="aguardando">Aguardando retorno</option>
+          <option value="concluido">Concluído</option>
+          <option value="bloqueado">Bloqueado</option>
+        </select>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="saveEdit()">Salvar</button>
+      <button class="btn-ghost" onclick="closeModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const STATUS_MAP = {
+    backlog:    { label: 'Backlog',            cls: 's-backlog' },
+    andamento:  { label: 'Em andamento',       cls: 's-andamento' },
+    revisao:    { label: 'Em revisão',         cls: 's-revisao' },
+    aguardando: { label: 'Aguardando retorno', cls: 's-aguardando' },
+    concluido:  { label: 'Concluído',          cls: 's-concluido' },
+    bloqueado:  { label: 'Bloqueado',          cls: 's-bloqueado' },
+  };
+  const STATUS_ORDER = ['backlog','andamento','revisao','aguardando','concluido','bloqueado'];
+
+  let tasks = [];
+  try { tasks = JSON.parse(localStorage.getItem('tracker_v3') || '[]'); } catch(e) {}
+
+  function save() { try { localStorage.setItem('tracker_v3', JSON.stringify(tasks)); } catch(e) {} }
+  function todayStr() { return new Date().toISOString().split('T')[0]; }
+  function fmtDate(d) { if (!d) return '—'; const [y,m,day]=d.split('-'); return `${day}/${m}/${y}`; }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // ── Microfone ────────────────────────────────────────────────────────
+  let recognition = null;
+  let isListening = false;
+
+  function toggleMic() {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      showToast('Seu browser não suporta reconhecimento de voz. Use Chrome ou Edge.');
+      return;
+    }
+    if (isListening) { recognition.stop(); return; }
+
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SR();
+    recognition.lang = 'pt-BR';
+    recognition.interimResults = true;
+    recognition.continuous = false;
+
+    recognition.onstart = () => {
+      isListening = true;
+      document.getElementById('mic-btn').classList.add('listening');
+      document.getElementById('mic-btn').textContent = '🔴';
     };
 
-    const STATUS_ORDER = ['backlog','andamento','revisao','aguardando','concluido','bloqueado'];
+    recognition.onresult = (e) => {
+      const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
+      document.getElementById('quick-input').value = transcript;
+      quickParse();
+    };
 
-    let tasks = [];
+    recognition.onend = () => {
+      isListening = false;
+      document.getElementById('mic-btn').classList.remove('listening');
+      document.getElementById('mic-btn').textContent = '🎤';
+    };
 
-    function todayStr() {
-      return new Date().toISOString().split('T')[0];
-    }
+    recognition.onerror = (e) => {
+      isListening = false;
+      document.getElementById('mic-btn').classList.remove('listening');
+      document.getElementById('mic-btn').textContent = '🎤';
+      if (e.error !== 'no-speech') showToast('Erro no microfone: ' + e.error);
+    };
 
-    function fmtDate(d) {
-      if (!d) return '—';
-      const [y, m, day] = d.split('-');
-      return `${day}/${m}/${y}`;
-    }
+    recognition.start();
+  }
 
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2000);
-    }
+  // ── Parser ───────────────────────────────────────────────────────────
+  function parseNatural(text) {
+    const t = text;
+    const r = {};
 
-    function setLoading(on) {
-      document.getElementById('tasks-list').style.opacity = on ? '0.4' : '1';
-    }
+    // Jira
+    const jiraM = t.match(/\b([A-Z]{2,10}-\d{1,6})\b/i);
+    if (jiraM) r.jira = jiraM[1].toUpperCase();
 
-    // ── Notion API via Worker ──────────────────────────────────────────
-
-    function notionToTask(page) {
-      const p = page.properties;
-      return {
-        id:            page.id,
-        notionId:      page.id,
-        empresa:       p.Empresa?.rich_text?.[0]?.plain_text   || '',
-        jira:          p.Jira?.rich_text?.[0]?.plain_text       || '',
-        funcional:     p.Funcional?.title?.[0]?.plain_text      || '',
-        status:        p.Status?.select?.name                   || 'andamento',
-        data:          p.Recebido?.date?.start                  || '',
-        dataConcluido: p['Concluído']?.date?.start              || '',
-        prazo:         p.Prazo?.date?.start                     || '',
-      };
-    }
-
-    async function apiList() {
-      const res  = await fetch(`${WORKER}?action=list`);
-      const json = await res.json();
-      return (json.results || []).map(notionToTask);
-    }
-
-    async function apiCreate(task) {
-      const res = await fetch(`${WORKER}?action=create`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(task),
-      });
-      const json = await res.json();
-      return notionToTask(json);
-    }
-
-    async function apiUpdate(task) {
-      await fetch(`${WORKER}?action=update&id=${task.notionId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(task),
-      });
-    }
-
-    async function apiDelete(notionId) {
-      await fetch(`${WORKER}?action=delete&id=${notionId}`, { method: 'POST' });
-    }
-
-    async function loadTasks() {
-      setLoading(true);
-      try {
-        tasks = await apiList();
-        renderList();
-      } catch(e) {
-        showToast('Erro ao carregar do Notion');
-      }
-      setLoading(false);
-    }
-
-    // ── Quick input parser ──────────────────────────────────────────────
-
-    function quickParse() {
-      const raw = document.getElementById('quick-input').value;
-      const p   = parseNatural(raw);
-      const pre = document.getElementById('quick-preview');
-
-      if (!raw.trim()) { pre.classList.remove('show'); return; }
-      pre.classList.add('show');
-
-      document.getElementById('qp-empresa').textContent  = p.empresa  || '—';
-      document.getElementById('qp-jira').textContent     = p.jira     || '—';
-      document.getElementById('qp-funcional').textContent= p.funcional|| '—';
-      document.getElementById('qp-prazo').textContent    = p.prazoLabel|| '—';
-      document.getElementById('qp-status').textContent   = p.statusLabel|| 'Em andamento';
-    }
-
-    async function quickAdd() {
-      const raw = document.getElementById('quick-input').value.trim();
-      if (!raw) return;
-
-      const p = parseNatural(raw);
-
-      if (!p.funcional && !p.jira) {
-        showToast('Não consegui identificar o que registrar. Inclua uma descrição ou ticket.');
-        return;
-      }
-
-      const task = {
-        empresa:  p.empresa   || '',
-        jira:     p.jira      || '',
-        funcional: p.funcional || p.jira || raw,
-        data:     todayStr(),
-        status:   p.status    || 'andamento',
-        prazo:    p.prazo     || '',
-      };
-
-      showToast('Salvando…');
-      try {
-        const created = await apiCreate(task);
-        tasks.unshift(created);
-        renderList();
-        document.getElementById('quick-input').value = '';
-        document.getElementById('quick-preview').classList.remove('show');
-        showToast('✓ Registrado' + (p.jira ? ` — ${p.jira}` : ''));
-      } catch(e) {
-        showToast('Erro ao salvar no Notion');
+    // Empresa
+    const empM = t.match(/(?:empresa|cliente|emp\.?)\s+([A-Z0-9]{2,8})\b/i);
+    if (empM) {
+      r.empresa = empM[1].toUpperCase();
+    } else {
+      const caps = t.match(/\b([A-Z]{2,6}\d{0,4})\b/g);
+      if (caps) {
+        const f = caps.filter(c => c !== (r.jira||'').split('-')[0]);
+        if (f.length) r.empresa = f[0];
       }
     }
 
-    function parseNatural(text) {
-      const t = text;
-      const result = {};
+    // Funcional
+    const funcM = t.match(/(?:funcional|responsável|resp\.?)\s+([A-ZÀ-Ú][a-zà-ú]+(?:\s+[A-ZÀ-Ú][a-zà-ú]+)*)/i);
+    if (funcM) r.funcional = funcM[1];
 
-      // Jira ticket: letras-números (ex: GFATR-282, YFI-100, PDPCP-11)
-      const jiraMatch = t.match(/\b([A-Z]{2,10}-\d{1,6})\b/i);
-      if (jiraMatch) result.jira = jiraMatch[1].toUpperCase();
+    // Ambiente
+    const ambM = t.match(/(?:ambiente|sistema|módulo|modulo|em)\s+([A-Za-z0-9_\-]{2,20})/i);
+    if (ambM) r.ambiente = ambM[1];
 
-      // Empresa: "empresa JM00" ou "cliente PD00" ou tokens all-caps curtos sem hífen
-      const empresaMatch = t.match(/(?:empresa|cliente|emp\.?)\s+([A-Z0-9]{2,8})\b/i);
-      if (empresaMatch) {
-        result.empresa = empresaMatch[1].toUpperCase();
-      } else {
-        // fallback: token all-caps de 2-6 chars que não seja o jira
-        const caps = t.match(/\b([A-Z]{2,6}\d{0,4})\b/g);
-        if (caps) {
-          const filtered = caps.filter(c => c !== (result.jira || '').split('-')[0]);
-          if (filtered.length) result.empresa = filtered[0];
-        }
-      }
-
-      // Prazo: "X dias", "X semanas", "até dd/mm", "até sexta"
-      const diasMatch = t.match(/(\d+)\s*dia[s]?/i);
-      const semMatch  = t.match(/(\d+)\s*semana[s]?/i);
-      const ateMatch  = t.match(/até\s+(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)/i);
-      const weekdayMatch = t.match(/(?:até\s+)?(segunda|terça|quarta|quinta|sexta|sábado|domingo)/i);
-
-      if (diasMatch) {
-        const d = new Date();
-        d.setDate(d.getDate() + parseInt(diasMatch[1]));
-        result.prazo      = d.toISOString().split('T')[0];
-        result.prazoLabel = `${diasMatch[1]} dia(s) — ${fmtDateSimple(result.prazo)}`;
-      } else if (semMatch) {
-        const d = new Date();
-        d.setDate(d.getDate() + parseInt(semMatch[1]) * 7);
-        result.prazo      = d.toISOString().split('T')[0];
-        result.prazoLabel = `${semMatch[1]} semana(s) — ${fmtDateSimple(result.prazo)}`;
-      } else if (ateMatch) {
-        const parts = ateMatch[1].split('/');
-        const year  = parts[2] ? (parts[2].length === 2 ? '20' + parts[2] : parts[2]) : new Date().getFullYear();
-        result.prazo      = `${year}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
-        result.prazoLabel = ateMatch[1];
-      } else if (weekdayMatch) {
-        const days = { segunda:1, terça:2, quarta:3, quinta:4, sexta:5, sábado:6, domingo:0 };
-        const target = days[weekdayMatch[1].toLowerCase()];
-        const d = new Date();
-        const diff = (target - d.getDay() + 7) % 7 || 7;
-        d.setDate(d.getDate() + diff);
-        result.prazo      = d.toISOString().split('T')[0];
-        result.prazoLabel = `${weekdayMatch[1]} — ${fmtDateSimple(result.prazo)}`;
-      }
-
-      // Status
-      const statusWords = {
-        'bloqueado|bloqueada|blocked':            'bloqueado',
-        'conclu[ií]do|conclu[ií]da|done|feito':  'concluido',
-        'revis[aã]o|revisando|review':            'revisao',
-        'aguardando|esperando|waiting':           'aguardando',
-        'backlog':                                'backlog',
-        'urgente|urgência|priority|priorit[aá]rio':'andamento',
-      };
-      for (const [pattern, val] of Object.entries(statusWords)) {
-        if (new RegExp(pattern, 'i').test(t)) {
-          result.status      = val;
-          result.statusLabel = STATUS_MAP[val]?.label;
-          break;
-        }
-      }
-      if (!result.status) {
-        result.status      = 'andamento';
-        result.statusLabel = 'Em andamento';
-      }
-
-      // Funcional: "funcional X" ou "responsável X" ou "com X" (nome próprio)
-      const funcMatch = t.match(/(?:funcional|responsável|resp\.?|com|pra|para)\s+([A-ZÀ-Ú][a-zà-ú]+(?:\s+[A-ZÀ-Ú][a-zà-ú]+)*)/i);
-      if (funcMatch) {
-        result.funcional = funcMatch[1];
-      } else {
-        // fallback: monta descrição limpando tokens já extraídos
-        let desc = t
-          .replace(/\b([A-Z]{2,10}-\d{1,6})\b/gi, '')
-          .replace(/(?:empresa|cliente|emp\.?)\s+\S+/gi, '')
-          .replace(/\d+\s*dia[s]?/gi, '')
-          .replace(/\d+\s*semana[s]?/gi, '')
-          .replace(/até\s+\S+/gi, '')
-          .replace(/\b(bloqueado|concluído|revisão|aguardando|backlog|urgente)\b/gi, '')
-          .replace(/\b(me passou|passou|mandou|enviou|pediu)\b/gi, '')
-          .replace(/\b(o|a|os|as|um|uma)\b/gi, '')
-          .replace(/\s{2,}/g, ' ')
-          .trim();
-
-        // Tenta extrair nome próprio livre (palavra capitalizada)
-        const nomeMatch = desc.match(/\b([A-ZÀ-Ú][a-zà-ú]{2,})\b/);
-        if (nomeMatch && !result.funcional) result.funcional = nomeMatch[1];
-      }
-
-      return result;
+    // Descrição: pega tudo depois de "descrição:" ou inferido removendo tokens
+    const descM = t.match(/(?:descrição|descricao|desc|tarefa|atividade)[:\s]+(.+?)(?:\.|,|$)/i);
+    if (descM) {
+      r.descricao = descM[1].trim();
+    } else {
+      // inferência: remove tokens extraídos e pega o que sobra como descrição
+      let desc = t
+        .replace(/\b([A-Z]{2,10}-\d{1,6})\b/gi, '')
+        .replace(/(?:empresa|cliente|emp\.?)\s+\S+/gi, '')
+        .replace(/(?:funcional|responsável|resp\.?)\s+\S+/gi, '')
+        .replace(/(?:ambiente|sistema|módulo|modulo|em)\s+\S+/gi, '')
+        .replace(/\d+\s*dia[s]?/gi, '')
+        .replace(/\d+\s*semana[s]?/gi, '')
+        .replace(/até\s+\S+/gi, '')
+        .replace(/\b(bloqueado|concluído|revisão|aguardando|backlog|urgente)\b/gi, '')
+        .replace(/\b(me passou|passou|mandou|enviou|pediu)\b/gi, '')
+        .replace(/\b(o|a|os|as|um|uma|pra|para|com|que|de|do|da)\b/gi, ' ')
+        .replace(/[,\.]/g, ' ')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+      if (desc.length > 3) r.descricao = desc;
     }
 
-    function fmtDateSimple(iso) {
-      if (!iso) return '';
-      const [, m, d] = iso.split('-');
-      return `${d}/${m}`;
+    // Prazo
+    const diasM = t.match(/(\d+)\s*dia[s]?/i);
+    const semM  = t.match(/(\d+)\s*semana[s]?/i);
+    const ateM  = t.match(/até\s+(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)/i);
+    const wdM   = t.match(/(?:até\s+)?(segunda|terça|quarta|quinta|sexta|sábado|domingo)/i);
+    if (diasM) {
+      const d = new Date(); d.setDate(d.getDate() + parseInt(diasM[1]));
+      r.prazo = d.toISOString().split('T')[0];
+      r.prazoLabel = `${diasM[1]} dia(s) — ${fmtDateSimple(r.prazo)}`;
+    } else if (semM) {
+      const d = new Date(); d.setDate(d.getDate() + parseInt(semM[1]) * 7);
+      r.prazo = d.toISOString().split('T')[0];
+      r.prazoLabel = `${semM[1]} semana(s) — ${fmtDateSimple(r.prazo)}`;
+    } else if (ateM) {
+      const pts = ateM[1].split('/');
+      const yr  = pts[2] ? (pts[2].length===2?'20'+pts[2]:pts[2]) : new Date().getFullYear();
+      r.prazo = `${yr}-${pts[1].padStart(2,'0')}-${pts[0].padStart(2,'0')}`;
+      r.prazoLabel = ateM[1];
+    } else if (wdM) {
+      const dmap = {segunda:1,terça:2,quarta:3,quinta:4,sexta:5,sábado:6,domingo:0};
+      const tgt  = dmap[wdM[1].toLowerCase()];
+      const d    = new Date();
+      d.setDate(d.getDate() + ((tgt - d.getDay() + 7) % 7 || 7));
+      r.prazo = d.toISOString().split('T')[0];
+      r.prazoLabel = `${wdM[1]} — ${fmtDateSimple(r.prazo)}`;
     }
 
-    // ── End quick parser ────────────────────────────────────────────────
-
-    async function addTask() {
-      const empresa   = document.getElementById('f-empresa').value.trim();
-      const jira      = document.getElementById('f-jira').value.trim().toUpperCase();
-      const funcional = document.getElementById('f-funcional').value.trim();
-      const data      = document.getElementById('f-data').value;
-      const status    = document.getElementById('f-status').value;
-
-      if (!funcional) { document.getElementById('f-funcional').focus(); return; }
-
-      showToast('Salvando…');
-      try {
-        const created = await apiCreate({ empresa, jira, funcional, data, status });
-        tasks.unshift(created);
-        clearForm();
-        renderList();
-        showToast('Atividade adicionada');
-      } catch(e) { showToast('Erro ao salvar no Notion'); }
+    // Status
+    const stWords = {
+      'bloqueado|bloqueada|blocked':           'bloqueado',
+      'conclu[ií]do|conclu[ií]da|done|feito': 'concluido',
+      'revis[aã]o|revisando|review':           'revisao',
+      'aguardando|esperando|waiting':          'aguardando',
+      'backlog':                               'backlog',
+    };
+    for (const [pat, val] of Object.entries(stWords)) {
+      if (new RegExp(pat,'i').test(t)) { r.status = val; r.statusLabel = STATUS_MAP[val].label; break; }
     }
+    if (!r.status) { r.status = 'andamento'; r.statusLabel = 'Em andamento'; }
 
-    function clearForm() {
-      ['f-empresa','f-jira','f-funcional'].forEach(id => document.getElementById(id).value = '');
-      document.getElementById('f-data').value = todayStr();
-      document.getElementById('f-status').value = 'andamento';
-      document.getElementById('f-funcional').focus();
+    return r;
+  }
+
+  function fmtDateSimple(iso) { if (!iso) return ''; const [,m,d]=iso.split('-'); return `${d}/${m}`; }
+
+  function quickParse() {
+    const raw = document.getElementById('quick-input').value;
+    const pre = document.getElementById('quick-preview');
+    if (!raw.trim()) { pre.classList.remove('show'); return; }
+    const p = parseNatural(raw);
+    pre.classList.add('show');
+    document.getElementById('qp-empresa').textContent  = p.empresa    || '—';
+    document.getElementById('qp-jira').textContent     = p.jira       || '—';
+    document.getElementById('qp-funcional').textContent= p.funcional  || '—';
+    document.getElementById('qp-ambiente').textContent = p.ambiente   || '—';
+    document.getElementById('qp-descricao').textContent= p.descricao  || '—';
+    document.getElementById('qp-prazo').textContent    = p.prazoLabel || '—';
+    document.getElementById('qp-status').textContent   = p.statusLabel|| 'Em andamento';
+  }
+
+  function quickAdd() {
+    const raw = document.getElementById('quick-input').value.trim();
+    if (!raw) return;
+    const p = parseNatural(raw);
+    if (!p.descricao && !p.jira) { showToast('Inclua uma descrição ou ticket.'); return; }
+
+    tasks.unshift({
+      id: Date.now(),
+      empresa:   p.empresa   || '',
+      jira:      p.jira      || '',
+      funcional: p.funcional || '',
+      ambiente:  p.ambiente  || '',
+      descricao: p.descricao || p.jira || raw,
+      data:      todayStr(),
+      status:    p.status    || 'andamento',
+      prazo:     p.prazo     || '',
+    });
+    save(); renderList();
+    document.getElementById('quick-input').value = '';
+    document.getElementById('quick-preview').classList.remove('show');
+    showToast('✓ Registrado' + (p.jira ? ` — ${p.jira}` : ''));
+  }
+
+  // ── CRUD ─────────────────────────────────────────────────────────────
+  function addTask() {
+    const descricao = document.getElementById('f-descricao').value.trim();
+    if (!descricao) { document.getElementById('f-descricao').focus(); return; }
+    tasks.unshift({
+      id:        Date.now(),
+      empresa:   document.getElementById('f-empresa').value.trim(),
+      jira:      document.getElementById('f-jira').value.trim().toUpperCase(),
+      funcional: document.getElementById('f-funcional').value.trim(),
+      ambiente:  document.getElementById('f-ambiente').value.trim(),
+      descricao,
+      data:      document.getElementById('f-data').value,
+      status:    document.getElementById('f-status').value,
+    });
+    save(); clearForm(); renderList(); showToast('Atividade adicionada');
+  }
+
+  function clearForm() {
+    ['f-empresa','f-jira','f-funcional','f-ambiente','f-descricao'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('f-data').value   = todayStr();
+    document.getElementById('f-status').value = 'andamento';
+    document.getElementById('f-descricao').focus();
+  }
+
+  function deleteTask(id) {
+    if (!confirm('Remover esta atividade?')) return;
+    tasks = tasks.filter(t => t.id !== id);
+    save(); renderList(); showToast('Removida');
+  }
+
+  function cycleStatus(id) {
+    const task = tasks.find(t => t.id === id);
+    if (!task) return;
+    const idx = STATUS_ORDER.indexOf(task.status);
+    task.status = STATUS_ORDER[(idx + 1) % STATUS_ORDER.length];
+    save(); renderList(); showToast('Status: ' + STATUS_MAP[task.status].label);
+  }
+
+  function completeTask(id) {
+    const task = tasks.find(t => t.id === id);
+    if (!task) return;
+    task.status = 'concluido'; task.dataConcluido = todayStr();
+    save(); renderList(); showToast('✓ Concluído em ' + fmtDate(task.dataConcluido));
+  }
+
+  // ── Edição ───────────────────────────────────────────────────────────
+  let editingId = null;
+
+  function openEdit(id) {
+    const t = tasks.find(t => t.id === id);
+    if (!t) return;
+    editingId = id;
+    document.getElementById('e-empresa').value   = t.empresa   || '';
+    document.getElementById('e-jira').value      = t.jira      || '';
+    document.getElementById('e-funcional').value = t.funcional || '';
+    document.getElementById('e-ambiente').value  = t.ambiente  || '';
+    document.getElementById('e-descricao').value = t.descricao || '';
+    document.getElementById('e-data').value      = t.data      || '';
+    document.getElementById('e-status').value    = t.status    || 'andamento';
+    document.getElementById('modal-overlay').classList.add('open');
+    setTimeout(() => document.getElementById('e-descricao').focus(), 80);
+  }
+
+  function saveEdit() {
+    const task = tasks.find(t => t.id === editingId);
+    if (!task) return;
+    task.empresa   = document.getElementById('e-empresa').value.trim();
+    task.jira      = document.getElementById('e-jira').value.trim().toUpperCase();
+    task.funcional = document.getElementById('e-funcional').value.trim();
+    task.ambiente  = document.getElementById('e-ambiente').value.trim();
+    task.descricao = document.getElementById('e-descricao').value.trim();
+    task.data      = document.getElementById('e-data').value;
+    task.status    = document.getElementById('e-status').value;
+    if (task.status === 'concluido' && !task.dataConcluido) task.dataConcluido = todayStr();
+    save(); closeModal(); renderList(); showToast('Salvo');
+  }
+
+  function closeModal(e) {
+    if (e && e.target !== document.getElementById('modal-overlay')) return;
+    document.getElementById('modal-overlay').classList.remove('open');
+    editingId = null;
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // ── Export ───────────────────────────────────────────────────────────
+  function exportCSV() {
+    if (!tasks.length) { showToast('Nenhuma atividade para exportar'); return; }
+    const header = ['Empresa','Jira','Funcional','Ambiente','Descrição','Recebido em','Status','Concluído em','Prazo'];
+    const rows = tasks.map(t => [
+      t.empresa, t.jira, t.funcional, t.ambiente, t.descricao,
+      fmtDate(t.data), STATUS_MAP[t.status]?.label || t.status,
+      t.dataConcluido ? fmtDate(t.dataConcluido) : '', t.prazo ? fmtDate(t.prazo) : ''
+    ]);
+    const csv = [header,...rows].map(r => r.map(c=>`"${(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob = new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8;'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `atividades_${todayStr()}.csv`; a.click();
+    showToast('CSV exportado');
+  }
+
+  // ── Histórico ────────────────────────────────────────────────────────
+  let historyOpen = false;
+
+  function toggleHistory() {
+    historyOpen = !historyOpen;
+    document.getElementById('history-list').style.display = historyOpen ? 'flex' : 'none';
+    document.getElementById('history-caret').classList.toggle('open', historyOpen);
+    if (historyOpen) renderHistory();
+  }
+
+  function renderHistory() {
+    const done = tasks.filter(t => t.status === 'concluido')
+      .sort((a,b) => (b.dataConcluido||'').localeCompare(a.dataConcluido||''));
+    const list = document.getElementById('history-list');
+    if (!done.length) {
+      list.innerHTML = `<div class="empty-state" style="padding:1.5rem;"><div class="empty-icon">✅</div>Nenhum concluído ainda.</div>`;
+      return;
     }
+    list.innerHTML = done.map(t => taskCardHTML(t, true)).join('');
+  }
 
-    async function deleteTask(notionId) {
-      if (!confirm('Remover esta atividade?')) return;
-      showToast('Removendo…');
-      try {
-        await apiDelete(notionId);
-        tasks = tasks.filter(t => t.notionId !== notionId);
-        renderList();
-        showToast('Removida');
-      } catch(e) { showToast('Erro ao remover'); }
+  // ── Render ───────────────────────────────────────────────────────────
+  function taskCardHTML(t, isDone = false) {
+    const s = STATUS_MAP[t.status] || STATUS_MAP['backlog'];
+    return `
+      <div class="task-card${isDone?' done':''}">
+        <div class="card-actions">
+          <button class="act-btn" onclick="openEdit(${t.id})" title="Editar">✎</button>
+          <button class="act-btn del" onclick="deleteTask(${t.id})" title="Remover">✕</button>
+        </div>
+        <div class="task-top">
+          <span class="task-empresa">${t.empresa||'—'}</span>
+          <div style="display:flex;gap:6px;align-items:center;">
+            ${t.ambiente ? `<span class="task-ambiente">${t.ambiente}</span>` : ''}
+            ${t.jira ? `<span class="task-jira">${t.jira}</span>` : ''}
+          </div>
+        </div>
+        <div class="task-desc">${t.descricao||'—'}</div>
+        ${t.funcional ? `<div class="task-funcional">Funcional: ${t.funcional}</div>` : ''}
+        <div class="task-meta">
+          <span class="status-badge ${s.cls}" onclick="cycleStatus(${t.id})" title="Avançar status">${s.label}</span>
+          ${t.data ? `<span class="dot"></span><span class="task-date">Recebido ${fmtDate(t.data)}</span>` : ''}
+          ${t.prazo ? `<span class="dot"></span><span class="task-date" style="color:var(--warning)">Prazo ${fmtDate(t.prazo)}</span>` : ''}
+          ${isDone && t.dataConcluido ? `<span class="dot"></span><span class="done-date">✓ ${fmtDate(t.dataConcluido)}</span>` : ''}
+          ${!isDone ? `<button class="done-btn" onclick="completeTask(${t.id})">✓ Concluir</button>` : ''}
+        </div>
+      </div>`;
+  }
+
+  function renderList() {
+    const q  = document.getElementById('search-input').value.toLowerCase();
+    const sf = document.getElementById('filter-status').value;
+
+    const active = tasks.filter(t => t.status !== 'concluido');
+    const done   = tasks.filter(t => t.status === 'concluido');
+
+    let filtered = active.filter(t => {
+      const hay = [t.empresa,t.jira,t.funcional,t.ambiente,t.descricao].join(' ').toLowerCase();
+      return (!q || hay.includes(q)) && (!sf || t.status === sf);
+    });
+
+    document.getElementById('count-badge').textContent   = `${filtered.length} registro${filtered.length!==1?'s':''}`;
+    document.getElementById('history-badge').textContent = done.length;
+    document.getElementById('st-total').textContent      = active.length;
+    document.getElementById('st-andamento').textContent  = active.filter(t=>t.status==='andamento').length;
+    document.getElementById('st-concluido').textContent  = done.length;
+
+    const list = document.getElementById('tasks-list');
+    if (!filtered.length) {
+      list.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div>${active.length?'Nenhuma atividade encontrada.':'Nenhuma atividade ativa. Adicione uma acima!'}</div>`;
+    } else {
+      list.innerHTML = filtered.map(t => taskCardHTML(t)).join('');
     }
+    if (historyOpen) renderHistory();
+  }
 
-    async function cycleStatus(notionId) {
-      const task = tasks.find(t => t.notionId === notionId);
-      if (!task) return;
-      const idx = STATUS_ORDER.indexOf(task.status);
-      task.status = STATUS_ORDER[(idx + 1) % STATUS_ORDER.length];
-      renderList();
-      try {
-        await apiUpdate(task);
-        showToast('Status: ' + STATUS_MAP[task.status].label);
-      } catch(e) { showToast('Erro ao atualizar'); }
-    }
+  // ── Init ─────────────────────────────────────────────────────────────
+  document.getElementById('f-data').value = todayStr();
+  document.getElementById('f-jira').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('f-descricao').focus(); });
+  document.getElementById('f-descricao').addEventListener('keydown', e => { if(e.key==='Enter') addTask(); });
+  document.getElementById('e-descricao').addEventListener('keydown', e => { if(e.key==='Enter') saveEdit(); });
 
-    // ── Concluir → move para histórico ──
-    async function completeTask(notionId) {
-      const task = tasks.find(t => t.notionId === notionId);
-      if (!task) return;
-      task.status        = 'concluido';
-      task.dataConcluido = todayStr();
-      renderList();
-      try {
-        await apiUpdate(task);
-        showToast('✓ Concluído em ' + fmtDate(task.dataConcluido));
-      } catch(e) { showToast('Erro ao atualizar'); }
-    }
-
-    // ── Edição ──
-    let editingId = null;
-
-    function openEdit(notionId) {
-      const task = tasks.find(t => t.notionId === notionId);
-      if (!task) return;
-      editingId = notionId;
-      document.getElementById('e-empresa').value   = task.empresa   || '';
-      document.getElementById('e-jira').value      = task.jira      || '';
-      document.getElementById('e-funcional').value = task.funcional || '';
-      document.getElementById('e-data').value      = task.data      || '';
-      document.getElementById('e-status').value    = task.status    || 'andamento';
-      document.getElementById('modal-overlay').classList.add('open');
-      setTimeout(() => document.getElementById('e-funcional').focus(), 80);
-    }
-
-    async function saveEdit() {
-      const task = tasks.find(t => t.notionId === editingId);
-      if (!task) return;
-      task.empresa   = document.getElementById('e-empresa').value.trim();
-      task.jira      = document.getElementById('e-jira').value.trim().toUpperCase();
-      task.funcional = document.getElementById('e-funcional').value.trim();
-      task.data      = document.getElementById('e-data').value;
-      task.status    = document.getElementById('e-status').value;
-      if (task.status === 'concluido' && !task.dataConcluido) task.dataConcluido = todayStr();
-      closeModal();
-      renderList();
-      try {
-        await apiUpdate(task);
-        showToast('Salvo');
-      } catch(e) { showToast('Erro ao salvar'); }
-    }
-
-    function closeModal(e) {
-      if (e && e.target !== document.getElementById('modal-overlay')) return;
-      document.getElementById('modal-overlay').classList.remove('open');
-      editingId = null;
-    }
-
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-    // ── Histórico ──
-    let historyOpen = false;
-
-    function toggleHistory() {
-      historyOpen = !historyOpen;
-      document.getElementById('history-list').style.display = historyOpen ? 'flex' : 'none';
-      document.getElementById('history-caret').classList.toggle('open', historyOpen);
-      if (historyOpen) renderHistory();
-    }
-
-    function renderHistory() {
-      const done = tasks.filter(t => t.status === 'concluido');
-      const list = document.getElementById('history-list');
-
-      if (!done.length) {
-        list.innerHTML = `<div class="empty-state" style="padding:1.5rem;"><div class="empty-icon">✅</div>Nenhum concluído ainda.</div>`;
-        return;
-      }
-
-      list.innerHTML = done
-        .sort((a, b) => (b.dataConcluido || '').localeCompare(a.dataConcluido || ''))
-        .map(t => `
-          <div class="task-card done">
-            <button class="del-btn" onclick="deleteTask('${t.notionId}')" title="Remover">✕</button>
-            <button class="edit-btn" onclick="openEdit('${t.notionId}')" title="Editar" style="position:absolute;top:10px;right:34px;">✎</button>
-            <div class="task-top">
-              <span class="task-empresa">${t.empresa || '—'}</span>
-              ${t.jira ? `<span class="task-jira">${t.jira}</span>` : ''}
-            </div>
-            <div class="task-funcional">${t.funcional}</div>
-            <div class="task-meta">
-              <span class="status-badge s-concluido">Concluído</span>
-              ${t.dataConcluido ? `<span class="dot"></span><span class="done-date">✓ ${fmtDate(t.dataConcluido)}</span>` : ''}
-              ${t.data ? `<span class="dot"></span><span class="task-date">Recebido ${fmtDate(t.data)}</span>` : ''}
-            </div>
-          </div>`).join('');
-    }
-
-    // ── Export ──
-    function exportCSV() {
-      if (!tasks.length) { showToast('Nenhuma atividade para exportar'); return; }
-      const header = ['Empresa','Jira','Funcional','Recebido em','Status','Concluído em'];
-      const rows = tasks.map(t => [
-        t.empresa, t.jira, t.funcional, fmtDate(t.data),
-        STATUS_MAP[t.status]?.label || t.status,
-        t.dataConcluido ? fmtDate(t.dataConcluido) : ''
-      ]);
-      const csv = [header, ...rows].map(r => r.map(c => `"${(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
-      const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `atividades_${todayStr()}.csv`;
-      a.click();
-      showToast('CSV exportado');
-    }
-
-    // ── Render ──
-    function renderList() {
-      const q  = document.getElementById('search-input').value.toLowerCase();
-      const sf = document.getElementById('filter-status').value;
-
-      const active = tasks.filter(t => t.status !== 'concluido');
-      const done   = tasks.filter(t => t.status === 'concluido');
-
-      let filtered = active.filter(t => {
-        const matchQ = !q || [t.empresa, t.jira, t.funcional].join(' ').toLowerCase().includes(q);
-        const matchS = !sf || t.status === sf;
-        return matchQ && matchS;
-      });
-
-      const n = filtered.length;
-      document.getElementById('count-badge').textContent  = `${n} registro${n !== 1 ? 's' : ''}`;
-      document.getElementById('history-badge').textContent = done.length;
-      document.getElementById('st-total').textContent     = active.length;
-      document.getElementById('st-andamento').textContent = active.filter(t => t.status === 'andamento').length;
-      document.getElementById('st-concluido').textContent = done.length;
-
-      const list = document.getElementById('tasks-list');
-
-      if (!filtered.length) {
-        list.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-icon">📋</div>
-            ${active.length ? 'Nenhuma atividade encontrada para o filtro.' : 'Nenhuma atividade ativa. Adicione uma acima!'}
-          </div>`;
-      } else {
-        list.innerHTML = filtered.map(t => {
-          const s = STATUS_MAP[t.status] || STATUS_MAP['backlog'];
-          return `
-            <div class="task-card">
-              <button class="edit-btn" onclick="openEdit('${t.notionId}')" title="Editar" style="position:absolute;top:10px;right:34px;">✎</button>
-              <button class="del-btn" onclick="deleteTask('${t.notionId}')" title="Remover">✕</button>
-              <div class="task-top">
-                <span class="task-empresa">${t.empresa || '—'}</span>
-                ${t.jira ? `<span class="task-jira">${t.jira}</span>` : ''}
-              </div>
-              <div class="task-funcional">${t.funcional}</div>
-              <div class="task-meta">
-                <span class="status-badge ${s.cls}" onclick="cycleStatus('${t.notionId}')" title="Clique para avançar o status">${s.label}</span>
-                ${t.data ? `<span class="dot"></span><span class="task-date">Recebido ${fmtDate(t.data)}</span>` : ''}
-                <button class="done-btn" onclick="completeTask('${t.notionId}')">✓ Concluir</button>
-              </div>
-            </div>`;
-        }).join('');
-      }
-
-      if (historyOpen) renderHistory();
-    }
-
-    document.getElementById('f-data').value = todayStr();
-    document.getElementById('f-jira').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('f-funcional').focus(); });
-    document.getElementById('f-funcional').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
-    document.getElementById('e-funcional').addEventListener('keydown', e => { if (e.key === 'Enter') saveEdit(); });
-
-    loadTasks();
-  </script>
+  renderList();
+</script>
 </body>
 </html>
