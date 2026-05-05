@@ -708,6 +708,8 @@
   <div class="toast" id="toast"></div>
 
   <script>
+    const WORKER = 'https://maingoal.g-oli-baltazar.workers.dev';
+
     const STATUS_MAP = {
       backlog:    { label: 'Backlog',            cls: 's-backlog',    next: 'andamento' },
       andamento:  { label: 'Em andamento',       cls: 's-andamento',  next: 'revisao' },
@@ -720,11 +722,6 @@
     const STATUS_ORDER = ['backlog','andamento','revisao','aguardando','concluido','bloqueado'];
 
     let tasks = [];
-    try { tasks = JSON.parse(localStorage.getItem('tracker_atividades') || '[]'); } catch(e) {}
-
-    function save() {
-      try { localStorage.setItem('tracker_atividades', JSON.stringify(tasks)); } catch(e) {}
-    }
 
     function todayStr() {
       return new Date().toISOString().split('T')[0];
@@ -741,6 +738,66 @@
       t.textContent = msg;
       t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 2000);
+    }
+
+    function setLoading(on) {
+      document.getElementById('tasks-list').style.opacity = on ? '0.4' : '1';
+    }
+
+    // ── Notion API via Worker ──────────────────────────────────────────
+
+    function notionToTask(page) {
+      const p = page.properties;
+      return {
+        id:            page.id,
+        notionId:      page.id,
+        empresa:       p.Empresa?.rich_text?.[0]?.plain_text   || '',
+        jira:          p.Jira?.rich_text?.[0]?.plain_text       || '',
+        funcional:     p.Funcional?.title?.[0]?.plain_text      || '',
+        status:        p.Status?.select?.name                   || 'andamento',
+        data:          p.Recebido?.date?.start                  || '',
+        dataConcluido: p['Concluído']?.date?.start              || '',
+        prazo:         p.Prazo?.date?.start                     || '',
+      };
+    }
+
+    async function apiList() {
+      const res  = await fetch(`${WORKER}?action=list`);
+      const json = await res.json();
+      return (json.results || []).map(notionToTask);
+    }
+
+    async function apiCreate(task) {
+      const res = await fetch(`${WORKER}?action=create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(task),
+      });
+      const json = await res.json();
+      return notionToTask(json);
+    }
+
+    async function apiUpdate(task) {
+      await fetch(`${WORKER}?action=update&id=${task.notionId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(task),
+      });
+    }
+
+    async function apiDelete(notionId) {
+      await fetch(`${WORKER}?action=delete&id=${notionId}`, { method: 'POST' });
+    }
+
+    async function loadTasks() {
+      setLoading(true);
+      try {
+        tasks = await apiList();
+        renderList();
+      } catch(e) {
+        showToast('Erro ao carregar do Notion');
+      }
+      setLoading(false);
     }
 
     // ── Quick input parser ──────────────────────────────────────────────
@@ -760,7 +817,7 @@
       document.getElementById('qp-status').textContent   = p.statusLabel|| 'Em andamento';
     }
 
-    function quickAdd() {
+    async function quickAdd() {
       const raw = document.getElementById('quick-input').value.trim();
       if (!raw) return;
 
@@ -771,22 +828,26 @@
         return;
       }
 
-      tasks.unshift({
-        id:       Date.now(),
-        empresa:  p.empresa  || '',
-        jira:     p.jira     || '',
+      const task = {
+        empresa:  p.empresa   || '',
+        jira:     p.jira      || '',
         funcional: p.funcional || p.jira || raw,
         data:     todayStr(),
-        status:   p.status   || 'andamento',
-        prazo:    p.prazo    || null,
-      });
+        status:   p.status    || 'andamento',
+        prazo:    p.prazo     || '',
+      };
 
-      save();
-      renderList();
-
-      document.getElementById('quick-input').value = '';
-      document.getElementById('quick-preview').classList.remove('show');
-      showToast('✓ Registrado' + (p.jira ? ` — ${p.jira}` : ''));
+      showToast('Salvando…');
+      try {
+        const created = await apiCreate(task);
+        tasks.unshift(created);
+        renderList();
+        document.getElementById('quick-input').value = '';
+        document.getElementById('quick-preview').classList.remove('show');
+        showToast('✓ Registrado' + (p.jira ? ` — ${p.jira}` : ''));
+      } catch(e) {
+        showToast('Erro ao salvar no Notion');
+      }
     }
 
     function parseNatural(text) {
@@ -896,23 +957,23 @@
 
     // ── End quick parser ────────────────────────────────────────────────
 
-    function addTask() {
+    async function addTask() {
       const empresa   = document.getElementById('f-empresa').value.trim();
       const jira      = document.getElementById('f-jira').value.trim().toUpperCase();
       const funcional = document.getElementById('f-funcional').value.trim();
       const data      = document.getElementById('f-data').value;
       const status    = document.getElementById('f-status').value;
 
-      if (!funcional) {
-        document.getElementById('f-funcional').focus();
-        return;
-      }
+      if (!funcional) { document.getElementById('f-funcional').focus(); return; }
 
-      tasks.unshift({ id: Date.now(), empresa, jira, funcional, data, status });
-      save();
-      clearForm();
-      renderList();
-      showToast('Atividade adicionada');
+      showToast('Salvando…');
+      try {
+        const created = await apiCreate({ empresa, jira, funcional, data, status });
+        tasks.unshift(created);
+        clearForm();
+        renderList();
+        showToast('Atividade adicionada');
+      } catch(e) { showToast('Erro ao salvar no Notion'); }
     }
 
     function clearForm() {
@@ -922,66 +983,73 @@
       document.getElementById('f-funcional').focus();
     }
 
-    function deleteTask(id) {
+    async function deleteTask(notionId) {
       if (!confirm('Remover esta atividade?')) return;
-      tasks = tasks.filter(t => t.id !== id);
-      save();
-      renderList();
-      showToast('Atividade removida');
+      showToast('Removendo…');
+      try {
+        await apiDelete(notionId);
+        tasks = tasks.filter(t => t.notionId !== notionId);
+        renderList();
+        showToast('Removida');
+      } catch(e) { showToast('Erro ao remover'); }
     }
 
-    function cycleStatus(id) {
-      const task = tasks.find(t => t.id === id);
+    async function cycleStatus(notionId) {
+      const task = tasks.find(t => t.notionId === notionId);
       if (!task) return;
       const idx = STATUS_ORDER.indexOf(task.status);
       task.status = STATUS_ORDER[(idx + 1) % STATUS_ORDER.length];
-      save();
       renderList();
-      showToast('Status: ' + STATUS_MAP[task.status].label);
+      try {
+        await apiUpdate(task);
+        showToast('Status: ' + STATUS_MAP[task.status].label);
+      } catch(e) { showToast('Erro ao atualizar'); }
     }
 
     // ── Concluir → move para histórico ──
-    function completeTask(id) {
-      const task = tasks.find(t => t.id === id);
+    async function completeTask(notionId) {
+      const task = tasks.find(t => t.notionId === notionId);
       if (!task) return;
-      task.status      = 'concluido';
+      task.status        = 'concluido';
       task.dataConcluido = todayStr();
-      save();
       renderList();
-      showToast('✓ Concluído em ' + fmtDate(task.dataConcluido));
+      try {
+        await apiUpdate(task);
+        showToast('✓ Concluído em ' + fmtDate(task.dataConcluido));
+      } catch(e) { showToast('Erro ao atualizar'); }
     }
 
     // ── Edição ──
     let editingId = null;
 
-    function openEdit(id) {
-      const task = tasks.find(t => t.id === id);
+    function openEdit(notionId) {
+      const task = tasks.find(t => t.notionId === notionId);
       if (!task) return;
-      editingId = id;
-      document.getElementById('e-empresa').value  = task.empresa  || '';
-      document.getElementById('e-jira').value     = task.jira     || '';
-      document.getElementById('e-funcional').value= task.funcional|| '';
-      document.getElementById('e-data').value     = task.data     || '';
-      document.getElementById('e-status').value   = task.status   || 'andamento';
+      editingId = notionId;
+      document.getElementById('e-empresa').value   = task.empresa   || '';
+      document.getElementById('e-jira').value      = task.jira      || '';
+      document.getElementById('e-funcional').value = task.funcional || '';
+      document.getElementById('e-data').value      = task.data      || '';
+      document.getElementById('e-status').value    = task.status    || 'andamento';
       document.getElementById('modal-overlay').classList.add('open');
       setTimeout(() => document.getElementById('e-funcional').focus(), 80);
     }
 
-    function saveEdit() {
-      const task = tasks.find(t => t.id === editingId);
+    async function saveEdit() {
+      const task = tasks.find(t => t.notionId === editingId);
       if (!task) return;
       task.empresa   = document.getElementById('e-empresa').value.trim();
       task.jira      = document.getElementById('e-jira').value.trim().toUpperCase();
       task.funcional = document.getElementById('e-funcional').value.trim();
       task.data      = document.getElementById('e-data').value;
       task.status    = document.getElementById('e-status').value;
-      if (task.status === 'concluido' && !task.dataConcluido) {
-        task.dataConcluido = todayStr();
-      }
-      save();
+      if (task.status === 'concluido' && !task.dataConcluido) task.dataConcluido = todayStr();
       closeModal();
       renderList();
-      showToast('Salvo');
+      try {
+        await apiUpdate(task);
+        showToast('Salvo');
+      } catch(e) { showToast('Erro ao salvar'); }
     }
 
     function closeModal(e) {
@@ -1015,8 +1083,8 @@
         .sort((a, b) => (b.dataConcluido || '').localeCompare(a.dataConcluido || ''))
         .map(t => `
           <div class="task-card done">
-            <button class="del-btn" onclick="deleteTask(${t.id})" title="Remover">✕</button>
-            <button class="edit-btn" onclick="openEdit(${t.id})" title="Editar" style="position:absolute;top:10px;right:34px;">✎</button>
+            <button class="del-btn" onclick="deleteTask('${t.notionId}')" title="Remover">✕</button>
+            <button class="edit-btn" onclick="openEdit('${t.notionId}')" title="Editar" style="position:absolute;top:10px;right:34px;">✎</button>
             <div class="task-top">
               <span class="task-empresa">${t.empresa || '—'}</span>
               ${t.jira ? `<span class="task-jira">${t.jira}</span>` : ''}
@@ -1082,17 +1150,17 @@
           const s = STATUS_MAP[t.status] || STATUS_MAP['backlog'];
           return `
             <div class="task-card">
-              <button class="edit-btn" onclick="openEdit(${t.id})" title="Editar" style="position:absolute;top:10px;right:34px;">✎</button>
-              <button class="del-btn" onclick="deleteTask(${t.id})" title="Remover">✕</button>
+              <button class="edit-btn" onclick="openEdit('${t.notionId}')" title="Editar" style="position:absolute;top:10px;right:34px;">✎</button>
+              <button class="del-btn" onclick="deleteTask('${t.notionId}')" title="Remover">✕</button>
               <div class="task-top">
                 <span class="task-empresa">${t.empresa || '—'}</span>
                 ${t.jira ? `<span class="task-jira">${t.jira}</span>` : ''}
               </div>
               <div class="task-funcional">${t.funcional}</div>
               <div class="task-meta">
-                <span class="status-badge ${s.cls}" onclick="cycleStatus(${t.id})" title="Clique para avançar o status">${s.label}</span>
+                <span class="status-badge ${s.cls}" onclick="cycleStatus('${t.notionId}')" title="Clique para avançar o status">${s.label}</span>
                 ${t.data ? `<span class="dot"></span><span class="task-date">Recebido ${fmtDate(t.data)}</span>` : ''}
-                <button class="done-btn" onclick="completeTask(${t.id})">✓ Concluir</button>
+                <button class="done-btn" onclick="completeTask('${t.notionId}')">✓ Concluir</button>
               </div>
             </div>`;
         }).join('');
@@ -1106,7 +1174,7 @@
     document.getElementById('f-funcional').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
     document.getElementById('e-funcional').addEventListener('keydown', e => { if (e.key === 'Enter') saveEdit(); });
 
-    renderList();
+    loadTasks();
   </script>
 </body>
 </html>
