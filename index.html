@@ -181,7 +181,18 @@ td { padding: 7px 16px; vertical-align: middle; font-size: 13px; }
 .col-dias      { width: 65px; }
 .col-status    { width: 148px; }
 .col-obs       { min-width: 180px; }
+.col-drag      { width: 28px; }
 .col-del       { width: 40px; }
+
+.drag-handle {
+  color: var(--hint); cursor: grab; font-size: 13px;
+  padding: 4px 2px; display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .15s; user-select: none;
+}
+tbody tr:hover .drag-handle { opacity: 1; }
+.drag-handle:active { cursor: grabbing; }
+tr.dragging { opacity: .4; }
+tr.drag-over { border-top: 2px solid var(--accent); }
 
 .cell-input {
   width: 100%; background: transparent; border: 1px solid transparent;
@@ -358,11 +369,14 @@ const STATUS = [
 ];
 
 // ── State ────────────────────────────────────────────────────────────────────
-let activeTab = MONTH_KEYS[new Date().getMonth()];
-let allRows   = {};   // { "01": [{id, empresa, ...}] }
-let obsData   = {};   // { "01": "texto", "obs": "texto" }
-let searchQ   = '';
-let filterSt  = '';
+const STATUS_ORDER_MAP = { iniciar:0, iniciado:1, testes:2, pronto:3, lancado:4, parado:5 };
+
+let activeTab  = MONTH_KEYS[new Date().getMonth()];
+let allRows    = {};   // { "01": [{id, empresa, ...}] }
+let obsData    = {};   // { "01": "texto", "obs": "texto" }
+let searchQ    = '';
+let filterSt   = '';
+let manualSort = false; // false = sort by status, true = manual drag order
 let unsub     = null; // firestore listener
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -489,7 +503,8 @@ function rowHTML(r) {
   const opts = STATUS.map(s =>
     `<option value="${s.val}"${r.status===s.val?' selected':''}>${s.label}</option>`
   ).join('');
-  return `<tr data-id="${r.id}">
+  return `<tr data-id="${r.id}" draggable="true">
+    <td class="col-drag"><div class="drag-handle" title="Arrastar para reordenar">⠿</div></td>
     <td class="col-empresa">
       <input class="cell-input" value="${esc(r.empresa)}" placeholder="Empresa"
         data-field="empresa" data-id="${r.id}" />
@@ -522,8 +537,19 @@ function rowHTML(r) {
 }
 
 // ── Render table ─────────────────────────────────────────────────────────────
+function sortedRows(key) {
+  const rows = [...(allRows[key] || [])];
+  if (manualSort) {
+    return rows.sort((a,b) => (a.order||0) - (b.order||0));
+  }
+  return rows.sort((a,b) => {
+    const sd = (STATUS_ORDER_MAP[a.status]??99) - (STATUS_ORDER_MAP[b.status]??99);
+    return sd !== 0 ? sd : (a.order||0) - (b.order||0);
+  });
+}
+
 function renderTable(key) {
-  const rows = allRows[key] || [];
+  const rows = sortedRows(key);
   const q    = searchQ.toLowerCase();
   const sf   = filterSt;
 
@@ -540,7 +566,7 @@ function renderTable(key) {
 
   tbody.innerHTML = filtered.length
     ? filtered.map(rowHTML).join('')
-    : `<tr><td colspan="7"><div class="empty">
+    : `<tr><td colspan="8"><div class="empty">
         <div class="empty-icon">📋</div>
         Nenhuma linha neste mês. Clique em <strong>+ Adicionar</strong>.
       </div></td></tr>`;
@@ -598,6 +624,64 @@ function renderTable(key) {
       toast('Linha removida');
     });
   });
+
+  // Drag & drop reorder
+  let dragId = null;
+  tbody.querySelectorAll('tr[draggable]').forEach(tr => {
+    tr.addEventListener('dragstart', e => {
+      dragId = tr.dataset.id;
+      tr.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      manualSort = true;
+      updateSortBtn();
+    });
+    tr.addEventListener('dragend', () => {
+      tr.classList.remove('dragging');
+      tbody.querySelectorAll('tr').forEach(r => r.classList.remove('drag-over'));
+    });
+    tr.addEventListener('dragover', e => {
+      e.preventDefault();
+      tbody.querySelectorAll('tr').forEach(r => r.classList.remove('drag-over'));
+      if (tr.dataset.id !== dragId) tr.classList.add('drag-over');
+    });
+    tr.addEventListener('drop', async e => {
+      e.preventDefault();
+      tr.classList.remove('drag-over');
+      if (!dragId || tr.dataset.id === dragId) return;
+
+      const rowsArr = sortedRows(key);
+      const fromIdx = rowsArr.findIndex(r => r.id === dragId);
+      const toIdx   = rowsArr.findIndex(r => r.id === tr.dataset.id);
+      if (fromIdx === -1 || toIdx === -1) return;
+
+      // Re-assign order values
+      rowsArr.splice(toIdx, 0, rowsArr.splice(fromIdx, 1)[0]);
+      const updates = [];
+      rowsArr.forEach((r, i) => {
+        r.order = i * 1000;
+        updates.push(fsUpdateRow(key, r.id, { order: r.order }));
+      });
+      allRows[key] = rowsArr;
+      await Promise.all(updates);
+      renderTable(key);
+    });
+  });
+}
+
+function updateSortBtn() {
+  const btn = document.getElementById('btn-sort');
+  if (!btn) return;
+  if (manualSort) {
+    btn.textContent = '↕ Manual';
+    btn.title = 'Clica para voltar à ordenação por status';
+    btn.style.color = 'var(--accent)';
+    btn.style.borderColor = 'var(--accent)';
+  } else {
+    btn.textContent = '↕ Por status';
+    btn.title = 'Ordenação automática por status — arrasta linhas para modo manual';
+    btn.style.color = '';
+    btn.style.borderColor = '';
+  }
 }
 
 // ── Obs pane ─────────────────────────────────────────────────────────────────
@@ -634,12 +718,14 @@ function renderMain() {
         <option value="">Todos</option>
         ${STATUS.map(s=>`<option value="${s.val}"${filterSt===s.val?' selected':''}>${s.label}</option>`).join('')}
       </select>
+      <button class="btn btn-ghost" id="btn-sort">↕ Por status</button>
       <button class="btn btn-ghost" id="btn-csv">↓ CSV</button>
       <span class="count-pill" id="count-pill"></span>
     </div>
     <div class="table-wrap">
       <table>
         <thead><tr>
+          <th class="col-drag"></th>
           <th class="col-empresa">Empresa</th>
           <th class="col-funcional">Funcional</th>
           <th class="col-jira">Jira</th>
@@ -672,6 +758,15 @@ function renderMain() {
     filterSt = e.target.value; renderTable(activeTab);
   });
   document.getElementById('btn-csv').addEventListener('click', exportCSV);
+
+  const sortBtn = document.getElementById('btn-sort');
+  updateSortBtn();
+  sortBtn.addEventListener('click', () => {
+    manualSort = !manualSort;
+    updateSortBtn();
+    renderTable(activeTab);
+    toast(manualSort ? 'Modo manual — arrasta as linhas' : 'Ordenação por status activada');
+  });
 }
 
 // ── Export CSV ───────────────────────────────────────────────────────────────
