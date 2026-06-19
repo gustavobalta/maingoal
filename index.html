@@ -127,6 +127,7 @@
     td.col-dias input { width: 56px; text-align: center; }
     td.col-empresa { min-width: 100px; }
     td.col-funcional { min-width: 120px; }
+    td.col-jira { min-width: 130px; }
     td.col-dias { width: 70px; }
     td.col-status { width: 140px; }
     td.col-actions { width: 40px; text-align: center; }
@@ -227,6 +228,7 @@
       <tr>
         <th class="col-empresa">Empresa</th>
         <th class="col-funcional">Funcional</th>
+        <th class="col-jira">Jira</th>
         <th class="col-dias">Dias</th>
         <th class="col-status">Status</th>
         <th class="col-actions"></th>
@@ -263,7 +265,7 @@
   function uid() { return Date.now() + Math.random().toString(36).slice(2); }
 
   function addRow() {
-    rows.unshift({ id: uid(), empresa: '', funcional: '', dias: '', status: 'iniciar' });
+    rows.unshift({ id: uid(), empresa: '', funcional: '', jira: '', dias: '', status: 'iniciar' });
     save();
     render();
     // focus first input of new row
@@ -324,6 +326,9 @@
         <td class="col-funcional"><input type="text" value="${esc(r.funcional)}" placeholder="Funcional"
           onchange="updateField('${r.id}','funcional',this.value)"
           onblur="updateField('${r.id}','funcional',this.value)" /></td>
+        <td class="col-jira"><input type="text" value="${esc(r.jira)}" placeholder="ex: GFATR-282"
+          onchange="updateField('${r.id}','jira',this.value)"
+          onblur="updateField('${r.id}','jira',this.value)" /></td>
         <td class="col-dias"><input type="text" value="${esc(r.dias)}" placeholder="0"
           onchange="updateField('${r.id}','dias',this.value)"
           onblur="updateField('${r.id}','dias',this.value)" /></td>
@@ -336,7 +341,7 @@
           <button class="del-btn" onclick="deleteRow('${r.id}')" title="Remover">✕</button>
         </td>
       </tr>`;
-    }).join('') || `<tr><td colspan="5" style="text-align:center;padding:24px;color:#aaa;">
+    }).join('') || `<tr><td colspan="6" style="text-align:center;padding:24px;color:#aaa;">
         Nenhuma linha. Clique em "+ Adicionar linha" para começar.
       </td></tr>`;
   }
@@ -347,9 +352,9 @@
 
   function exportCSV() {
     if (!rows.length) { toast('Nada para exportar'); return; }
-    const header = ['Empresa','Funcional','Dias','Status'];
+    const header = ['Empresa','Funcional','Jira','Dias','Status'];
     const data = rows.map(r => [
-      r.empresa, r.funcional, r.dias,
+      r.empresa, r.funcional, r.jira, r.dias,
       STATUS.find(s => s.val === r.status)?.label || r.status
     ]);
     const csv = [header, ...data]
