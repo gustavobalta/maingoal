@@ -1,397 +1,691 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tracker</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Tracker</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 13px;
-      background: #f5f5f5;
-      color: #111;
-      min-height: 100vh;
-      padding: 24px 20px;
-    }
+:root {
+  --bg:        #0f1117;
+  --surface:   #161b27;
+  --surface2:  #1e2535;
+  --border:    #2a3145;
+  --border2:   #3a4560;
+  --text:      #e8ecf4;
+  --muted:     #8892a4;
+  --hint:      #505a6e;
+  --accent:    #4f8ef7;
+  --accent-bg: rgba(79,142,247,.12);
 
-    h1 {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 16px;
-      color: #111;
-    }
+  --s-iniciar-bg:  #1e2535; --s-iniciar-cl:  #8892a4; --s-iniciar-bd: #2a3145;
+  --s-iniciado-bg: #252535; --s-iniciado-cl: #a0a0c0; --s-iniciado-bd: #35355a;
+  --s-testes-bg:   #2a2412; --s-testes-cl:   #f0c040; --s-testes-bd:  #504010;
+  --s-pronto-bg:   #102414; --s-pronto-cl:   #4ecb71; --s-pronto-bd:  #1a4a20;
+  --s-lancado-bg:  #0e1e38; --s-lancado-cl:  #4f8ef7; --s-lancado-bd: #1a3060;
+  --s-parado-bg:   #2a1010; --s-parado-cl:   #f06060; --s-parado-bd:  #501818;
 
-    .toolbar {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-      align-items: center;
-    }
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+}
 
-    .btn {
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 5px 12px;
-      font-size: 12px;
-      cursor: pointer;
-      color: #333;
-      transition: background 0.1s;
-    }
-    .btn:hover { background: #eee; }
-    .btn.primary {
-      background: #1a73e8;
-      color: #fff;
-      border-color: #1a73e8;
-    }
-    .btn.primary:hover { background: #1558b0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
-    .search-input {
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 5px 10px;
-      font-size: 12px;
-      width: 200px;
-      outline: none;
-    }
-    .search-input:focus { border-color: #1a73e8; }
+/* ── Header ── */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 28px 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
 
-    .filter-sel {
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 5px 8px;
-      font-size: 12px;
-      outline: none;
-      background: #fff;
-      cursor: pointer;
-    }
+.app-logo {
+  width: 28px; height: 28px;
+  background: var(--accent);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
+  margin-bottom: 14px;
+}
 
-    /* Table */
-    .table-wrap {
-      overflow-x: auto;
-      border: 1px solid #d0d0d0;
-      border-radius: 6px;
-      background: #fff;
-    }
+.app-title {
+  font-size: 15px; font-weight: 600; color: var(--text);
+  margin-bottom: 14px;
+  margin-right: 24px;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 600px;
-    }
+/* ── Month tabs ── */
+.tabs {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: 1;
+  margin-bottom: -1px;
+}
+.tabs::-webkit-scrollbar { display: none; }
 
-    thead th {
-      background: #f0f0f0;
-      border-bottom: 1px solid #d0d0d0;
-      padding: 8px 12px;
-      text-align: left;
-      font-weight: 600;
-      font-size: 12px;
-      color: #444;
-      user-select: none;
-      white-space: nowrap;
-    }
+.tab {
+  padding: 10px 16px 11px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color .15s, border-color .15s;
+  user-select: none;
+  flex-shrink: 0;
+}
+.tab:hover { color: var(--text); }
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.tab.obs-tab { color: var(--muted); }
+.tab.obs-tab.active { color: #c084fc; border-bottom-color: #c084fc; }
 
-    tbody tr {
-      border-bottom: 1px solid #e8e8e8;
-      transition: background 0.1s;
-    }
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: #f9f9f9; }
+/* ── Main content ── */
+.main {
+  flex: 1;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
-    td {
-      padding: 7px 12px;
-      vertical-align: middle;
-    }
+/* ── Toolbar ── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
 
-    td input[type="text"],
-    td input[type="number"] {
-      width: 100%;
-      border: none;
-      background: transparent;
-      font-size: 13px;
-      font-family: inherit;
-      color: #111;
-      outline: none;
-      padding: 2px 0;
-    }
-    td input[type="text"]:focus,
-    td input[type="number"]:focus {
-      background: #fff9e6;
-      border-radius: 3px;
-      padding: 2px 4px;
-    }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px;
+  font-size: 12px; font-weight: 500; font-family: inherit;
+  border-radius: 7px;
+  border: 1px solid var(--border2);
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
+.btn-primary:hover { background: #3a7ce8; border-color: #3a7ce8; }
+.btn-ghost {
+  background: var(--surface2); color: var(--muted); border-color: var(--border);
+}
+.btn-ghost:hover { color: var(--text); border-color: var(--border2); }
 
-    td.col-dias input { width: 56px; text-align: center; }
-    td.col-empresa { min-width: 100px; }
-    td.col-funcional { min-width: 120px; }
-    td.col-jira { min-width: 130px; }
-    td.col-dias { width: 70px; }
-    td.col-status { width: 140px; }
-    td.col-actions { width: 40px; text-align: center; }
+.search {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 7px 12px;
+  font-size: 12px; font-family: inherit;
+  color: var(--text);
+  outline: none;
+  width: 200px;
+  transition: border-color .15s;
+}
+.search::placeholder { color: var(--hint); }
+.search:focus { border-color: var(--accent); }
 
-    /* Status dropdown */
-    .status-sel {
-      border: none;
-      border-radius: 12px;
-      padding: 3px 10px;
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      outline: none;
-      appearance: none;
-      -webkit-appearance: none;
-      text-align: center;
-      width: 100%;
-      min-width: 110px;
-    }
+.filter {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-size: 12px; font-family: inherit;
+  color: var(--muted);
+  outline: none;
+  cursor: pointer;
+  transition: border-color .15s;
+}
+.filter:focus { border-color: var(--accent); }
 
-    .s-iniciar  { background: #fff;    color: #555;  border: 1px solid #ccc; }
-    .s-iniciado { background: #e0e0e0; color: #333;  border: 1px solid #bbb; }
-    .s-testes   { background: #fff9c4; color: #7a6000; border: 1px solid #e0c800; }
-    .s-pronto   { background: #c8e6c9; color: #1b5e20; border: 1px solid #81c784; }
-    .s-lancado  { background: #bbdefb; color: #0d3c70; border: 1px solid #64b5f6; }
-    .s-parado   { background: #ffcdd2; color: #7f0000; border: 1px solid #ef9a9a; }
+.count-pill {
+  margin-left: auto;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 11px; color: var(--muted);
+}
 
-    /* Delete btn */
-    .del-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #bbb;
-      font-size: 15px;
-      padding: 2px 4px;
-      border-radius: 3px;
-      line-height: 1;
-      transition: color 0.1s, background 0.1s;
-    }
-    .del-btn:hover { color: #d32f2f; background: #ffebee; }
+/* ── Table ── */
+.table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
 
-    /* Add row */
-    .add-row td { padding: 6px 12px; }
-    .add-row input {
-      width: 100%;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 4px 8px;
-      font-size: 13px;
-      font-family: inherit;
-      background: #fafafa;
-      outline: none;
-    }
-    .add-row input:focus { border-color: #1a73e8; background: #fff; }
-    .add-row td.col-dias input { width: 56px; text-align: center; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+}
 
-    /* Toast */
-    .toast {
-      position: fixed; bottom: 20px; left: 50%;
-      transform: translateX(-50%) translateY(8px);
-      background: #333; color: #fff; font-size: 12px;
-      padding: 7px 16px; border-radius: 16px; opacity: 0;
-      transition: opacity 0.2s, transform 0.2s; pointer-events: none; z-index: 999;
-      white-space: nowrap;
-    }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+thead th {
+  background: var(--surface2);
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--hint);
+  border-bottom: 1px solid var(--border);
+  user-select: none;
+  white-space: nowrap;
+}
 
-    .count-label {
-      margin-left: auto;
-      font-size: 12px;
-      color: #888;
-    }
-  </style>
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background .1s;
+}
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--surface2); }
+
+td {
+  padding: 8px 16px;
+  vertical-align: middle;
+  font-size: 13px;
+}
+
+.col-empresa   { width: 130px; }
+.col-funcional { width: 140px; }
+.col-jira      { width: 130px; }
+.col-dias      { width: 70px; }
+.col-status    { width: 150px; }
+.col-obs       { min-width: 200px; }
+.col-del       { width: 44px; }
+
+/* Inline inputs */
+.cell-input {
+  width: 100%;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  padding: 4px 6px;
+  font-size: 13px; font-family: inherit;
+  color: var(--text);
+  outline: none;
+  transition: border-color .15s, background .15s;
+}
+.cell-input:hover { border-color: var(--border2); background: var(--surface2); }
+.cell-input:focus { border-color: var(--accent); background: var(--bg); }
+.cell-input::placeholder { color: var(--hint); }
+
+.cell-dias { width: 48px; text-align: center; }
+
+/* Status select */
+.status-wrap { position: relative; }
+.status-sel {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 20px;
+  padding: 4px 28px 4px 12px;
+  font-size: 11px; font-weight: 600; font-family: inherit;
+  cursor: pointer; outline: none;
+  border: 1px solid;
+  transition: opacity .15s;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238892a4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+.status-sel:hover { opacity: .85; }
+
+.s-iniciar  { background: var(--s-iniciar-bg);  color: var(--s-iniciar-cl);  border-color: var(--s-iniciar-bd);  }
+.s-iniciado { background: var(--s-iniciado-bg); color: var(--s-iniciado-cl); border-color: var(--s-iniciado-bd); }
+.s-testes   { background: var(--s-testes-bg);   color: var(--s-testes-cl);   border-color: var(--s-testes-bd);   }
+.s-pronto   { background: var(--s-pronto-bg);   color: var(--s-pronto-cl);   border-color: var(--s-pronto-bd);   }
+.s-lancado  { background: var(--s-lancado-bg);  color: var(--s-lancado-cl);  border-color: var(--s-lancado-bd);  }
+.s-parado   { background: var(--s-parado-bg);   color: var(--s-parado-cl);   border-color: var(--s-parado-bd);   }
+
+/* Delete button */
+.del-btn {
+  background: none; border: none;
+  color: var(--hint); cursor: pointer;
+  font-size: 14px; padding: 4px 6px;
+  border-radius: 5px; line-height: 1;
+  transition: color .15s, background .15s;
+  opacity: 0;
+}
+tbody tr:hover .del-btn { opacity: 1; }
+.del-btn:hover { color: #f06060; background: rgba(240,96,96,.1); }
+
+/* Empty */
+.empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--hint);
+  font-size: 13px;
+}
+.empty-icon { font-size: 32px; margin-bottom: 10px; opacity: .4; }
+
+/* ── Observações pane ── */
+.obs-pane {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.obs-pane h2 { font-size: 13px; font-weight: 600; color: var(--muted); }
+.obs-textarea {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 13px; font-family: inherit; line-height: 1.65;
+  color: var(--text);
+  outline: none;
+  resize: vertical;
+  min-height: 260px;
+  transition: border-color .15s;
+}
+.obs-textarea::placeholder { color: var(--hint); }
+.obs-textarea:focus { border-color: #c084fc; }
+.obs-save-hint { font-size: 11px; color: var(--hint); }
+
+/* ── Toast ── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-size: 12px; padding: 8px 18px;
+  border-radius: 20px;
+  opacity: 0; pointer-events: none; z-index: 999;
+  transition: opacity .2s, transform .2s;
+  white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0,0,0,.4);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+</style>
 </head>
 <body>
 
-<h1>Tracker de Atividades</h1>
+<header class="app-header">
+  <div class="app-logo">T</div>
+  <span class="app-title">Tracker</span>
+  <nav class="tabs" id="tabs"></nav>
+</header>
 
-<div class="toolbar">
-  <button class="btn primary" onclick="addRow()">+ Adicionar linha</button>
-  <input class="search-input" id="search" placeholder="Buscar..." oninput="render()" />
-  <select class="filter-sel" id="filter-status" onchange="render()">
-    <option value="">Todos os status</option>
-    <option value="iniciar">A iniciar</option>
-    <option value="iniciado">Iniciado</option>
-    <option value="testes">Testes</option>
-    <option value="pronto">Pronto</option>
-    <option value="lancado">Lançado</option>
-    <option value="parado">Parado</option>
-  </select>
-  <span class="count-label" id="count-label"></span>
-  <button class="btn" onclick="exportCSV()" style="margin-left:8px;">↓ CSV</button>
-</div>
-
-<div class="table-wrap">
-  <table id="main-table">
-    <thead>
-      <tr>
-        <th class="col-empresa">Empresa</th>
-        <th class="col-funcional">Funcional</th>
-        <th class="col-jira">Jira</th>
-        <th class="col-dias">Dias</th>
-        <th class="col-status">Status</th>
-        <th class="col-actions"></th>
-      </tr>
-    </thead>
-    <tbody id="tbody"></tbody>
-  </table>
-</div>
+<main class="main" id="main"></main>
 
 <div class="toast" id="toast"></div>
 
 <script>
-  const STATUS = [
-    { val: 'iniciar',  label: 'A iniciar',  cls: 's-iniciar'  },
-    { val: 'iniciado', label: 'Iniciado',   cls: 's-iniciado' },
-    { val: 'testes',   label: 'Testes',     cls: 's-testes'   },
-    { val: 'pronto',   label: 'Pronto',     cls: 's-pronto'   },
-    { val: 'lancado',  label: 'Lançado',    cls: 's-lancado'  },
-    { val: 'parado',   label: 'Parado',     cls: 's-parado'   },
-  ];
+// ── Constants ────────────────────────────────────────────────────────────────
+const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+                'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
-  function statusCls(val) {
-    const s = STATUS.find(s => s.val === val);
-    return s ? s.cls : 's-iniciar';
+const STATUS = [
+  { val:'iniciar',  label:'A iniciar', cls:'s-iniciar'  },
+  { val:'iniciado', label:'Iniciado',  cls:'s-iniciado' },
+  { val:'testes',   label:'Testes',    cls:'s-testes'   },
+  { val:'pronto',   label:'Pronto',    cls:'s-pronto'   },
+  { val:'lancado',  label:'Lançado',   cls:'s-lancado'  },
+  { val:'parado',   label:'Parado',    cls:'s-parado'   },
+];
+
+const STATUS_OPTS = STATUS.map(s =>
+  `<option value="${s.val}">${s.label}</option>`
+).join('');
+
+const STORE_KEY   = 'tracker_2024_rows';
+const OBS_KEY     = 'tracker_2024_obs';
+const ACTIVE_KEY  = 'tracker_2024_tab';
+
+// ── State ────────────────────────────────────────────────────────────────────
+let allRows = {};   // { "jan": [{id,empresa,funcional,jira,dias,status},...], ... }
+let obsData = {};   // { "jan": "texto...", ... }
+let activeTab = 'jan';
+let searchQ  = '';
+let filterSt = '';
+
+const MONTH_KEYS = MONTHS.map((_,i) => String(i+1).padStart(2,'0'));
+// jan=01, feb=02, ...
+
+// ── Persistence ──────────────────────────────────────────────────────────────
+function load() {
+  try {
+    const r = localStorage.getItem(STORE_KEY);
+    allRows = r ? JSON.parse(r) : {};
+  } catch(e) { allRows = {}; }
+  try {
+    const o = localStorage.getItem(OBS_KEY);
+    obsData = o ? JSON.parse(o) : {};
+  } catch(e) { obsData = {}; }
+  try {
+    activeTab = localStorage.getItem(ACTIVE_KEY) || currentMonthKey();
+  } catch(e) { activeTab = currentMonthKey(); }
+}
+
+function save() {
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify(allRows));
+    localStorage.setItem(OBS_KEY,   JSON.stringify(obsData));
+    localStorage.setItem(ACTIVE_KEY, activeTab);
+  } catch(e) {
+    toast('⚠ Erro ao salvar — localStorage indisponível');
   }
+}
 
-  let rows = [];
-  try { rows = JSON.parse(localStorage.getItem('tracker_xl') || '[]'); } catch(e) {}
+function currentMonthKey() {
+  return String(new Date().getMonth() + 1).padStart(2,'0');
+}
 
-  function save() {
-    try { localStorage.setItem('tracker_xl', JSON.stringify(rows)); } catch(e) {}
-  }
+function rowsFor(key) {
+  if (!allRows[key]) allRows[key] = [];
+  return allRows[key];
+}
 
-  function uid() { return Date.now() + Math.random().toString(36).slice(2); }
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+}
 
-  function addRow() {
-    rows.unshift({ id: uid(), empresa: '', funcional: '', jira: '', dias: '', status: 'iniciar' });
-    save();
-    render();
-    // focus first input of new row
-    setTimeout(() => {
-      const first = document.querySelector('#tbody tr:first-child td.col-empresa input');
-      if (first) first.focus();
-    }, 30);
-  }
+// ── Tabs ─────────────────────────────────────────────────────────────────────
+function buildTabs() {
+  const nav = document.getElementById('tabs');
+  let html = MONTH_KEYS.map((k, i) => {
+    const cnt = (allRows[k] || []).length;
+    const badge = cnt ? ` <span style="background:var(--accent-bg);color:var(--accent);border-radius:10px;padding:1px 6px;font-size:10px;">${cnt}</span>` : '';
+    return `<div class="tab${activeTab===k?' active':''}" data-key="${k}">${MONTHS[i]}${badge}</div>`;
+  }).join('');
+  html += `<div class="tab obs-tab${activeTab==='obs'?' active':''}" data-key="obs">Observações</div>`;
+  nav.innerHTML = html;
+  nav.querySelectorAll('.tab').forEach(el => {
+    el.addEventListener('click', () => switchTab(el.dataset.key));
+  });
+}
 
-  function deleteRow(id) {
-    rows = rows.filter(r => r.id !== id);
-    save();
-    render();
-    toast('Linha removida');
-  }
+function switchTab(key) {
+  activeTab = key;
+  save();
+  buildTabs();
+  renderMain();
+}
 
-  function updateField(id, field, value) {
-    const row = rows.find(r => r.id === id);
-    if (!row) return;
-    row[field] = value;
-    save();
-  }
+// ── Table rendering ──────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s || '')
+    .replace(/&/g,'&amp;').replace(/"/g,'&quot;')
+    .replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
 
-  function updateStatus(id, value) {
-    const row = rows.find(r => r.id === id);
-    if (!row) return;
-    row.status = value;
-    save();
-    // update select styling without full re-render
-    const sel = document.querySelector(`select[data-id="${id}"]`);
-    if (sel) {
-      sel.className = 'status-sel ' + statusCls(value);
-    }
-  }
+function statusCls(val) {
+  return STATUS.find(s => s.val === val)?.cls || 's-iniciar';
+}
 
-  function render() {
-    const q  = document.getElementById('search').value.toLowerCase();
-    const sf = document.getElementById('filter-status').value;
+function rowHTML(r) {
+  const cls = statusCls(r.status);
+  const opts = STATUS.map(s =>
+    `<option value="${s.val}"${r.status===s.val?' selected':''}>${s.label}</option>`
+  ).join('');
+  return `<tr data-id="${r.id}">
+    <td class="col-empresa">
+      <input class="cell-input" value="${esc(r.empresa)}" placeholder="Empresa"
+        data-field="empresa" data-id="${r.id}" />
+    </td>
+    <td class="col-funcional">
+      <input class="cell-input" value="${esc(r.funcional)}" placeholder="Funcional"
+        data-field="funcional" data-id="${r.id}" />
+    </td>
+    <td class="col-jira">
+      <input class="cell-input" value="${esc(r.jira)}" placeholder="ex: GFATR-282"
+        data-field="jira" data-id="${r.id}" />
+    </td>
+    <td class="col-dias">
+      <input class="cell-input cell-dias" value="${esc(r.dias)}" placeholder="0"
+        data-field="dias" data-id="${r.id}" />
+    </td>
+    <td class="col-status">
+      <select class="status-sel ${cls}" data-id="${r.id}" data-field="status">
+        ${opts}
+      </select>
+    </td>
+    <td class="col-obs">
+      <input class="cell-input" value="${esc(r.obs)}" placeholder="Observação..."
+        data-field="obs" data-id="${r.id}" />
+    </td>
+    <td class="col-del">
+      <button class="del-btn" data-id="${r.id}" title="Remover">✕</button>
+    </td>
+  </tr>`;
+}
 
-    const filtered = rows.filter(r => {
-      const hay = [r.empresa, r.funcional, r.dias].join(' ').toLowerCase();
-      return (!q || hay.includes(q)) && (!sf || r.status === sf);
-    });
+function renderTable(key) {
+  const rows = rowsFor(key);
+  const q  = searchQ.toLowerCase();
+  const sf = filterSt;
 
-    document.getElementById('count-label').textContent =
-      filtered.length + ' linha' + (filtered.length !== 1 ? 's' : '');
-
-    const tbody = document.getElementById('tbody');
-    tbody.innerHTML = filtered.map(r => {
-      const cls = statusCls(r.status);
-      const opts = STATUS.map(s =>
-        `<option value="${s.val}"${r.status === s.val ? ' selected' : ''}>${s.label}</option>`
-      ).join('');
-      return `<tr data-id="${r.id}">
-        <td class="col-empresa"><input type="text" value="${esc(r.empresa)}" placeholder="Empresa"
-          onchange="updateField('${r.id}','empresa',this.value)"
-          onblur="updateField('${r.id}','empresa',this.value)" /></td>
-        <td class="col-funcional"><input type="text" value="${esc(r.funcional)}" placeholder="Funcional"
-          onchange="updateField('${r.id}','funcional',this.value)"
-          onblur="updateField('${r.id}','funcional',this.value)" /></td>
-        <td class="col-jira"><input type="text" value="${esc(r.jira)}" placeholder="ex: GFATR-282"
-          onchange="updateField('${r.id}','jira',this.value)"
-          onblur="updateField('${r.id}','jira',this.value)" /></td>
-        <td class="col-dias"><input type="text" value="${esc(r.dias)}" placeholder="0"
-          onchange="updateField('${r.id}','dias',this.value)"
-          onblur="updateField('${r.id}','dias',this.value)" /></td>
-        <td class="col-status">
-          <select class="status-sel ${cls}" data-id="${r.id}" onchange="updateStatus('${r.id}',this.value)">
-            ${opts}
-          </select>
-        </td>
-        <td class="col-actions">
-          <button class="del-btn" onclick="deleteRow('${r.id}')" title="Remover">✕</button>
-        </td>
-      </tr>`;
-    }).join('') || `<tr><td colspan="6" style="text-align:center;padding:24px;color:#aaa;">
-        Nenhuma linha. Clique em "+ Adicionar linha" para começar.
-      </td></tr>`;
-  }
-
-  function esc(s) {
-    return String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
-  }
-
-  function exportCSV() {
-    if (!rows.length) { toast('Nada para exportar'); return; }
-    const header = ['Empresa','Funcional','Jira','Dias','Status'];
-    const data = rows.map(r => [
-      r.empresa, r.funcional, r.jira, r.dias,
-      STATUS.find(s => s.val === r.status)?.label || r.status
-    ]);
-    const csv = [header, ...data]
-      .map(row => row.map(c => `"${String(c||'').replace(/"/g,'""')}"`).join(','))
-      .join('\n');
-    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'tracker.csv';
-    a.click();
-    toast('CSV exportado');
-  }
-
-  function toast(msg) {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 2000);
-  }
-
-  // keyboard: Enter on a row moves to next row same column, Tab works natively
-  document.addEventListener('keydown', e => {
-    if (e.key !== 'Enter') return;
-    const input = e.target;
-    if (!input.matches('td input')) return;
-    e.preventDefault();
-    const td = input.closest('td');
-    const tr = td.closest('tr');
-    const nextTr = tr.nextElementSibling;
-    if (nextTr) {
-      const idx = Array.from(tr.children).indexOf(td);
-      const nextInput = nextTr.children[idx]?.querySelector('input');
-      if (nextInput) nextInput.focus();
-    }
+  const filtered = rows.filter(r => {
+    const hay = [r.empresa,r.funcional,r.jira,r.dias,r.obs].join(' ').toLowerCase();
+    return (!q || hay.includes(q)) && (!sf || r.status === sf);
   });
 
-  render();
+  const countEl  = document.getElementById('count-pill');
+  if (countEl) countEl.textContent = filtered.length + ' linha' + (filtered.length !== 1 ? 's' : '');
+
+  const tbody = document.getElementById('tbody');
+  if (!tbody) return;
+
+  tbody.innerHTML = filtered.length
+    ? filtered.map(rowHTML).join('')
+    : `<tr><td colspan="7">
+        <div class="empty">
+          <div class="empty-icon">📋</div>
+          Nenhuma linha neste mês. Clique em <strong>+ Adicionar</strong> para começar.
+        </div>
+      </td></tr>`;
+
+  // Bind inputs
+  tbody.querySelectorAll('.cell-input').forEach(input => {
+    input.addEventListener('change', onCellChange);
+    input.addEventListener('blur',   onCellChange);
+  });
+  tbody.querySelectorAll('.status-sel').forEach(sel => {
+    sel.addEventListener('change', onStatusChange);
+  });
+  tbody.querySelectorAll('.del-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const id = e.currentTarget.dataset.id;
+      deleteRow(key, id);
+    });
+  });
+
+  // Enter key navigation
+  tbody.querySelectorAll('.cell-input').forEach(input => {
+    input.addEventListener('keydown', e => {
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      const tr   = input.closest('tr');
+      const next = tr?.nextElementSibling;
+      if (next) {
+        const idx  = Array.from(tr.querySelectorAll('.cell-input')).indexOf(input);
+        const nInp = next.querySelectorAll('.cell-input')[idx];
+        if (nInp) nInp.focus();
+      }
+    });
+  });
+}
+
+function onCellChange(e) {
+  const input = e.currentTarget;
+  const id    = input.dataset.id;
+  const field = input.dataset.field;
+  const val   = input.value;
+  const row   = rowsFor(activeTab).find(r => r.id === id);
+  if (!row) return;
+  row[field] = val;
+  save();
+}
+
+function onStatusChange(e) {
+  const sel   = e.currentTarget;
+  const id    = sel.dataset.id;
+  const val   = sel.value;
+  const row   = rowsFor(activeTab).find(r => r.id === id);
+  if (!row) return;
+  row.status  = val;
+  save();
+  sel.className = 'status-sel ' + statusCls(val);
+  buildTabs(); // refresh count badges
+}
+
+function deleteRow(key, id) {
+  allRows[key] = rowsFor(key).filter(r => r.id !== id);
+  save();
+  buildTabs();
+  renderTable(key);
+  toast('Linha removida');
+}
+
+// ── Observations pane ────────────────────────────────────────────────────────
+function renderObs() {
+  const val = obsData[activeTab] || '';
+  return `
+    <div class="obs-pane">
+      <h2>Observações — ${MONTHS[MONTH_KEYS.indexOf(activeTab)] || 'Geral'}</h2>
+      <textarea class="obs-textarea" id="obs-area" placeholder="Escreva aqui anotações, lembretes, contexto relevante para este mês...">${esc(val)}</textarea>
+      <span class="obs-save-hint">Salvo automaticamente ao digitar.</span>
+    </div>`;
+}
+
+// ── Main render ──────────────────────────────────────────────────────────────
+function renderMain() {
+  const main = document.getElementById('main');
+
+  if (activeTab === 'obs') {
+    main.innerHTML = renderObs();
+    const area = document.getElementById('obs-area');
+    let timer;
+    area.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        obsData['obs'] = area.value;
+        save();
+      }, 400);
+    });
+    return;
+  }
+
+  main.innerHTML = `
+    <div class="toolbar">
+      <button class="btn btn-primary" id="btn-add">+ Adicionar</button>
+      <input class="search" id="search" placeholder="Buscar…" value="${esc(searchQ)}" />
+      <select class="filter" id="filter-status">
+        <option value="">Todos</option>
+        ${STATUS.map(s => `<option value="${s.val}"${filterSt===s.val?' selected':''}>${s.label}</option>`).join('')}
+      </select>
+      <button class="btn btn-ghost" id="btn-csv" title="Exportar CSV">↓ CSV</button>
+      <span class="count-pill" id="count-pill"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="col-empresa">Empresa</th>
+            <th class="col-funcional">Funcional</th>
+            <th class="col-jira">Jira</th>
+            <th class="col-dias">Dias</th>
+            <th class="col-status">Status</th>
+            <th class="col-obs">Observação</th>
+            <th class="col-del"></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>`;
+
+  renderTable(activeTab);
+
+  document.getElementById('btn-add').addEventListener('click', () => {
+    rowsFor(activeTab).unshift({
+      id: uid(), empresa:'', funcional:'', jira:'', dias:'', status:'iniciar', obs:''
+    });
+    save();
+    buildTabs();
+    renderTable(activeTab);
+    const first = document.querySelector('#tbody tr:first-child .cell-input');
+    if (first) first.focus();
+  });
+
+  document.getElementById('search').addEventListener('input', e => {
+    searchQ = e.target.value;
+    renderTable(activeTab);
+  });
+
+  document.getElementById('filter-status').addEventListener('change', e => {
+    filterSt = e.target.value;
+    renderTable(activeTab);
+  });
+
+  document.getElementById('btn-csv').addEventListener('click', exportCSV);
+}
+
+// ── Export ───────────────────────────────────────────────────────────────────
+function exportCSV() {
+  const rows = rowsFor(activeTab);
+  if (!rows.length) { toast('Nenhuma linha para exportar'); return; }
+  const header = ['Empresa','Funcional','Jira','Dias','Status','Observação'];
+  const data   = rows.map(r => [
+    r.empresa, r.funcional, r.jira, r.dias,
+    STATUS.find(s => s.val === r.status)?.label || r.status,
+    r.obs
+  ]);
+  const csv = [header,...data]
+    .map(row => row.map(c => `"${String(c||'').replace(/"/g,'""')}"`).join(','))
+    .join('\n');
+  const blob = new Blob(['﻿'+csv], { type:'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `tracker_${MONTHS[MONTH_KEYS.indexOf(activeTab)] || activeTab}.csv`;
+  a.click();
+  toast('CSV exportado');
+}
+
+// ── Toast ────────────────────────────────────────────────────────────────────
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+load();
+buildTabs();
+renderMain();
+
+// Confirm data saved on unload
+window.addEventListener('beforeunload', () => save());
 </script>
 </body>
 </html>
