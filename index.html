@@ -930,7 +930,7 @@ function renderMain() {
 
 // ── Export CSV ────────────────────────────────────────────────────────────────
 function exportCSV(key) {
-  const rows = allRows[key]||[];
+  const rows = sortedRows(key);
   if (!rows.length) { toast('Nenhuma linha para exportar'); return; }
   const header = ['Empresa','Funcional','Jira','Início','Dias','Status','Observação','Lançado'];
   const data   = rows.map(r=>[
