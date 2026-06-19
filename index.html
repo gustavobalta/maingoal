@@ -385,14 +385,14 @@ function toast(msg) {
 }
 
 // ── Firestore paths ──────────────────────────────────────────────────────────
-// rows: tracker/months/{monthKey}/rows/{docId}
-// obs:  tracker/obs/{monthKey}  (single doc with field "text")
+// rows: tracker_{monthKey}/{docId}
+// obs:  tracker_obs/{key}  (single doc with field "text")
 
 function rowsCol(monthKey) {
-  return collection(db, 'tracker', 'months', monthKey, 'rows');
+  return collection(db, 'tracker_' + monthKey);
 }
 function obsDocRef(key) {
-  return doc(db, 'tracker', 'obs', key);
+  return doc(db, 'tracker_obs', key);
 }
 
 // ── Load all data ────────────────────────────────────────────────────────────
@@ -441,7 +441,7 @@ async function fsAddRow(monthKey, row) {
 async function fsUpdateRow(monthKey, id, fields) {
   syncDot('saving');
   try {
-    await updateDoc(doc(db, 'tracker', 'months', monthKey, 'rows', id), fields);
+    await updateDoc(doc(db, 'tracker_' + monthKey, id), fields);
     syncDot('ok');
   } catch(e) { console.error(e); syncDot('error'); toast('⚠ Erro ao guardar'); }
 }
@@ -449,7 +449,7 @@ async function fsUpdateRow(monthKey, id, fields) {
 async function fsDeleteRow(monthKey, id) {
   syncDot('saving');
   try {
-    await deleteDoc(doc(db, 'tracker', 'months', monthKey, 'rows', id));
+    await deleteDoc(doc(db, 'tracker_' + monthKey, id));
     syncDot('ok');
   } catch(e) { console.error(e); syncDot('error'); toast('⚠ Erro ao apagar'); }
 }
