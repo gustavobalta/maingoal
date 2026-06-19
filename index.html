@@ -423,9 +423,10 @@ const STATUS = [
 const STATUS_ORDER = { iniciar:0, iniciado:1, testes:2, pronto:3, parado:4 };
 
 const YEARS = [2024, 2025, 2026, 2027];
+const CUR_YEAR = 2025; // ano actual dos dados
 
 // ── State ─────────────────────────────────────────────────────────────────────
-let activeYear = new Date().getFullYear();
+let activeYear = 2025;
 let activeTab  = MONTH_KEYS[new Date().getMonth()];
 let allRows    = {};   // { "2025_06": [...] }
 let obsData    = {};   // { "2025_06": "texto" }
