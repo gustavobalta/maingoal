@@ -23,7 +23,6 @@
   --s-iniciado-bg: #252535; --s-iniciado-cl: #a0a0c0; --s-iniciado-bd: #35355a;
   --s-testes-bg:   #2a2412; --s-testes-cl:   #f0c040; --s-testes-bd:  #504010;
   --s-pronto-bg:   #102414; --s-pronto-cl:   #4ecb71; --s-pronto-bd:  #1a4a20;
-  --s-lancado-bg:  #0e1e38; --s-lancado-cl:  #4f8ef7; --s-lancado-bd: #1a3060;
   --s-parado-bg:   #2a1010; --s-parado-cl:   #f06060; --s-parado-bd:  #501818;
 
   font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
@@ -219,8 +218,24 @@ tr.drag-over { border-top: 2px solid var(--accent); }
 .s-iniciado { background: var(--s-iniciado-bg); color: var(--s-iniciado-cl); border-color: var(--s-iniciado-bd); }
 .s-testes   { background: var(--s-testes-bg);   color: var(--s-testes-cl);   border-color: var(--s-testes-bd);   }
 .s-pronto   { background: var(--s-pronto-bg);   color: var(--s-pronto-cl);   border-color: var(--s-pronto-bd);   }
-.s-lancado  { background: var(--s-lancado-bg);  color: var(--s-lancado-cl);  border-color: var(--s-lancado-bd);  }
 .s-parado   { background: var(--s-parado-bg);   color: var(--s-parado-cl);   border-color: var(--s-parado-bd);   }
+
+/* Checkbox lançado */
+.col-lancado { width: 72px; text-align: center; }
+.check-lancado {
+  width: 17px; height: 17px; cursor: pointer; accent-color: var(--accent);
+  appearance: none; -webkit-appearance: none;
+  border: 2px solid var(--border2); border-radius: 4px;
+  background: transparent; transition: all .15s; position: relative;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.check-lancado:checked {
+  background: var(--accent); border-color: var(--accent);
+}
+.check-lancado:checked::after {
+  content: '✓'; color: #fff; font-size: 11px; font-weight: 700; position: absolute;
+}
+.check-lancado:hover:not(:checked) { border-color: var(--accent); }
 
 .del-btn {
   background: none; border: none; color: var(--hint); cursor: pointer;
@@ -364,12 +379,11 @@ const STATUS = [
   { val:'iniciado', label:'Iniciado',  cls:'s-iniciado' },
   { val:'testes',   label:'Testes',    cls:'s-testes'   },
   { val:'pronto',   label:'Pronto',    cls:'s-pronto'   },
-  { val:'lancado',  label:'Lançado',   cls:'s-lancado'  },
   { val:'parado',   label:'Parado',    cls:'s-parado'   },
 ];
 
 // ── State ────────────────────────────────────────────────────────────────────
-const STATUS_ORDER_MAP = { iniciar:0, iniciado:1, testes:2, pronto:3, lancado:4, parado:5 };
+const STATUS_ORDER_MAP = { iniciar:0, iniciado:1, testes:2, pronto:3, parado:4 };
 
 let activeTab  = MONTH_KEYS[new Date().getMonth()];
 let allRows    = {};   // { "01": [{id, empresa, ...}] }
@@ -445,6 +459,7 @@ async function fsAddRow(monthKey, row) {
       dias:      row.dias      || '',
       status:    row.status    || 'iniciar',
       obs:       row.obs       || '',
+      lancado:   row.lancado   || false,
       order:     Date.now(),
     });
     row.id = ref.id;
@@ -530,6 +545,9 @@ function rowHTML(r) {
       <input class="cell-input" value="${esc(r.obs)}" placeholder="Observação…"
         data-field="obs" data-id="${r.id}" />
     </td>
+    <td class="col-lancado">
+      <input type="checkbox" class="check-lancado" data-id="${r.id}" ${r.lancado ? 'checked' : ''} />
+    </td>
     <td class="col-del">
       <button class="del-btn" data-id="${r.id}" title="Remover">✕</button>
     </td>
@@ -566,7 +584,7 @@ function renderTable(key) {
 
   tbody.innerHTML = filtered.length
     ? filtered.map(rowHTML).join('')
-    : `<tr><td colspan="8"><div class="empty">
+    : `<tr><td colspan="9"><div class="empty">
         <div class="empty-icon">📋</div>
         Nenhuma linha neste mês. Clique em <strong>+ Adicionar</strong>.
       </div></td></tr>`;
@@ -596,6 +614,18 @@ function renderTable(key) {
         const nInp = next.querySelectorAll('.cell-input')[idx];
         if (nInp) nInp.focus();
       }
+    });
+  });
+
+  // Lançado checkboxes
+  tbody.querySelectorAll('.check-lancado').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const id  = cb.dataset.id;
+      const val = cb.checked;
+      const row = (allRows[key]||[]).find(r=>r.id===id);
+      if (!row) return;
+      row.lancado = val;
+      fsUpdateRow(key, id, { lancado: val });
     });
   });
 
@@ -732,6 +762,7 @@ function renderMain() {
           <th class="col-dias">Dias</th>
           <th class="col-status">Status</th>
           <th class="col-obs">Observação</th>
+          <th class="col-lancado">Lançado</th>
           <th class="col-del"></th>
         </tr></thead>
         <tbody id="tbody"></tbody>
@@ -741,7 +772,7 @@ function renderMain() {
   renderTable(activeTab);
 
   document.getElementById('btn-add').addEventListener('click', async () => {
-    const row = { empresa:'', funcional:'', jira:'', dias:'', status:'iniciar', obs:'' };
+    const row = { empresa:'', funcional:'', jira:'', dias:'', status:'iniciar', obs:'', lancado: false };
     if (!allRows[activeTab]) allRows[activeTab] = [];
     allRows[activeTab].unshift(row);
     await fsAddRow(activeTab, row);
