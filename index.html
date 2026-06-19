@@ -555,6 +555,70 @@ tfoot td { padding: 7px 10px; font-size: 11px; color: var(--muted); font-weight:
 }
 .voice-actions .btn-success:hover { background: #2a6a30; }
 
+/* waveform */
+.voice-wave {
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  height: 36px; padding: 4px 0;
+}
+.voice-wave span {
+  display: block; width: 4px; border-radius: 2px;
+  background: #e05080; min-height: 4px;
+  animation: wave-bar .7s ease-in-out infinite;
+}
+.voice-wave span:nth-child(1)  { animation-delay: 0s;    }
+.voice-wave span:nth-child(2)  { animation-delay: .07s;  }
+.voice-wave span:nth-child(3)  { animation-delay: .14s;  }
+.voice-wave span:nth-child(4)  { animation-delay: .21s;  }
+.voice-wave span:nth-child(5)  { animation-delay: .28s;  }
+.voice-wave span:nth-child(6)  { animation-delay: .21s;  }
+.voice-wave span:nth-child(7)  { animation-delay: .14s;  }
+.voice-wave span:nth-child(8)  { animation-delay: .07s;  }
+.voice-wave span:nth-child(9)  { animation-delay: .14s;  }
+.voice-wave span:nth-child(10) { animation-delay: .21s;  }
+@keyframes wave-bar {
+  0%,100% { height: 4px;  }
+  50%      { height: 28px; }
+}
+.voice-wave.loud span { animation-duration: .4s; }
+
+/* countdown badge */
+.voice-countdown {
+  margin-left: auto; font-size: 26px; font-weight: 700; color: #e05080;
+  width: 40px; text-align: center; line-height: 1;
+}
+
+/* history chips */
+.voice-history {
+  display: flex; flex-wrap: wrap; gap: 5px;
+}
+.voice-history-chip {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 20px;
+  padding: 3px 10px; font-size: 11px; color: var(--muted); cursor: pointer;
+  transition: border-color .12s, color .12s; max-width: 200px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.voice-history-chip:hover { border-color: #e05080; color: var(--text); }
+
+/* inline editable fields */
+.voice-field-edit {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 5px;
+  padding: 3px 6px; font-size: 12px; color: var(--text); font-family: inherit;
+  font-weight: 500; width: 100%; box-sizing: border-box; outline: none;
+}
+.voice-field-edit:focus { border-color: var(--accent); }
+.voice-field-sel {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 5px;
+  padding: 3px 6px; font-size: 12px; color: var(--text); font-family: inherit;
+  font-weight: 500; width: 100%; box-sizing: border-box; outline: none; cursor: pointer;
+}
+.voice-field-sel:focus { border-color: var(--accent); }
+.voice-field-check {
+  display: flex; align-items: center; gap: 5px; cursor: pointer; margin-top: 2px;
+}
+.voice-field-check input { cursor: pointer; accent-color: var(--accent); }
+.voice-field-val.editable { cursor: text; border-bottom: 1px dashed var(--border); padding-bottom: 1px; }
+.voice-field-val.editable:hover { border-bottom-color: var(--accent); color: var(--text); }
+
 /* ── Calendar ── */
 .cal-pane { display: flex; flex-direction: column; gap: 20px; }
 .cal-nav {
@@ -759,21 +823,29 @@ tfoot td { padding: 7px 10px; font-size: 11px; color: var(--muted); font-weight:
         <span class="voice-title">Entrada por voz</span>
         <span class="voice-status" id="voice-status">Clica no microfone para começar</span>
       </div>
+      <div class="voice-countdown" id="voice-countdown" style="display:none;"></div>
+    </div>
+    <!-- waveform bars -->
+    <div class="voice-wave" id="voice-wave" style="display:none;">
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
     </div>
     <div class="voice-transcript empty" id="voice-transcript"></div>
-    <div class="voice-hint">
+    <!-- history chips -->
+    <div class="voice-history" id="voice-history" style="display:none;"></div>
+    <div class="voice-hint" id="voice-hint">
       Exemplos:<br>
       <strong>»</strong> "Empresa JM, funcional Marco, 3 dias, testes, Jira GFATR-282"<br>
       <strong>»</strong> "Samuel, 0 dias, iniciado, obs Swift"<br>
-      <strong>»</strong> "Capela, pronto, 1 dia, lançado"
+      <strong>»</strong> "Chapel, pronto, 1 dia, lançado"
     </div>
     <div class="voice-preview" id="voice-preview" style="display:none;">
-      <div class="voice-preview-title">Actividade interpretada</div>
+      <div class="voice-preview-title">Actividade interpretada <span style="font-weight:400;color:var(--hint);">— clica num campo para editar</span></div>
       <div class="voice-fields" id="voice-fields"></div>
     </div>
     <div class="voice-actions">
       <button class="btn" id="voice-cancel">Cancelar</button>
-      <button class="btn" id="voice-retry" style="display:none;">🔄 Repetir</button>
+      <button class="btn" id="voice-retry" style="display:none;">🎤 Regravar</button>
       <button class="btn-success" id="voice-save" style="display:none;">✓ Guardar actividade</button>
     </div>
   </div>
@@ -1797,94 +1869,124 @@ async function renderCalendar() {
 
 // ── Voice input ───────────────────────────────────────────────────────────────
 
-const VOICE_STATUS_LABELS = {
-  'iniciar':  'A iniciar',
-  'iniciado': 'Iniciado',
-  'testes':   'Testes',
-  'pronto':   'Pronto',
-  'parado':   'Parado',
+const STATUS_ALIASES = {
+  'iniciar':'iniciar','a iniciar':'iniciar','inicio':'iniciar','início':'iniciar','por iniciar':'iniciar',
+  'iniciado':'iniciado','em curso':'iniciado','andamento':'iniciado','em andamento':'iniciado','a decorrer':'iniciado',
+  'teste':'testes','testes':'testes','em teste':'testes','em testes':'testes','a testar':'testes',
+  'pronto':'pronto','feito':'pronto','concluído':'pronto','concluido':'pronto','done':'pronto','terminado':'pronto','completo':'pronto',
+  'parado':'parado','bloqueado':'parado','pausa':'parado','em pausa':'parado','travado':'parado',
 };
 
-// Maps spoken words/aliases → internal status value
-const STATUS_ALIASES = {
-  'iniciar': 'iniciar', 'a iniciar': 'iniciar', 'inicio': 'iniciar', 'início': 'iniciar',
-  'iniciado': 'iniciado', 'em curso': 'iniciado', 'andamento': 'iniciado', 'em andamento': 'iniciado',
-  'teste': 'testes', 'testes': 'testes', 'em teste': 'testes', 'em testes': 'testes',
-  'pronto': 'pronto', 'feito': 'pronto', 'concluído': 'pronto', 'concluido': 'pronto', 'done': 'pronto',
-  'parado': 'parado', 'bloqueado': 'parado', 'pausa': 'parado',
-};
+const NUM_WORDS = { zero:0,um:1,uma:1,dois:2,duas:2,'três':3,tres:3,quatro:4,cinco:5,seis:6,sete:7,oito:8,nove:9,dez:10,onze:11,doze:12,treze:13,catorze:14,quinze:15 };
 
 function parseVoiceText(text) {
   const t = text.toLowerCase().trim();
-  const result = {
-    empresa: '', funcional: '', jira: '', dias: '', status: 'iniciar',
-    obs: '', lancado: false,
-  };
+  const result = { empresa:'', funcional:'', jira:'', dias:'', status:'iniciar', obs:'', lancado:false };
 
-  // lançado
+  // lançado / lancado
   if (/lan[çc]ado/i.test(t)) result.lancado = true;
 
-  // status — scan for known aliases (longest match first)
+  // status — longest match first
   const sortedAliases = Object.keys(STATUS_ALIASES).sort((a,b)=>b.length-a.length);
   for (const alias of sortedAliases) {
     if (t.includes(alias)) { result.status = STATUS_ALIASES[alias]; break; }
   }
 
-  // dias — "3 dias" / "1 dia" / "zero dias"
-  const diasMatch = t.match(/(\d+|zero|um|uma|dois|duas|tr[eê]s|quatro|cinco|seis|sete|oito|nove|dez)\s*dia[s]?/i);
+  // dias — "3 dias" / "um dia" / "meio dia" / "0 dias" / "zero dias"
+  const diasMatch = t.match(/(?:(\d+)|([a-záéóú]+))\s+dia[s]?/i);
   if (diasMatch) {
-    const wordMap = { zero:0,um:1,uma:1,dois:2,duas:2,'três':3,tres:3,quatro:4,cinco:5,seis:6,sete:7,oito:8,nove:9,dez:10 };
-    result.dias = String(wordMap[diasMatch[1].toLowerCase()] ?? parseInt(diasMatch[1], 10));
+    const raw = diasMatch[1] ?? diasMatch[2];
+    result.dias = String(NUM_WORDS[raw?.toLowerCase()] ?? (parseInt(raw, 10) || 0));
   }
 
-  // jira — patterns like GFATR-282, ABC-123, PROJ-1234
-  const jiraMatch = t.match(/\b([a-z]{2,8}[-\s]?\d{1,6})\b/i);
-  if (jiraMatch) result.jira = jiraMatch[1].toUpperCase().replace(/\s/g,'-');
+  // jira — GFATR-282, ABC 123, PROJ-1234 (com ou sem hífen)
+  const jiraMatch = t.match(/\b([a-z]{2,8})[\s\-](\d{1,6})\b/i);
+  if (jiraMatch) {
+    const candidate = jiraMatch[1].toUpperCase() + '-' + jiraMatch[2];
+    // exclude false positives like "um-1 dia" patterns already matched above
+    const excludedPrefixes = ['UM','UMA','DOIS','DUAS','TRES','MEIO','ZERO','DIA'];
+    if (!excludedPrefixes.includes(jiraMatch[1].toUpperCase())) result.jira = candidate;
+  }
 
   // empresa — after "empresa" keyword
-  const empresaMatch = t.match(/empresa\s+([a-záéíóúâêîôûãõç\s]+?)(?:\s*,|\s+funcional|\s+jira|\s+\d|\s+dias|\s+obs|$)/i);
-  if (empresaMatch) result.empresa = empresaMatch[1].trim();
+  const empMatch = t.match(/empresa\s+([a-záéíóúâêîôûãõç\s]+?)(?:\s*[,.]|\s+(?:funcional|jira|\d|dias|obs)|$)/i);
+  if (empMatch) result.empresa = empMatch[1].trim();
 
-  // funcional — after "funcional" keyword OR first word(s) before comma/number if no empresa keyword
-  const funcMatch = t.match(/funcional\s+([a-záéíóúâêîôûãõç\/\s]+?)(?:\s*,|\s+\d|\s+dias|\s+jira|\s+obs|\s+pronto|\s+testes|\s+iniciado|\s+parado|\s+feito|$)/i);
+  // funcional — after "funcional" keyword, or first segment before comma/number
+  const stopWords = [...sortedAliases, 'empresa','funcional','jira','dias','obs','lançado','lancado'];
+  const funcMatch = t.match(/(?:funcional|responsável|responsavel)\s+([a-záéíóúâêîôûãõç\/\s]+?)(?:\s*[,.]|\s+(?:\d|dias|jira|obs|lan|pronto|testes|iniciado|parado|feito)|$)/i);
   if (funcMatch) {
     result.funcional = funcMatch[1].trim();
   } else if (!result.empresa) {
-    // first segment before comma or number likely is the funcional
-    const firstSeg = t.split(/,|\s+\d+\s+dia/)[0].trim();
-    // exclude if it's a status word
-    const isStatus = sortedAliases.some(a => firstSeg.toLowerCase() === a);
-    if (firstSeg && !isStatus && firstSeg.length < 40) result.funcional = firstSeg;
+    const segs = t.split(/[,.]|\s{2,}/);
+    const firstSeg = segs[0]?.trim();
+    const isKw = stopWords.some(w => firstSeg?.toLowerCase() === w);
+    const hasDigit = /^\d/.test(firstSeg ?? '');
+    if (firstSeg && !isKw && !hasDigit && firstSeg.length < 50) result.funcional = firstSeg;
   }
 
   // obs — after "obs" / "observação" / "nota"
-  const obsMatch = t.match(/(?:obs|observa[çc][aã]o|nota)\s+([^,]+?)(?:\s*,|$)/i);
+  const obsMatch = t.match(/(?:obs|observa[çc][aã]o|nota)\s+([^,.]+?)(?:\s*[,.]|$)/i);
   if (obsMatch) result.obs = obsMatch[1].trim();
 
   return result;
 }
 
+// localStorage history (last 5 phrases)
+const VOICE_HIST_KEY = 'mg_voice_hist';
+function voiceHistGet() { try { return JSON.parse(localStorage.getItem(VOICE_HIST_KEY)||'[]'); } catch{ return []; } }
+function voiceHistPush(text) {
+  const h = voiceHistGet().filter(x=>x!==text);
+  h.unshift(text);
+  localStorage.setItem(VOICE_HIST_KEY, JSON.stringify(h.slice(0,5)));
+}
+
 function voiceFieldsHTML(parsed) {
-  const statusInfo = STATUS.find(s=>s.val===parsed.status);
-  const fields = [
-    { label:'Empresa',   val: parsed.empresa   || '—', empty: !parsed.empresa },
-    { label:'Funcional', val: parsed.funcional  || '—', empty: !parsed.funcional },
-    { label:'Jira',      val: parsed.jira       || '—', empty: !parsed.jira },
-    { label:'Dias',      val: parsed.dias!==''  ? parsed.dias+'d' : '—', empty: parsed.dias==='' },
-    { label:'Status',    val: statusInfo ? `<span class="voice-field-val status-pill ${statusInfo.cls}">${statusInfo.label}</span>` : parsed.status, raw: true },
-    { label:'Observação',val: parsed.obs        || '—', empty: !parsed.obs },
-    { label:'Lançado',   val: parsed.lancado    ? '✓ Sim' : 'Não', empty: false },
-  ];
-  return fields.map(f => `
+  const statusOpts = STATUS.map(s=>`<option value="${s.val}"${s.val===parsed.status?' selected':''}>${s.label}</option>`).join('');
+  return `
     <div class="voice-field">
-      <span class="voice-field-label">${f.label}</span>
-      ${f.raw ? f.val : `<span class="voice-field-val${f.empty?' empty':''}">${f.val}</span>`}
-    </div>`).join('');
+      <span class="voice-field-label">Empresa</span>
+      <input class="voice-field-edit" data-field="empresa" value="${parsed.empresa}" placeholder="ex: JM">
+    </div>
+    <div class="voice-field">
+      <span class="voice-field-label">Funcional</span>
+      <input class="voice-field-edit" data-field="funcional" value="${parsed.funcional}" placeholder="ex: Marco">
+    </div>
+    <div class="voice-field">
+      <span class="voice-field-label">Jira</span>
+      <input class="voice-field-edit" data-field="jira" value="${parsed.jira}" placeholder="ex: GFATR-282">
+    </div>
+    <div class="voice-field">
+      <span class="voice-field-label">Dias</span>
+      <input class="voice-field-edit" data-field="dias" value="${parsed.dias}" placeholder="0" style="width:70px;">
+    </div>
+    <div class="voice-field">
+      <span class="voice-field-label">Status</span>
+      <select class="voice-field-sel" data-field="status">${statusOpts}</select>
+    </div>
+    <div class="voice-field">
+      <span class="voice-field-label">Observação</span>
+      <input class="voice-field-edit" data-field="obs" value="${parsed.obs}" placeholder="notas…">
+    </div>
+    <div class="voice-field" style="grid-column:1/-1;">
+      <label class="voice-field-check">
+        <input type="checkbox" data-field="lancado" ${parsed.lancado?'checked':''}>
+        <span style="font-size:12px;">Lançado</span>
+      </label>
+    </div>`;
+}
+
+function voiceReadFields() {
+  const p = {};
+  document.querySelectorAll('#voice-fields [data-field]').forEach(el => {
+    p[el.dataset.field] = el.type==='checkbox' ? el.checked : el.value.trim();
+  });
+  return p;
 }
 
 let voiceRecognition = null;
-let voiceParsed      = null;
 let voiceListening   = false;
+let voiceCountdownId = null;
 
 function openVoiceModal(key) {
   const overlay    = document.getElementById('voice-overlay');
@@ -1892,79 +1994,143 @@ function openVoiceModal(key) {
   const statusEl   = document.getElementById('voice-status');
   const transcript = document.getElementById('voice-transcript');
   const preview    = document.getElementById('voice-preview');
-  const fields     = document.getElementById('voice-fields');
+  const fieldsEl   = document.getElementById('voice-fields');
   const saveBtn    = document.getElementById('voice-save');
   const retryBtn   = document.getElementById('voice-retry');
   const cancelBtn  = document.getElementById('voice-cancel');
+  const wave       = document.getElementById('voice-wave');
+  const countdown  = document.getElementById('voice-countdown');
+  const hintEl     = document.getElementById('voice-hint');
+  const histEl     = document.getElementById('voice-history');
 
-  // reset
-  voiceParsed = null;
-  voiceListening = false;
-  transcript.textContent = '';
-  transcript.className = 'voice-transcript empty';
-  preview.style.display = 'none';
-  saveBtn.style.display = retryBtn.style.display = 'none';
+  function resetUI() {
+    transcript.textContent = '';
+    transcript.className = 'voice-transcript empty';
+    preview.style.display = 'none';
+    saveBtn.style.display = retryBtn.style.display = 'none';
+    wave.style.display = 'none';
+    countdown.style.display = 'none';
+    micBtn.classList.remove('active');
+    clearInterval(voiceCountdownId);
+  }
+
+  resetUI();
   statusEl.textContent = 'Clica no microfone para começar';
-  micBtn.classList.remove('active');
   overlay.classList.add('open');
+
+  // history chips
+  const hist = voiceHistGet();
+  if (hist.length) {
+    histEl.style.display = '';
+    histEl.innerHTML = hist.map(h=>`<div class="voice-history-chip" title="${h}">${h}</div>`).join('');
+    histEl.querySelectorAll('.voice-history-chip').forEach(chip => {
+      chip.onclick = () => applyTranscript(chip.title);
+    });
+    hintEl.style.display = 'none';
+  } else {
+    histEl.style.display = 'none';
+    hintEl.style.display = '';
+  }
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
-    statusEl.textContent = '⚠ O teu browser não suporta reconhecimento de voz';
+    statusEl.textContent = '⚠ O teu browser não suporta reconhecimento de voz (usa Chrome)';
     return;
+  }
+
+  function applyTranscript(text) {
+    transcript.textContent = text;
+    transcript.className = 'voice-transcript';
+    const parsed = parseVoiceText(text);
+    fieldsEl.innerHTML = voiceFieldsHTML(parsed);
+    preview.style.display = '';
+    saveBtn.style.display = retryBtn.style.display = '';
+    statusEl.textContent = 'Edita os campos se necessário e guarda.';
+    hintEl.style.display = 'none';
   }
 
   function startListening() {
     if (voiceListening) { voiceRecognition?.stop(); return; }
+    resetUI();
+    statusEl.textContent = 'A preparar…';
+
+    // 3-2-1 countdown
+    let n = 3;
+    countdown.textContent = n;
+    countdown.style.display = '';
+    voiceCountdownId = setInterval(() => {
+      n--;
+      if (n <= 0) {
+        clearInterval(voiceCountdownId);
+        countdown.style.display = 'none';
+        beginRecording();
+      } else {
+        countdown.textContent = n;
+      }
+    }, 700);
+  }
+
+  function beginRecording() {
     voiceRecognition = new SpeechRecognition();
     voiceRecognition.lang = 'pt-PT';
     voiceRecognition.interimResults = true;
-    voiceRecognition.maxAlternatives = 1;
+    voiceRecognition.maxAlternatives = 3;
     voiceRecognition.continuous = false;
 
     voiceListening = true;
     micBtn.classList.add('active');
+    wave.style.display = '';
     statusEl.textContent = 'A ouvir… fala agora';
     transcript.className = 'voice-transcript';
     transcript.textContent = '';
-    preview.style.display = 'none';
-    saveBtn.style.display = retryBtn.style.display = 'none';
 
     let finalText = '';
+    let loudTimer;
 
     voiceRecognition.onresult = e => {
       let interim = '';
       for (let i = e.resultIndex; i < e.results.length; i++) {
-        const t = e.results[i][0].transcript;
-        if (e.results[i].isFinal) finalText += t + ' ';
-        else interim += t;
+        // pick best alternative that looks most like activity text
+        const best = Array.from({length:e.results[i].length},(_,j)=>e.results[i][j].transcript)
+          .sort((a,b)=> /\d/.test(b)?1:/\d/.test(a)?-1:0)[0];
+        if (e.results[i].isFinal) finalText += best + ' ';
+        else interim += best;
       }
-      transcript.innerHTML = finalText
-        + (interim ? `<span class="interim">${interim}</span>` : '');
+      transcript.innerHTML = finalText + (interim ? `<span class="interim">${interim}</span>` : '');
+      // pulse wave louder
+      wave.classList.add('loud');
+      clearTimeout(loudTimer);
+      loudTimer = setTimeout(()=>wave.classList.remove('loud'), 300);
     };
 
     voiceRecognition.onend = () => {
       voiceListening = false;
       micBtn.classList.remove('active');
+      wave.style.display = 'none';
+      clearTimeout(loudTimer);
       const full = finalText.trim() || transcript.textContent.trim();
       if (!full) {
         statusEl.textContent = 'Nada captado — tenta de novo';
         retryBtn.style.display = '';
         return;
       }
-      transcript.textContent = full;
-      statusEl.textContent = 'Texto captado — a interpretar…';
-      voiceParsed = parseVoiceText(full);
-      fields.innerHTML = voiceFieldsHTML(voiceParsed);
-      preview.style.display = '';
-      saveBtn.style.display = retryBtn.style.display = '';
-      statusEl.textContent = 'Verifica os campos e guarda.';
+      voiceHistPush(full);
+      applyTranscript(full);
+      // refresh history chips
+      const h2 = voiceHistGet();
+      histEl.style.display = '';
+      histEl.innerHTML = h2.map(h=>`<div class="voice-history-chip" title="${h}">${h}</div>`).join('');
+      histEl.querySelectorAll('.voice-history-chip').forEach(chip => {
+        chip.onclick = () => applyTranscript(chip.title);
+      });
+      hintEl.style.display = 'none';
     };
 
     voiceRecognition.onerror = e => {
       voiceListening = false;
       micBtn.classList.remove('active');
-      const msgs = { 'not-allowed':'Permissão de microfone negada.', 'no-speech':'Sem fala detectada.', 'network':'Erro de rede.' };
+      wave.style.display = 'none';
+      const msgs = { 'not-allowed':'Permissão de microfone negada — verifica as definições do browser.', 'no-speech':'Sem fala detectada.', 'network':'Erro de rede.' };
       statusEl.textContent = msgs[e.error] || `Erro: ${e.error}`;
       retryBtn.style.display = '';
     };
@@ -1976,16 +2142,16 @@ function openVoiceModal(key) {
   retryBtn.onclick = startListening;
 
   saveBtn.onclick = async () => {
-    if (!voiceParsed) return;
+    const p = voiceReadFields();
     const row = {
-      empresa:   voiceParsed.empresa,
-      funcional: voiceParsed.funcional,
-      jira:      voiceParsed.jira,
+      empresa:   p.empresa   || '',
+      funcional: p.funcional || '',
+      jira:      p.jira      || '',
       inicio:    todayStr(),
-      dias:      voiceParsed.dias,
-      status:    voiceParsed.status,
-      obs:       voiceParsed.obs,
-      lancado:   voiceParsed.lancado,
+      dias:      p.dias      || '',
+      status:    p.status    || 'iniciar',
+      obs:       p.obs       || '',
+      lancado:   !!p.lancado,
       order:     Date.now(),
     };
     closeVoice();
@@ -2002,6 +2168,7 @@ function openVoiceModal(key) {
   };
 
   function closeVoice() {
+    clearInterval(voiceCountdownId);
     voiceRecognition?.stop();
     voiceListening = false;
     overlay.classList.remove('open');
@@ -2011,7 +2178,7 @@ function openVoiceModal(key) {
   overlay.addEventListener('click', e => { if (e.target===overlay) closeVoice(); });
 
   // auto-start
-  setTimeout(startListening, 200);
+  setTimeout(startListening, 150);
 }
 
 // ── Main render ───────────────────────────────────────────────────────────────
