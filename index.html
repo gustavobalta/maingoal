@@ -47,6 +47,15 @@ body {
   background: var(--surface);
 }
 
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+}
+
 .app-logo {
   width: 28px; height: 28px;
   background: var(--accent);
@@ -100,6 +109,10 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  align-self: center;
 }
 
 /* ── Toolbar ── */
@@ -330,9 +343,11 @@ tbody tr:hover .del-btn { opacity: 1; }
 <body>
 
 <header class="app-header">
-  <div class="app-logo">T</div>
-  <span class="app-title">Tracker</span>
-  <nav class="tabs" id="tabs"></nav>
+  <div class="header-inner">
+    <div class="app-logo">T</div>
+    <span class="app-title">Tracker</span>
+    <nav class="tabs" id="tabs"></nav>
+  </div>
 </header>
 
 <main class="main" id="main"></main>
