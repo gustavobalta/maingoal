@@ -1516,42 +1516,47 @@ async function renderCalendar() {
 
   const netYear = yearWork - yearVac - yearOff;
 
-  // holidays list
-  const holidayList = Object.entries(holidays)
-    .sort(([a],[b])=>a.localeCompare(b))
-    .map(([date,name])=>{
-      const dow = DOW_LABELS[new Date(date+'T00:00:00').getDay()];
-      const [,mm,dd] = date.split('-');
-      const isT = date===todayFull, isP = date<todayFull;
-      return `<div class="cal-list-row${isT?' is-today':isP?' is-past':''}">
-        <span class="cal-list-date">${dd}/${mm}</span>
-        <span class="cal-list-badge badge-hol">Feriado</span>
-        <span class="cal-list-name">${name}</span>
-        <span class="cal-list-dow">${dow}</span>
-      </div>`;
-    }).join('');
-
-  // personal days list (vacation + dayoff merged, sorted)
+  // unified list: holidays + personal days, sorted by date
   const personalEntries = Object.entries(dayMap)
-    .filter(([d])=>d.startsWith(String(calYear)))
-    .sort(([a],[b])=>a.localeCompare(b));
+    .filter(([d])=>d.startsWith(String(calYear)));
 
-  const personalList = personalEntries.length
-    ? personalEntries.map(([date, type]) => {
+  const allEntries = [
+    ...Object.entries(holidays).map(([date,name])=>({ date, type:'holiday', name })),
+    ...personalEntries.map(([date,type])=>({ date, type, name:'' })),
+  ].sort((a,b)=>a.date.localeCompare(b.date));
+
+  const totalNonWork = Object.keys(holidays).length + personalEntries.length;
+
+  const unifiedList = allEntries.length
+    ? allEntries.map(({ date, type, name }) => {
         const dow = DOW_LABELS[new Date(date+'T00:00:00').getDay()];
         const [,mm,dd] = date.split('-');
-        const isP = date < todayFull;
-        const badge = type==='vacation'
-          ? `<span class="cal-list-badge badge-vac">🌴 Férias</span>`
-          : `<span class="cal-list-badge badge-off">☕ Folga</span>`;
-        return `<div class="cal-list-row${isP?' is-past':''}">
+        const isT = date===todayFull, isP = date<todayFull;
+        let cls = 'cal-list-row';
+        if (isT) cls += ' is-today';
+        if (isP && !isT) cls += ' is-past';
+        let badge, label, removeBtn='';
+        if (type==='holiday') {
+          badge = `<span class="cal-list-badge badge-hol">🔴 Feriado</span>`;
+          label = `<span class="cal-list-name">${name}</span>`;
+        } else if (type==='vacation') {
+          badge = `<span class="cal-list-badge badge-vac">🌴 Férias</span>`;
+          label = `<span class="cal-list-name" style="color:var(--hint);font-size:11px;">Clica para remover</span>`;
+          removeBtn = `<button class="cal-remove-btn" data-date="${date}" title="Remover">✕</button>`;
+        } else {
+          badge = `<span class="cal-list-badge badge-off">☕ Folga</span>`;
+          label = `<span class="cal-list-name" style="color:var(--hint);font-size:11px;">Clica para remover</span>`;
+          removeBtn = `<button class="cal-remove-btn" data-date="${date}" title="Remover">✕</button>`;
+        }
+        return `<div class="${cls}">
           <span class="cal-list-date">${dd}/${mm}</span>
           ${badge}
+          ${label}
           <span class="cal-list-dow">${dow}</span>
-          <button class="cal-remove-btn" data-date="${date}" title="Remover">✕</button>
+          ${removeBtn}
         </div>`;
       }).join('')
-    : `<div class="cal-list-empty">Sem dias marcados.<br>Clica num dia útil para marcar férias ou folga.</div>`;
+    : `<div class="cal-list-empty">Sem dias marcados nem feriados.</div>`;
 
   main.innerHTML = `
     <div class="cal-pane">
@@ -1560,7 +1565,8 @@ async function renderCalendar() {
           <span class="cal-nav-title">Calendário Portugal — ${calYear}</span>
           <div class="cal-nav-sub">
             <span><b style="color:var(--accent);">${netYear}</b> dias úteis no ano</span>
-            ${yearVac>0?`<span><b style="color:#4ecb71;">🌴 ${yearVac}</b> dias de férias</span>`:''}
+            <span><b style="color:#f06060;">🔴 ${Object.keys(holidays).length}</b> feriados</span>
+            ${yearVac>0?`<span><b style="color:#4ecb71;">🌴 ${yearVac}</b> férias</span>`:''}
             ${yearOff>0?`<span><b style="color:#f0c040;">☕ ${yearOff}</b> folgas</span>`:''}
           </div>
         </div>
@@ -1570,22 +1576,16 @@ async function renderCalendar() {
         </div>
       </div>
       <div class="cal-legend">
-        <span class="cal-legend-item"><span class="cal-legend-dot" style="background:rgba(240,96,96,.3);"></span>Feriado</span>
-        <span class="cal-legend-item"><span class="cal-legend-dot" style="background:rgba(78,203,113,.2);box-shadow:inset 0 0 0 1px rgba(78,203,113,.4);"></span>Férias 🌴</span>
-        <span class="cal-legend-item"><span class="cal-legend-dot" style="background:rgba(240,192,64,.2);box-shadow:inset 0 0 0 1px rgba(240,192,64,.4);"></span>Folga ☕</span>
+        <span class="cal-legend-item"><span class="cal-legend-dot" style="background:rgba(240,96,96,.3);"></span>🔴 Feriado</span>
+        <span class="cal-legend-item"><span class="cal-legend-dot" style="background:rgba(78,203,113,.2);box-shadow:inset 0 0 0 1px rgba(78,203,113,.4);"></span>🌴 Férias</span>
+        <span class="cal-legend-item"><span class="cal-legend-dot" style="background:rgba(240,192,64,.2);box-shadow:inset 0 0 0 1px rgba(240,192,64,.4);"></span>☕ Folga</span>
         <span class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--accent-bg);box-shadow:inset 0 0 0 1px rgba(79,142,247,.4);"></span>Hoje</span>
         <span class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--accent);border-radius:50%;width:8px;height:8px;"></span>Tem actividade</span>
       </div>
       <div class="cal-months">${monthsHTML}</div>
-      <div class="cal-lists">
-        <div class="cal-list-box">
-          <h3>Feriados ${calYear} (${Object.keys(holidays).length})</h3>
-          ${holidayList}
-        </div>
-        <div class="cal-list-box">
-          <h3>Férias &amp; Folgas ${calYear} (${personalEntries.length})</h3>
-          ${personalList}
-        </div>
+      <div class="cal-list-box" style="margin-top:0;">
+        <h3>Todos os dias especiais ${calYear} (${totalNonWork})</h3>
+        ${unifiedList}
       </div>
     </div>`;
 
