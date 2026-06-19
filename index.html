@@ -30,227 +30,239 @@
 
 body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
-/* ── Lock screen ── */
+/* ── Lock ── */
 .lock-screen {
   position: fixed; inset: 0; background: var(--bg);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 9999; flex-direction: column; gap: 24px;
+  display: flex; align-items: center; justify-content: center; z-index: 9999;
 }
 .lock-box {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 16px; padding: 36px 40px;
-  display: flex; flex-direction: column; align-items: center; gap: 20px;
-  width: 320px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+  padding: 36px 40px; display: flex; flex-direction: column; align-items: center; gap: 20px; width: 320px;
 }
 .lock-logo {
   width: 44px; height: 44px; background: var(--accent); border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; font-weight: 700; color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: #fff;
 }
-.lock-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.lock-title    { font-size: 15px; font-weight: 600; }
 .lock-subtitle { font-size: 12px; color: var(--muted); margin-top: -12px; }
 .lock-input {
-  width: 100%; background: var(--surface2); border: 1px solid var(--border);
-  border-radius: 8px; padding: 10px 14px; font-size: 20px; font-family: inherit;
-  color: var(--text); outline: none; text-align: center; letter-spacing: 8px;
-  transition: border-color .15s;
+  width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 14px; font-size: 20px; font-family: inherit; color: var(--text);
+  outline: none; text-align: center; letter-spacing: 8px; transition: border-color .15s;
 }
 .lock-input:focus { border-color: var(--accent); }
 .lock-input.error { border-color: #f06060; animation: shake .3s; }
 .lock-btn {
-  width: 100%; background: var(--accent); color: #fff; border: none;
-  border-radius: 8px; padding: 10px; font-size: 13px; font-weight: 600;
-  font-family: inherit; cursor: pointer; transition: background .15s;
+  width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  padding: 10px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer;
 }
 .lock-btn:hover { background: #3a7ce8; }
 .lock-err { font-size: 12px; color: #f06060; min-height: 16px; }
-@keyframes shake {
-  0%,100% { transform: translateX(0); }
-  25%      { transform: translateX(-6px); }
-  75%      { transform: translateX(6px); }
-}
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
 
 /* ── Header ── */
-.app-header {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 0 28px;
-}
+.app-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; }
 .header-inner {
-  display: flex; align-items: center; gap: 12px;
-  max-width: 1400px; width: 100%; margin: 0 auto;
-  padding: 16px 0 0;
+  display: flex; align-items: center; gap: 10px;
+  max-width: 1500px; width: 100%; margin: 0 auto; padding: 14px 0 0;
 }
 .app-logo {
-  width: 28px; height: 28px; background: var(--accent); border-radius: 7px;
+  width: 26px; height: 26px; background: var(--accent); border-radius: 7px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
-  margin-bottom: 14px;
+  font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; margin-bottom: 13px;
 }
-.app-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; margin-right: 24px; white-space: nowrap; }
+.app-title { font-size: 14px; font-weight: 600; margin-bottom: 13px; margin-right: 8px; white-space: nowrap; }
+
+/* year selector */
+.year-sel {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
+  padding: 3px 8px; font-size: 12px; font-family: inherit; color: var(--muted);
+  outline: none; cursor: pointer; margin-bottom: 13px; flex-shrink: 0;
+}
+.year-sel:focus { border-color: var(--accent); }
 
 /* ── Tabs ── */
 .tabs { display: flex; overflow-x: auto; scrollbar-width: none; flex: 1; margin-bottom: -1px; }
 .tabs::-webkit-scrollbar { display: none; }
 .tab {
-  padding: 10px 15px 11px; font-size: 12px; font-weight: 500; color: var(--muted);
+  padding: 9px 13px 10px; font-size: 11.5px; font-weight: 500; color: var(--muted);
   cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap;
-  transition: color .15s, border-color .15s; user-select: none; flex-shrink: 0;
+  transition: color .15s, border-color .15s; user-select: none; flex-shrink: 0; position: relative;
 }
 .tab:hover { color: var(--text); }
 .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab.has-data { color: var(--text); }
+.tab.has-data.active { color: var(--accent); }
 .tab.obs-tab.active { color: #c084fc; border-bottom-color: #c084fc; }
+.tab-badge {
+  display: inline-block; background: var(--accent-bg); color: var(--accent);
+  border-radius: 10px; padding: 1px 5px; font-size: 9.5px; margin-left: 4px; vertical-align: middle;
+}
 
-/* ── Sync indicator ── */
+/* sync dot */
 .sync-dot {
-  width: 7px; height: 7px; border-radius: 50%; margin-bottom: 14px; flex-shrink: 0;
+  width: 7px; height: 7px; border-radius: 50%; margin-bottom: 13px; flex-shrink: 0;
   background: var(--hint); transition: background .3s;
 }
-.sync-dot.ok      { background: #4ecb71; }
-.sync-dot.saving  { background: #f0c040; }
-.sync-dot.error   { background: #f06060; }
+.sync-dot.ok     { background: #4ecb71; }
+.sync-dot.saving { background: #f0c040; }
+.sync-dot.error  { background: #f06060; }
 
 /* ── Main ── */
 .main {
-  flex: 1; padding: 24px 28px;
-  display: flex; flex-direction: column; gap: 20px;
-  max-width: 1400px; width: 100%; margin: 0 auto; align-self: center;
+  flex: 1; padding: 20px 24px;
+  display: flex; flex-direction: column; gap: 16px;
+  max-width: 1500px; width: 100%; margin: 0 auto; align-self: center;
 }
-
-/* ── Loading overlay ── */
-.loading {
-  text-align: center; padding: 60px 20px; color: var(--muted); font-size: 13px;
-}
+.loading { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 13px; }
 .spinner {
-  width: 24px; height: 24px; border: 2px solid var(--border2);
-  border-top-color: var(--accent); border-radius: 50%;
-  animation: spin .7s linear infinite; margin: 0 auto 12px;
+  width: 22px; height: 22px; border: 2px solid var(--border2); border-top-color: var(--accent);
+  border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 12px;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ── Toolbar ── */
-.toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 7px 14px; font-size: 12px; font-weight: 500; font-family: inherit;
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 12px; font-size: 12px; font-weight: 500; font-family: inherit;
   border-radius: 7px; border: 1px solid var(--border2); cursor: pointer;
-  transition: all .15s; white-space: nowrap;
+  transition: all .15s; white-space: nowrap; background: var(--surface2); color: var(--muted);
 }
+.btn:hover { color: var(--text); border-color: var(--border2); }
 .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-.btn-primary:hover { background: #3a7ce8; }
-.btn-ghost { background: var(--surface2); color: var(--muted); border-color: var(--border); }
-.btn-ghost:hover { color: var(--text); border-color: var(--border2); }
+.btn-primary:hover { background: #3a7ce8; color: #fff; }
+.btn.active-sort { color: var(--accent); border-color: var(--accent); }
 
 .search {
   background: var(--surface2); border: 1px solid var(--border); border-radius: 7px;
-  padding: 7px 12px; font-size: 12px; font-family: inherit; color: var(--text);
-  outline: none; width: 200px; transition: border-color .15s;
+  padding: 6px 11px; font-size: 12px; font-family: inherit; color: var(--text);
+  outline: none; width: 180px; transition: border-color .15s;
 }
 .search::placeholder { color: var(--hint); }
 .search:focus { border-color: var(--accent); }
 
 .filter {
   background: var(--surface2); border: 1px solid var(--border); border-radius: 7px;
-  padding: 7px 10px; font-size: 12px; font-family: inherit; color: var(--muted);
+  padding: 6px 9px; font-size: 12px; font-family: inherit; color: var(--muted);
   outline: none; cursor: pointer;
 }
-.filter:focus { border-color: var(--accent); }
+.filter:focus { border-color: var(--accent); color: var(--text); }
 
 .count-pill {
   margin-left: auto; background: var(--surface2); border: 1px solid var(--border);
-  border-radius: 20px; padding: 4px 12px; font-size: 11px; color: var(--muted);
+  border-radius: 20px; padding: 3px 11px; font-size: 11px; color: var(--muted);
 }
 
 /* ── Table ── */
 .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-table { width: 100%; border-collapse: collapse; min-width: 700px; }
+table { width: 100%; border-collapse: collapse; }
 thead th {
-  background: var(--surface2); padding: 10px 16px; text-align: left;
-  font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
-  color: var(--hint); border-bottom: 1px solid var(--border); user-select: none; white-space: nowrap;
+  background: var(--surface2); padding: 9px 14px; text-align: left;
+  font-size: 10.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--hint); border-bottom: 1px solid var(--border); white-space: nowrap;
 }
-tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+tbody tr { border-bottom: 1px solid var(--border); transition: background .1s, opacity .2s; }
 tbody tr:last-child { border-bottom: none; }
 tbody tr:hover { background: var(--surface2); }
-td { padding: 7px 16px; vertical-align: middle; font-size: 13px; }
+tbody tr.removing { opacity: 0; transform: translateX(20px); transition: opacity .25s, transform .25s; }
+td { padding: 6px 14px; vertical-align: middle; font-size: 13px; overflow: hidden; }
 
-.col-empresa   { width: 90px;  white-space: nowrap; }
-.col-funcional { width: 160px; }
-.col-jira      { width: 110px; white-space: nowrap; }
-.col-dias      { width: 55px;  white-space: nowrap; }
-.col-status    { width: 140px; white-space: nowrap; }
-.col-obs       { width: auto;  min-width: 0; }
-.col-lancado   { width: 72px;  white-space: nowrap; text-align: center; }
-.col-drag      { width: 24px; }
-.col-del       { width: 36px; }
+.col-drag     { width: 22px; }
+.col-empresa  { width: 80px; }
+.col-funcional{ width: 140px; }
+.col-jira     { width: 130px; }
+.col-inicio   { width: 108px; white-space: nowrap; }
+.col-dias     { width: 50px; white-space: nowrap; }
+.col-status   { width: 132px; white-space: nowrap; }
+.col-obs      { width: auto; min-width: 0; }
+.col-lancado  { width: 66px; text-align: center; white-space: nowrap; }
+.col-dup      { width: 28px; }
+.col-del      { width: 28px; }
 
-/* inputs expandem para preencher célula */
-td { overflow: hidden; }
-.cell-input { min-width: 0; }
+/* Jira input — fonte mono para alinhar melhor */
+td.col-jira .cell-input {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  letter-spacing: .02em;
+  color: var(--accent);
+}
 
 .drag-handle {
-  color: var(--hint); cursor: grab; font-size: 13px;
-  padding: 4px 2px; display: flex; align-items: center; justify-content: center;
+  color: var(--hint); cursor: grab; font-size: 13px; padding: 3px 2px;
+  display: flex; align-items: center; justify-content: center;
   opacity: 0; transition: opacity .15s; user-select: none;
 }
 tbody tr:hover .drag-handle { opacity: 1; }
 .drag-handle:active { cursor: grabbing; }
-tr.dragging { opacity: .4; }
-tr.drag-over { border-top: 2px solid var(--accent); }
+tr.dragging  { opacity: .35; }
+tr.drag-over { box-shadow: inset 0 2px 0 var(--accent); }
 
+/* cell inputs */
 .cell-input {
   width: 100%; background: transparent; border: 1px solid transparent;
-  border-radius: 5px; padding: 4px 6px; font-size: 13px; font-family: inherit;
-  color: var(--text); outline: none; transition: border-color .15s, background .15s;
+  border-radius: 5px; padding: 3px 6px; font-size: 13px; font-family: inherit;
+  color: var(--text); outline: none; transition: border-color .15s, background .15s; min-width: 0;
 }
 .cell-input:hover { border-color: var(--border2); background: rgba(255,255,255,.03); }
 .cell-input:focus { border-color: var(--accent); background: var(--bg); }
 .cell-input::placeholder { color: var(--hint); }
-.cell-dias { width: 44px; text-align: center; }
+.cell-dias { width: 40px; text-align: center; }
 
+/* date input */
+input[type="date"].cell-input {
+  color-scheme: dark; width: 100%;
+}
+input[type="date"].cell-input::-webkit-calendar-picker-indicator { opacity: .4; cursor: pointer; filter: invert(1); }
+
+/* status select */
 .status-sel {
-  width: 100%; appearance: none; -webkit-appearance: none;
-  border-radius: 20px; padding: 4px 26px 4px 12px;
-  font-size: 11px; font-weight: 600; font-family: inherit;
+  width: 100%; appearance: none; -webkit-appearance: none; border-radius: 20px;
+  padding: 3px 24px 3px 11px; font-size: 11px; font-weight: 600; font-family: inherit;
   cursor: pointer; outline: none; border: 1px solid;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238892a4'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 9px center;
-  transition: opacity .15s;
+  background-repeat: no-repeat; background-position: right 8px center; transition: opacity .15s;
 }
 .status-sel:hover { opacity: .85; }
-
 .s-iniciar  { background: var(--s-iniciar-bg);  color: var(--s-iniciar-cl);  border-color: var(--s-iniciar-bd);  }
 .s-iniciado { background: var(--s-iniciado-bg); color: var(--s-iniciado-cl); border-color: var(--s-iniciado-bd); }
 .s-testes   { background: var(--s-testes-bg);   color: var(--s-testes-cl);   border-color: var(--s-testes-bd);   }
 .s-pronto   { background: var(--s-pronto-bg);   color: var(--s-pronto-cl);   border-color: var(--s-pronto-bd);   }
 .s-parado   { background: var(--s-parado-bg);   color: var(--s-parado-cl);   border-color: var(--s-parado-bd);   }
 
-/* Checkbox lançado */
+/* checkbox */
 .check-lancado {
-  width: 17px; height: 17px; cursor: pointer; accent-color: var(--accent);
-  appearance: none; -webkit-appearance: none;
-  border: 2px solid var(--border2); border-radius: 4px;
-  background: transparent; transition: all .15s; position: relative;
-  display: inline-flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px; cursor: pointer; appearance: none; -webkit-appearance: none;
+  border: 2px solid var(--border2); border-radius: 4px; background: transparent;
+  transition: all .15s; position: relative; display: inline-flex; align-items: center; justify-content: center;
 }
-.check-lancado:checked {
-  background: var(--accent); border-color: var(--accent);
-}
-.check-lancado:checked::after {
-  content: '✓'; color: #fff; font-size: 11px; font-weight: 700; position: absolute;
-}
+.check-lancado:checked { background: var(--accent); border-color: var(--accent); }
+.check-lancado:checked::after { content: '✓'; color: #fff; font-size: 10px; font-weight: 700; position: absolute; }
 .check-lancado:hover:not(:checked) { border-color: var(--accent); }
 
-.del-btn {
-  background: none; border: none; color: var(--hint); cursor: pointer;
-  font-size: 14px; padding: 4px 6px; border-radius: 5px; line-height: 1;
-  transition: color .15s, background .15s; opacity: 0;
+/* dup / del buttons */
+.icon-btn {
+  background: none; border: none; cursor: pointer; font-size: 13px;
+  padding: 3px 5px; border-radius: 4px; line-height: 1; opacity: 0;
+  transition: color .15s, background .15s, opacity .15s; color: var(--hint);
 }
-tbody tr:hover .del-btn { opacity: 1; }
-.del-btn:hover { color: #f06060; background: rgba(240,96,96,.1); }
+tbody tr:hover .icon-btn { opacity: 1; }
+.icon-btn.dup:hover { color: var(--accent); background: var(--accent-bg); }
+.icon-btn.del:hover { color: #f06060; background: rgba(240,96,96,.1); }
 
-.empty { text-align: center; padding: 48px 20px; color: var(--hint); font-size: 13px; }
-.empty-icon { font-size: 32px; margin-bottom: 10px; opacity: .4; }
+/* ── Footer totals ── */
+tfoot tr { border-top: 2px solid var(--border2); background: var(--surface2); }
+tfoot td { padding: 7px 14px; font-size: 11px; color: var(--muted); font-weight: 500; }
+.foot-total { color: var(--text); font-weight: 600; font-size: 13px; }
+.foot-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.foot-chip {
+  border-radius: 20px; padding: 2px 9px; font-size: 10.5px; font-weight: 600;
+  border: 1px solid;
+}
+
+/* empty */
+.empty { text-align: center; padding: 44px 20px; color: var(--hint); font-size: 13px; }
+.empty-icon { font-size: 28px; margin-bottom: 8px; opacity: .4; }
 
 /* ── Obs pane ── */
 .obs-pane {
@@ -261,50 +273,77 @@ tbody tr:hover .del-btn { opacity: 1; }
 .obs-textarea {
   background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
   padding: 14px 16px; font-size: 13px; font-family: inherit; line-height: 1.65;
-  color: var(--text); outline: none; resize: vertical; min-height: 260px;
-  transition: border-color .15s;
+  color: var(--text); outline: none; resize: vertical; min-height: 260px; transition: border-color .15s;
 }
 .obs-textarea::placeholder { color: var(--hint); }
 .obs-textarea:focus { border-color: #c084fc; }
 .obs-save-hint { font-size: 11px; color: var(--hint); }
 
+/* ── Confirm dialog ── */
+.confirm-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.5);
+  display: flex; align-items: center; justify-content: center; z-index: 8000;
+  opacity: 0; pointer-events: none; transition: opacity .15s;
+}
+.confirm-overlay.open { opacity: 1; pointer-events: all; }
+.confirm-box {
+  background: var(--surface); border: 1px solid var(--border2); border-radius: 12px;
+  padding: 24px 28px; width: 320px; display: flex; flex-direction: column; gap: 16px;
+  transform: translateY(6px); transition: transform .15s;
+}
+.confirm-overlay.open .confirm-box { transform: translateY(0); }
+.confirm-title { font-size: 14px; font-weight: 600; }
+.confirm-msg   { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.confirm-btns  { display: flex; gap: 8px; justify-content: flex-end; }
+.confirm-btns .btn-danger {
+  background: #7f0000; color: #ffaaaa; border-color: #501818;
+  padding: 6px 14px; font-size: 12px; font-weight: 600; font-family: inherit;
+  border-radius: 7px; cursor: pointer; border: 1px solid; transition: background .15s;
+}
+.confirm-btns .btn-danger:hover { background: #a32d2d; }
+.confirm-btns .btn-cancel {
+  background: var(--surface2); color: var(--muted); border: 1px solid var(--border);
+  padding: 6px 14px; font-size: 12px; font-family: inherit; border-radius: 7px; cursor: pointer;
+}
+
 /* ── Toast ── */
 .toast {
-  position: fixed; bottom: 24px; left: 50%;
-  transform: translateX(-50%) translateY(6px);
-  background: var(--surface2); border: 1px solid var(--border2);
-  color: var(--text); font-size: 12px; padding: 8px 18px; border-radius: 20px;
+  position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(6px);
+  background: var(--surface2); border: 1px solid var(--border2); color: var(--text);
+  font-size: 12px; padding: 7px 16px; border-radius: 20px;
   opacity: 0; pointer-events: none; z-index: 999;
   transition: opacity .2s, transform .2s; white-space: nowrap;
   box-shadow: 0 4px 20px rgba(0,0,0,.4);
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 </style>
 </head>
 <body>
 
+<!-- Lock -->
 <div class="lock-screen" id="lock-screen">
   <div class="lock-box">
     <div class="lock-logo">M</div>
     <div class="lock-title">MainGoal</div>
     <div class="lock-subtitle">Introduz a senha para continuar</div>
-    <input class="lock-input" id="lock-input" type="password"
-      maxlength="10" placeholder="••••" autocomplete="off" />
+    <input class="lock-input" id="lock-input" type="password" maxlength="10" placeholder="••••" autocomplete="off"/>
     <button class="lock-btn" id="lock-btn">Entrar</button>
     <span class="lock-err" id="lock-err"></span>
   </div>
 </div>
 
+<!-- App -->
 <header class="app-header" id="app-header" style="display:none;">
   <div class="header-inner">
     <div class="app-logo">M</div>
     <span class="app-title">MainGoal</span>
+    <select class="year-sel" id="year-sel"></select>
     <nav class="tabs" id="tabs"></nav>
-    <div class="sync-dot" id="sync-dot" title="Estado da sincronização"></div>
+    <div class="sync-dot" id="sync-dot" title="Sincronização Firebase"></div>
   </div>
 </header>
 
@@ -312,57 +351,53 @@ tbody tr:hover .del-btn { opacity: 1; }
   <div class="loading"><div class="spinner"></div>A ligar ao Firebase…</div>
 </main>
 
+<!-- Confirm dialog -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-title">Remover linha?</div>
+    <div class="confirm-msg" id="confirm-msg">Esta acção não pode ser desfeita.</div>
+    <div class="confirm-btns">
+      <button class="btn-cancel" id="confirm-cancel">Cancelar</button>
+      <button class="btn-danger" id="confirm-ok">Remover</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
-<!-- Firebase SDK (modular via CDN) -->
 <script type="module">
-import { initializeApp }                          from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getFirestore, doc, getDoc, setDoc,
-         collection, getDocs, addDoc, updateDoc,
-         deleteDoc, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { initializeApp }     from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getFirestore, doc, getDoc, setDoc, collection,
+         getDocs, addDoc, updateDoc, deleteDoc, onSnapshot }
+  from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-// ── Lock screen ──────────────────────────────────────────────────────────────
-const PWD_HASH = '31303832303432333539'; // obfuscated: "0206" xor-encoded
-
-function checkPwd(input) {
-  // Simple hash: sum of char codes as hex, not reversible from source alone
-  return btoa(input) === btoa('0206');
-}
-
+// ── Lock ─────────────────────────────────────────────────────────────────────
+function checkPwd(v) { return btoa(v) === btoa('0206'); }
 function unlock() {
-  document.getElementById('lock-screen').style.display  = 'none';
-  document.getElementById('app-header').style.display   = '';
-  document.getElementById('main').style.display         = '';
-  sessionStorage.setItem('tracker_unlocked', '1');
+  document.getElementById('lock-screen').style.display = 'none';
+  document.getElementById('app-header').style.display  = '';
+  document.getElementById('main').style.display        = '';
+  sessionStorage.setItem('mg_unlocked','1');
 }
-
 (function initLock() {
-  if (sessionStorage.getItem('tracker_unlocked') === '1') {
-    unlock();
-    return;
-  }
-  const input = document.getElementById('lock-input');
-  const btn   = document.getElementById('lock-btn');
-  const err   = document.getElementById('lock-err');
-
-  function tryUnlock() {
-    if (checkPwd(input.value)) {
-      unlock();
-    } else {
+  if (sessionStorage.getItem('mg_unlocked')==='1') { unlock(); return; }
+  const inp = document.getElementById('lock-input');
+  const err = document.getElementById('lock-err');
+  function try_() {
+    if (checkPwd(inp.value)) { unlock(); }
+    else {
       err.textContent = 'Senha incorrecta.';
-      input.classList.add('error');
-      input.value = '';
-      setTimeout(() => { input.classList.remove('error'); err.textContent = ''; }, 1200);
-      input.focus();
+      inp.classList.add('error'); inp.value = '';
+      setTimeout(()=>{ inp.classList.remove('error'); err.textContent=''; }, 1200);
+      inp.focus();
     }
   }
-
-  btn.addEventListener('click', tryUnlock);
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
-  setTimeout(() => input.focus(), 80);
+  document.getElementById('lock-btn').addEventListener('click', try_);
+  inp.addEventListener('keydown', e => { if(e.key==='Enter') try_(); });
+  setTimeout(()=>inp.focus(), 80);
 })();
 
-// ── Firebase init ────────────────────────────────────────────────────────────
+// ── Firebase ──────────────────────────────────────────────────────────────────
 const app = initializeApp({
   apiKey:            "AIzaSyCQ4tyq754PjD8jcZbNepcYempnAFpL_PE",
   authDomain:        "maingoal-4a29c.firebaseapp.com",
@@ -373,9 +408,9 @@ const app = initializeApp({
 });
 const db = getFirestore(app);
 
-// ── Constants ────────────────────────────────────────────────────────────────
-const MONTHS    = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
-                   'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+// ── Constants ─────────────────────────────────────────────────────────────────
+const MONTHS     = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+                    'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 const MONTH_KEYS = MONTHS.map((_,i) => String(i+1).padStart(2,'0'));
 
 const STATUS = [
@@ -385,215 +420,299 @@ const STATUS = [
   { val:'pronto',   label:'Pronto',    cls:'s-pronto'   },
   { val:'parado',   label:'Parado',    cls:'s-parado'   },
 ];
+const STATUS_ORDER = { iniciar:0, iniciado:1, testes:2, pronto:3, parado:4 };
 
-// ── State ────────────────────────────────────────────────────────────────────
-const STATUS_ORDER_MAP = { iniciar:0, iniciado:1, testes:2, pronto:3, parado:4 };
+const YEARS = [2024, 2025, 2026, 2027];
 
+// ── State ─────────────────────────────────────────────────────────────────────
+let activeYear = new Date().getFullYear();
 let activeTab  = MONTH_KEYS[new Date().getMonth()];
-let allRows    = {};   // { "01": [{id, empresa, ...}] }
-let obsData    = {};   // { "01": "texto", "obs": "texto" }
+let allRows    = {};   // { "2025_06": [...] }
+let obsData    = {};   // { "2025_06": "texto" }
+let loaded     = {};   // { "2025_06": true } — lazy load cache
 let searchQ    = '';
 let filterSt   = '';
-let manualSort = false; // false = sort by status, true = manual drag order
-let unsub     = null; // firestore listener
+let filterLanc = '';   // '' | 'sim' | 'nao'
+let manualSort = false;
+let unsubMap   = {};   // real-time listeners per tab key
+let pendingDel = null; // { key, id, label }
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
-function statusCls(val) { return STATUS.find(s=>s.val===val)?.cls||'s-iniciar'; }
+function tabKey(year, month) { return `${year}_${month}`; }
+function activeKey()         { return activeTab === 'obs' ? 'obs' : tabKey(activeYear, activeTab); }
+function rowsColPath(key)    { return collection(db, 'tracker_' + key); }
+function obsRef(key)         { return doc(db, 'tracker_obs', key); }
+function statusCls(v)        { return STATUS.find(s=>s.val===v)?.cls||'s-iniciar'; }
+function todayStr()          { return new Date().toISOString().split('T')[0]; }
+function fmtDate(d)          { if(!d) return ''; const [y,m,dd]=d.split('-'); return `${dd}/${m}`; }
 
 function syncDot(state) {
   const d = document.getElementById('sync-dot');
-  if (!d) return;
-  d.className = 'sync-dot ' + state;
+  if(d) d.className = 'sync-dot '+state;
 }
-
 function toast(msg) {
   const el = document.getElementById('toast');
-  if (!el) return;
+  if(!el) return;
   el.textContent = msg; el.classList.add('show');
   clearTimeout(el._t); el._t = setTimeout(()=>el.classList.remove('show'), 2400);
 }
 
-// ── Firestore paths ──────────────────────────────────────────────────────────
-// rows: tracker_{monthKey}/{docId}
-// obs:  tracker_obs/{key}  (single doc with field "text")
-
-function rowsCol(monthKey) {
-  return collection(db, 'tracker_' + monthKey);
+// ── Confirm dialog ────────────────────────────────────────────────────────────
+function confirm_(msg) {
+  return new Promise(resolve => {
+    const overlay = document.getElementById('confirm-overlay');
+    document.getElementById('confirm-msg').textContent = msg;
+    overlay.classList.add('open');
+    const ok  = document.getElementById('confirm-ok');
+    const can = document.getElementById('confirm-cancel');
+    function close(val) {
+      overlay.classList.remove('open');
+      ok.removeEventListener('click', onOk);
+      can.removeEventListener('click', onCan);
+      resolve(val);
+    }
+    const onOk  = () => close(true);
+    const onCan = () => close(false);
+    ok.addEventListener('click', onOk);
+    can.addEventListener('click', onCan);
+  });
 }
-function obsDocRef(key) {
-  return doc(db, 'tracker_obs', key);
-}
 
-// ── Load all data ────────────────────────────────────────────────────────────
-async function loadAll() {
+// ── Firestore ─────────────────────────────────────────────────────────────────
+async function loadTab(key) {
+  if (loaded[key]) return;
   syncDot('saving');
   try {
-    // Load all rows for all months in parallel
-    const rowPromises = MONTH_KEYS.map(async k => {
-      const snap = await getDocs(rowsCol(k));
-      allRows[k] = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      allRows[k].sort((a,b) => (a.order||0) - (b.order||0));
-    });
-    // Load obs
-    const obsKeys = [...MONTH_KEYS, 'obs'];
-    const obsPromises = obsKeys.map(async k => {
-      const snap = await getDoc(obsDocRef(k));
-      obsData[k] = snap.exists() ? (snap.data().text || '') : '';
-    });
-    await Promise.all([...rowPromises, ...obsPromises]);
+    if (key.startsWith('obs_') || key === 'obs') {
+      const snap = await getDoc(obsRef(key));
+      obsData[key] = snap.exists() ? (snap.data().text||'') : '';
+    } else {
+      const snap = await getDocs(rowsColPath(key));
+      allRows[key] = snap.docs.map(d=>({id:d.id,...d.data()}));
+      // start real-time listener
+      startListener(key);
+    }
+    loaded[key] = true;
     syncDot('ok');
-  } catch(e) {
-    console.error(e);
-    syncDot('error');
-    toast('⚠ Erro ao carregar dados');
-  }
+  } catch(e) { console.error(e); syncDot('error'); toast('⚠ Erro ao carregar dados'); }
 }
 
-// ── Firestore write helpers ──────────────────────────────────────────────────
-async function fsAddRow(monthKey, row) {
+function startListener(key) {
+  if (unsubMap[key]) return;
+  unsubMap[key] = onSnapshot(rowsColPath(key), snap => {
+    allRows[key] = snap.docs.map(d=>({id:d.id,...d.data()}));
+    if (activeKey() === key) renderTable(key);
+    buildTabs();
+  });
+}
+
+async function fsAdd(key, row) {
   syncDot('saving');
   try {
-    const ref = await addDoc(rowsCol(monthKey), {
-      empresa:   row.empresa   || '',
-      funcional: row.funcional || '',
-      jira:      row.jira      || '',
-      dias:      row.dias      || '',
-      status:    row.status    || 'iniciar',
-      obs:       row.obs       || '',
-      lancado:   row.lancado   || false,
-      order:     Date.now(),
+    const ref = await addDoc(rowsColPath(key), {
+      empresa:'', funcional:'', jira:'', inicio: row.inicio||'', dias:'',
+      status:'iniciar', obs:'', lancado:false, order: Date.now(),
+      ...row,
     });
     row.id = ref.id;
     syncDot('ok');
   } catch(e) { console.error(e); syncDot('error'); toast('⚠ Erro ao guardar'); }
 }
 
-async function fsUpdateRow(monthKey, id, fields) {
+async function fsUpdate(key, id, fields) {
   syncDot('saving');
   try {
-    await updateDoc(doc(db, 'tracker_' + monthKey, id), fields);
+    await updateDoc(doc(db,'tracker_'+key,id), fields);
     syncDot('ok');
   } catch(e) { console.error(e); syncDot('error'); toast('⚠ Erro ao guardar'); }
 }
 
-async function fsDeleteRow(monthKey, id) {
+async function fsDelete(key, id) {
   syncDot('saving');
   try {
-    await deleteDoc(doc(db, 'tracker_' + monthKey, id));
+    await deleteDoc(doc(db,'tracker_'+key,id));
     syncDot('ok');
   } catch(e) { console.error(e); syncDot('error'); toast('⚠ Erro ao apagar'); }
 }
 
 async function fsSaveObs(key, text) {
   syncDot('saving');
-  try {
-    await setDoc(obsDocRef(key), { text });
-    syncDot('ok');
-  } catch(e) { console.error(e); syncDot('error'); }
+  try { await setDoc(obsRef(key),{text}); syncDot('ok'); }
+  catch(e) { console.error(e); syncDot('error'); }
 }
 
-// ── Tabs ─────────────────────────────────────────────────────────────────────
+// ── Year selector ─────────────────────────────────────────────────────────────
+function buildYearSel() {
+  const sel = document.getElementById('year-sel');
+  sel.innerHTML = YEARS.map(y=>`<option value="${y}"${y===activeYear?' selected':''}>${y}</option>`).join('');
+  sel.onchange = () => {
+    activeYear = +sel.value;
+    loaded = {};
+    Object.values(unsubMap).forEach(u=>u());
+    unsubMap = {};
+    buildTabs();
+    switchTab(activeTab);
+  };
+}
+
+// ── Tabs ──────────────────────────────────────────────────────────────────────
 function buildTabs() {
   const nav = document.getElementById('tabs');
   let html = MONTH_KEYS.map((k,i) => {
-    const cnt   = (allRows[k]||[]).length;
-    const badge = cnt ? ` <span style="background:var(--accent-bg);color:var(--accent);border-radius:10px;padding:1px 6px;font-size:10px;">${cnt}</span>` : '';
-    return `<div class="tab${activeTab===k?' active':''}" data-key="${k}">${MONTHS[i]}${badge}</div>`;
+    const key  = tabKey(activeYear, k);
+    const rows = allRows[key] || [];
+    const cnt  = rows.length;
+    const hasData = cnt > 0;
+    const badge = hasData ? `<span class="tab-badge">${cnt}</span>` : '';
+    return `<div class="tab${activeTab===k?' active':''}${hasData?' has-data':''}" data-key="${k}">
+      ${MONTHS[i]}${badge}
+    </div>`;
   }).join('');
   html += `<div class="tab obs-tab${activeTab==='obs'?' active':''}" data-key="obs">Observações</div>`;
   nav.innerHTML = html;
   nav.querySelectorAll('.tab').forEach(el =>
-    el.addEventListener('click', () => switchTab(el.dataset.key))
+    el.addEventListener('click', ()=>switchTab(el.dataset.key))
   );
 }
 
-function switchTab(key) {
+async function switchTab(key) {
   activeTab = key;
   buildTabs();
+  const k = activeKey();
+  await loadTab(k === 'obs' ? 'obs' : k);
   renderMain();
 }
 
-// ── Row HTML ─────────────────────────────────────────────────────────────────
+// ── Sort ──────────────────────────────────────────────────────────────────────
+function sortedRows(key) {
+  const rows = [...(allRows[key]||[])];
+  if (manualSort) return rows.sort((a,b)=>(a.order||0)-(b.order||0));
+  return rows.sort((a,b)=>{
+    const sd = (STATUS_ORDER[a.status]??99)-(STATUS_ORDER[b.status]??99);
+    return sd !== 0 ? sd : (a.order||0)-(b.order||0);
+  });
+}
+
+// ── Row HTML ──────────────────────────────────────────────────────────────────
 function rowHTML(r) {
   const cls  = statusCls(r.status);
-  const opts = STATUS.map(s =>
-    `<option value="${s.val}"${r.status===s.val?' selected':''}>${s.label}</option>`
-  ).join('');
+  const opts = STATUS.map(s=>`<option value="${s.val}"${r.status===s.val?' selected':''}>${s.label}</option>`).join('');
   return `<tr data-id="${r.id}" draggable="true">
-    <td class="col-drag"><div class="drag-handle" title="Arrastar para reordenar">⠿</div></td>
+    <td class="col-drag"><div class="drag-handle">⠿</div></td>
     <td class="col-empresa">
-      <input class="cell-input" value="${esc(r.empresa)}" placeholder="Empresa"
-        data-field="empresa" data-id="${r.id}" />
+      <input class="cell-input" value="${esc(r.empresa)}" placeholder="Empresa" data-field="empresa" data-id="${r.id}"/>
     </td>
     <td class="col-funcional">
-      <input class="cell-input" value="${esc(r.funcional)}" placeholder="Funcional"
-        data-field="funcional" data-id="${r.id}" />
+      <input class="cell-input" value="${esc(r.funcional)}" placeholder="Funcional" data-field="funcional" data-id="${r.id}"/>
     </td>
     <td class="col-jira">
-      <input class="cell-input" value="${esc(r.jira)}" placeholder="GFATR-282"
-        data-field="jira" data-id="${r.id}" />
+      <input class="cell-input" value="${esc(r.jira)}" placeholder="GFATR-282" data-field="jira" data-id="${r.id}"/>
+    </td>
+    <td class="col-inicio">
+      <input class="cell-input" type="date" value="${esc(r.inicio||'')}" data-field="inicio" data-id="${r.id}"/>
     </td>
     <td class="col-dias">
-      <input class="cell-input cell-dias" value="${esc(r.dias)}" placeholder="0"
-        data-field="dias" data-id="${r.id}" />
+      <input class="cell-input cell-dias" value="${esc(r.dias)}" placeholder="0" data-field="dias" data-id="${r.id}"/>
     </td>
     <td class="col-status">
-      <select class="status-sel ${cls}" data-id="${r.id}">
-        ${opts}
-      </select>
+      <select class="status-sel ${cls}" data-id="${r.id}">${opts}</select>
     </td>
     <td class="col-obs">
-      <input class="cell-input" value="${esc(r.obs)}" placeholder="Observação…"
-        data-field="obs" data-id="${r.id}" />
+      <input class="cell-input" value="${esc(r.obs)}" placeholder="Observação…" data-field="obs" data-id="${r.id}"/>
     </td>
     <td class="col-lancado">
-      <input type="checkbox" class="check-lancado" data-id="${r.id}" ${r.lancado ? 'checked' : ''} />
+      <input type="checkbox" class="check-lancado" data-id="${r.id}" ${r.lancado?'checked':''}/>
+    </td>
+    <td class="col-dup">
+      <button class="icon-btn dup" data-id="${r.id}" title="Duplicar linha">⎘</button>
     </td>
     <td class="col-del">
-      <button class="del-btn" data-id="${r.id}" title="Remover">✕</button>
+      <button class="icon-btn del" data-id="${r.id}" title="Remover">✕</button>
     </td>
   </tr>`;
 }
 
-// ── Render table ─────────────────────────────────────────────────────────────
-function sortedRows(key) {
-  const rows = [...(allRows[key] || [])];
-  if (manualSort) {
-    return rows.sort((a,b) => (a.order||0) - (b.order||0));
-  }
-  return rows.sort((a,b) => {
-    const sd = (STATUS_ORDER_MAP[a.status]??99) - (STATUS_ORDER_MAP[b.status]??99);
-    return sd !== 0 ? sd : (a.order||0) - (b.order||0);
-  });
+// ── Footer totals ─────────────────────────────────────────────────────────────
+function footerHTML(rows) {
+  const totalDias = rows.reduce((s,r)=>s+(parseFloat(r.dias)||0),0);
+  const counts    = {};
+  STATUS.forEach(s=>counts[s.val]=0);
+  rows.forEach(r=>{ if(counts[r.status]!==undefined) counts[r.status]++; });
+  const lancados  = rows.filter(r=>r.lancado).length;
+
+  const chips = STATUS
+    .filter(s=>counts[s.val]>0)
+    .map(s=>`<span class="foot-chip ${s.cls}">${s.label}: ${counts[s.val]}</span>`)
+    .join('');
+
+  return `<tfoot><tr>
+    <td colspan="2"></td>
+    <td colspan="3" style="color:var(--muted);font-size:11px;">
+      <div class="foot-chips">${chips}</div>
+    </td>
+    <td class="col-dias" style="text-align:center;">
+      <span class="foot-total">${totalDias}</span>
+    </td>
+    <td></td>
+    <td></td>
+    <td style="text-align:center;font-size:11px;color:var(--muted);">✓ ${lancados}</td>
+    <td colspan="2"></td>
+  </tr></tfoot>`;
 }
 
+// ── Render table ──────────────────────────────────────────────────────────────
 function renderTable(key) {
   const rows = sortedRows(key);
   const q    = searchQ.toLowerCase();
   const sf   = filterSt;
+  const lf   = filterLanc;
 
   const filtered = rows.filter(r => {
-    const hay = [r.empresa,r.funcional,r.jira,r.dias,r.obs].join(' ').toLowerCase();
-    return (!q||hay.includes(q)) && (!sf||r.status===sf);
+    const hay = [r.empresa,r.funcional,r.jira,r.obs,r.inicio].join(' ').toLowerCase();
+    const matchQ = !q || hay.includes(q);
+    const matchS = !sf || r.status === sf;
+    const matchL = !lf || (lf==='sim' ? r.lancado : !r.lancado);
+    return matchQ && matchS && matchL;
   });
 
   const pill = document.getElementById('count-pill');
-  if (pill) pill.textContent = filtered.length + ' linha' + (filtered.length!==1?'s':'');
+  if(pill) pill.textContent = filtered.length+' linha'+(filtered.length!==1?'s':'');
+
+  const wrap = document.getElementById('table-wrap');
+  if(!wrap) return;
+
+  if (!filtered.length) {
+    wrap.innerHTML = `<table><tbody><tr><td colspan="11"><div class="empty">
+      <div class="empty-icon">📋</div>
+      Nenhuma linha neste mês. Clique em <strong>+ Adicionar</strong>.
+    </div></td></tr></tbody></table>`;
+    return;
+  }
+
+  wrap.innerHTML = `<table>
+    <thead><tr>
+      <th class="col-drag"></th>
+      <th class="col-empresa">Empresa</th>
+      <th class="col-funcional">Funcional</th>
+      <th class="col-jira">Jira</th>
+      <th class="col-inicio">Início</th>
+      <th class="col-dias">Dias</th>
+      <th class="col-status">Status</th>
+      <th class="col-obs">Observação</th>
+      <th class="col-lancado">Lançado</th>
+      <th class="col-dup"></th>
+      <th class="col-del"></th>
+    </tr></thead>
+    <tbody id="tbody">${filtered.map(rowHTML).join('')}</tbody>
+    ${footerHTML(filtered)}
+  </table>`;
 
   const tbody = document.getElementById('tbody');
-  if (!tbody) return;
 
-  tbody.innerHTML = filtered.length
-    ? filtered.map(rowHTML).join('')
-    : `<tr><td colspan="9"><div class="empty">
-        <div class="empty-icon">📋</div>
-        Nenhuma linha neste mês. Clique em <strong>+ Adicionar</strong>.
-      </div></td></tr>`;
-
-  // Bind cell inputs (debounced save)
+  // cell inputs — debounced save
   tbody.querySelectorAll('.cell-input').forEach(input => {
     let timer;
     const commit = () => {
@@ -601,16 +720,16 @@ function renderTable(key) {
       const field = input.dataset.field;
       const val   = input.value;
       const row   = (allRows[key]||[]).find(r=>r.id===id);
-      if (!row || row[field] === val) return;
+      if (!row || row[field]===val) return;
       row[field] = val;
-      fsUpdateRow(key, id, { [field]: val });
+      fsUpdate(key, id, {[field]: val});
     };
-    input.addEventListener('input',  () => { clearTimeout(timer); timer = setTimeout(commit, 600); });
+    input.addEventListener('input',  ()=>{ clearTimeout(timer); timer=setTimeout(commit,600); });
     input.addEventListener('blur',   commit);
+    input.addEventListener('change', commit); // for date inputs
     input.addEventListener('keydown', e => {
       if (e.key !== 'Enter') return;
-      e.preventDefault();
-      commit();
+      e.preventDefault(); commit();
       const tr   = input.closest('tr');
       const next = tr?.nextElementSibling;
       if (next) {
@@ -621,7 +740,7 @@ function renderTable(key) {
     });
   });
 
-  // Lançado checkboxes
+  // checkboxes
   tbody.querySelectorAll('.check-lancado').forEach(cb => {
     cb.addEventListener('change', () => {
       const id  = cb.dataset.id;
@@ -629,11 +748,11 @@ function renderTable(key) {
       const row = (allRows[key]||[]).find(r=>r.id===id);
       if (!row) return;
       row.lancado = val;
-      fsUpdateRow(key, id, { lancado: val });
+      fsUpdate(key, id, {lancado: val});
     });
   });
 
-  // Status selects
+  // status selects
   tbody.querySelectorAll('.status-sel').forEach(sel => {
     sel.addEventListener('change', () => {
       const id  = sel.dataset.id;
@@ -641,25 +760,46 @@ function renderTable(key) {
       const row = (allRows[key]||[]).find(r=>r.id===id);
       if (!row) return;
       row.status = val;
-      sel.className = 'status-sel ' + statusCls(val);
-      fsUpdateRow(key, id, { status: val });
+      sel.className = 'status-sel '+statusCls(val);
+      fsUpdate(key, id, {status: val});
       buildTabs();
     });
   });
 
-  // Delete buttons
-  tbody.querySelectorAll('.del-btn').forEach(btn => {
+  // duplicate buttons
+  tbody.querySelectorAll('.icon-btn.dup').forEach(btn => {
     btn.addEventListener('click', async () => {
-      const id = btn.dataset.id;
+      const id  = btn.dataset.id;
+      const src = (allRows[key]||[]).find(r=>r.id===id);
+      if (!src) return;
+      const newRow = { ...src, id: undefined, inicio: todayStr(), order: Date.now() };
+      delete newRow.id;
+      if (!allRows[key]) allRows[key] = [];
+      allRows[key].unshift(newRow);
+      await fsAdd(key, newRow);
+      toast('Linha duplicada');
+    });
+  });
+
+  // delete buttons
+  tbody.querySelectorAll('.icon-btn.del').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id  = btn.dataset.id;
+      const row = (allRows[key]||[]).find(r=>r.id===id);
+      const lbl = row ? (row.funcional||row.empresa||'esta linha') : 'esta linha';
+      const ok  = await confirm_(`Remover "${lbl}"? Esta acção não pode ser desfeita.`);
+      if (!ok) return;
+      // animate
+      const tr = tbody.querySelector(`tr[data-id="${id}"]`);
+      if (tr) { tr.classList.add('removing'); await new Promise(r=>setTimeout(r,250)); }
       allRows[key] = (allRows[key]||[]).filter(r=>r.id!==id);
-      await fsDeleteRow(key, id);
+      await fsDelete(key, id);
       buildTabs();
-      renderTable(key);
       toast('Linha removida');
     });
   });
 
-  // Drag & drop reorder
+  // drag & drop
   let dragId = null;
   tbody.querySelectorAll('tr[draggable]').forEach(tr => {
     tr.addEventListener('dragstart', e => {
@@ -671,33 +811,25 @@ function renderTable(key) {
     });
     tr.addEventListener('dragend', () => {
       tr.classList.remove('dragging');
-      tbody.querySelectorAll('tr').forEach(r => r.classList.remove('drag-over'));
+      tbody.querySelectorAll('tr').forEach(r=>r.classList.remove('drag-over'));
     });
     tr.addEventListener('dragover', e => {
       e.preventDefault();
-      tbody.querySelectorAll('tr').forEach(r => r.classList.remove('drag-over'));
+      tbody.querySelectorAll('tr').forEach(r=>r.classList.remove('drag-over'));
       if (tr.dataset.id !== dragId) tr.classList.add('drag-over');
     });
     tr.addEventListener('drop', async e => {
       e.preventDefault();
       tr.classList.remove('drag-over');
-      if (!dragId || tr.dataset.id === dragId) return;
-
-      const rowsArr = sortedRows(key);
-      const fromIdx = rowsArr.findIndex(r => r.id === dragId);
-      const toIdx   = rowsArr.findIndex(r => r.id === tr.dataset.id);
-      if (fromIdx === -1 || toIdx === -1) return;
-
-      // Re-assign order values
-      rowsArr.splice(toIdx, 0, rowsArr.splice(fromIdx, 1)[0]);
-      const updates = [];
-      rowsArr.forEach((r, i) => {
-        r.order = i * 1000;
-        updates.push(fsUpdateRow(key, r.id, { order: r.order }));
-      });
-      allRows[key] = rowsArr;
+      if (!dragId || tr.dataset.id===dragId) return;
+      const arr  = sortedRows(key);
+      const from = arr.findIndex(r=>r.id===dragId);
+      const to   = arr.findIndex(r=>r.id===tr.dataset.id);
+      if (from===-1||to===-1) return;
+      arr.splice(to,0,arr.splice(from,1)[0]);
+      const updates = arr.map((r,i)=>{ r.order=i*1000; return fsUpdate(key,r.id,{order:r.order}); });
+      allRows[key] = arr;
       await Promise.all(updates);
-      renderTable(key);
     });
   });
 }
@@ -707,126 +839,120 @@ function updateSortBtn() {
   if (!btn) return;
   if (manualSort) {
     btn.textContent = '↕ Manual';
-    btn.title = 'Clica para voltar à ordenação por status';
-    btn.style.color = 'var(--accent)';
-    btn.style.borderColor = 'var(--accent)';
+    btn.classList.add('active-sort');
   } else {
     btn.textContent = '↕ Por status';
-    btn.title = 'Ordenação automática por status — arrasta linhas para modo manual';
-    btn.style.color = '';
-    btn.style.borderColor = '';
+    btn.classList.remove('active-sort');
   }
 }
 
-// ── Obs pane ─────────────────────────────────────────────────────────────────
+// ── Obs pane ──────────────────────────────────────────────────────────────────
 function renderObs() {
   const main = document.getElementById('main');
-  const val  = obsData[activeTab] || '';
+  const key  = 'obs';
+  const val  = obsData[key] || '';
   main.innerHTML = `
     <div class="obs-pane">
-      <h2>Observações${activeTab!=='obs' ? ' — ' + MONTHS[MONTH_KEYS.indexOf(activeTab)] : ' Gerais'}</h2>
+      <h2>Observações Gerais</h2>
       <textarea class="obs-textarea" id="obs-area" placeholder="Anotações, lembretes, contexto…">${esc(val)}</textarea>
       <span class="obs-save-hint">Guardado automaticamente no Firebase.</span>
     </div>`;
-
   const area = document.getElementById('obs-area');
   let timer;
   area.addEventListener('input', () => {
-    obsData[activeTab] = area.value;
+    obsData[key] = area.value;
     clearTimeout(timer);
-    timer = setTimeout(() => fsSaveObs(activeTab, area.value), 800);
+    timer = setTimeout(()=>fsSaveObs(key, area.value), 800);
   });
 }
 
-// ── Main render ──────────────────────────────────────────────────────────────
+// ── Main render ───────────────────────────────────────────────────────────────
 function renderMain() {
   const main = document.getElementById('main');
-
   if (activeTab === 'obs') { renderObs(); return; }
+  const key = activeKey();
 
   main.innerHTML = `
     <div class="toolbar">
       <button class="btn btn-primary" id="btn-add">+ Adicionar</button>
-      <input class="search" id="search" placeholder="Buscar…" value="${esc(searchQ)}" />
+      <input class="search" id="search" placeholder="Buscar…" value="${esc(searchQ)}"/>
       <select class="filter" id="filter-status">
-        <option value="">Todos</option>
+        <option value="">Todos os status</option>
         ${STATUS.map(s=>`<option value="${s.val}"${filterSt===s.val?' selected':''}>${s.label}</option>`).join('')}
       </select>
-      <button class="btn btn-ghost" id="btn-sort">↕ Por status</button>
-      <button class="btn btn-ghost" id="btn-csv">↓ CSV</button>
+      <select class="filter" id="filter-lanc">
+        <option value=""${filterLanc===''?' selected':''}>Todos</option>
+        <option value="sim"${filterLanc==='sim'?' selected':''}>Lançado ✓</option>
+        <option value="nao"${filterLanc==='nao'?' selected':''}>Não lançado</option>
+      </select>
+      <button class="btn" id="btn-sort">↕ Por status</button>
+      <button class="btn" id="btn-csv">↓ CSV</button>
       <span class="count-pill" id="count-pill"></span>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr>
-          <th class="col-drag"></th>
-          <th class="col-empresa">Empresa</th>
-          <th class="col-funcional">Funcional</th>
-          <th class="col-jira">Jira</th>
-          <th class="col-dias">Dias</th>
-          <th class="col-status">Status</th>
-          <th class="col-obs">Observação</th>
-          <th class="col-lancado">Lançado</th>
-          <th class="col-del"></th>
-        </tr></thead>
-        <tbody id="tbody"></tbody>
-      </table>
-    </div>`;
+    <div class="table-wrap" id="table-wrap"></div>`;
 
-  renderTable(activeTab);
+  renderTable(key);
 
   document.getElementById('btn-add').addEventListener('click', async () => {
-    const row = { empresa:'', funcional:'', jira:'', dias:'', status:'iniciar', obs:'', lancado: false };
-    if (!allRows[activeTab]) allRows[activeTab] = [];
-    allRows[activeTab].unshift(row);
-    await fsAddRow(activeTab, row);
+    const row = { empresa:'', funcional:'', jira:'', inicio:todayStr(), dias:'', status:'iniciar', obs:'', lancado:false };
+    if (!allRows[key]) allRows[key] = [];
+    allRows[key].unshift(row);
+    await fsAdd(key, row);
     buildTabs();
-    renderTable(activeTab);
     const first = document.querySelector('#tbody tr:first-child .cell-input');
     if (first) first.focus();
   });
 
-  document.getElementById('search').addEventListener('input', e => {
-    searchQ = e.target.value; renderTable(activeTab);
+  document.getElementById('search').addEventListener('input', e=>{
+    searchQ = e.target.value; renderTable(key);
   });
-  document.getElementById('filter-status').addEventListener('change', e => {
-    filterSt = e.target.value; renderTable(activeTab);
+  document.getElementById('filter-status').addEventListener('change', e=>{
+    filterSt = e.target.value; renderTable(key);
   });
-  document.getElementById('btn-csv').addEventListener('click', exportCSV);
+  document.getElementById('filter-lanc').addEventListener('change', e=>{
+    filterLanc = e.target.value; renderTable(key);
+  });
+  document.getElementById('btn-csv').addEventListener('click', ()=>exportCSV(key));
 
   const sortBtn = document.getElementById('btn-sort');
   updateSortBtn();
-  sortBtn.addEventListener('click', () => {
+  sortBtn.addEventListener('click', ()=>{
     manualSort = !manualSort;
     updateSortBtn();
-    renderTable(activeTab);
+    renderTable(key);
     toast(manualSort ? 'Modo manual — arrasta as linhas' : 'Ordenação por status activada');
   });
 }
 
-// ── Export CSV ───────────────────────────────────────────────────────────────
-function exportCSV() {
-  const rows = allRows[activeTab] || [];
+// ── Export CSV ────────────────────────────────────────────────────────────────
+function exportCSV(key) {
+  const rows = allRows[key]||[];
   if (!rows.length) { toast('Nenhuma linha para exportar'); return; }
-  const header = ['Empresa','Funcional','Jira','Dias','Status','Observação'];
-  const data   = rows.map(r => [
-    r.empresa, r.funcional, r.jira, r.dias,
-    STATUS.find(s=>s.val===r.status)?.label||r.status, r.obs
+  const header = ['Empresa','Funcional','Jira','Início','Dias','Status','Observação','Lançado'];
+  const data   = rows.map(r=>[
+    r.empresa, r.funcional, r.jira, r.inicio||'', r.dias,
+    STATUS.find(s=>s.val===r.status)?.label||r.status,
+    r.obs, r.lancado?'Sim':'Não'
   ]);
   const csv  = [header,...data].map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob = new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8;'});
   const a    = document.createElement('a');
   a.href     = URL.createObjectURL(blob);
-  a.download = `tracker_${MONTHS[MONTH_KEYS.indexOf(activeTab)]||activeTab}.csv`;
+  const monthName = MONTHS[MONTH_KEYS.indexOf(activeTab)]||activeTab;
+  a.download = `maingoal_${activeYear}_${monthName}.csv`;
   a.click();
   toast('CSV exportado');
 }
 
-// ── Init ─────────────────────────────────────────────────────────────────────
+// ── Init ──────────────────────────────────────────────────────────────────────
 (async () => {
-  await loadAll();
+  buildYearSel();
+  // load only active month
+  const k = activeKey();
+  await loadTab(k);
   buildTabs();
   renderMain();
+  syncDot('ok');
 })();
 </script>
 </body>
