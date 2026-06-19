@@ -78,7 +78,7 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; display: fl
 }
 .header-inner {
   display: flex; align-items: center; gap: 12px;
-  max-width: 1200px; width: 100%; margin: 0 auto;
+  max-width: 1400px; width: 100%; margin: 0 auto;
   padding: 16px 0 0;
 }
 .app-logo {
@@ -114,7 +114,7 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; display: fl
 .main {
   flex: 1; padding: 24px 28px;
   display: flex; flex-direction: column; gap: 20px;
-  max-width: 1200px; width: 100%; margin: 0 auto; align-self: center;
+  max-width: 1400px; width: 100%; margin: 0 auto; align-self: center;
 }
 
 /* ── Loading overlay ── */
@@ -174,14 +174,19 @@ tbody tr:last-child { border-bottom: none; }
 tbody tr:hover { background: var(--surface2); }
 td { padding: 7px 16px; vertical-align: middle; font-size: 13px; }
 
-.col-empresa   { width: 120px; }
-.col-funcional { width: 130px; }
-.col-jira      { width: 120px; }
-.col-dias      { width: 65px; }
-.col-status    { width: 148px; }
-.col-obs       { min-width: 180px; }
-.col-drag      { width: 28px; }
-.col-del       { width: 40px; }
+.col-empresa   { width: 90px;  white-space: nowrap; }
+.col-funcional { width: 160px; }
+.col-jira      { width: 110px; white-space: nowrap; }
+.col-dias      { width: 55px;  white-space: nowrap; }
+.col-status    { width: 140px; white-space: nowrap; }
+.col-obs       { width: auto;  min-width: 0; }
+.col-lancado   { width: 72px;  white-space: nowrap; text-align: center; }
+.col-drag      { width: 24px; }
+.col-del       { width: 36px; }
+
+/* inputs expandem para preencher célula */
+td { overflow: hidden; }
+.cell-input { min-width: 0; }
 
 .drag-handle {
   color: var(--hint); cursor: grab; font-size: 13px;
@@ -221,7 +226,6 @@ tr.drag-over { border-top: 2px solid var(--accent); }
 .s-parado   { background: var(--s-parado-bg);   color: var(--s-parado-cl);   border-color: var(--s-parado-bd);   }
 
 /* Checkbox lançado */
-.col-lancado { width: 72px; text-align: center; }
 .check-lancado {
   width: 17px; height: 17px; cursor: pointer; accent-color: var(--accent);
   appearance: none; -webkit-appearance: none;
