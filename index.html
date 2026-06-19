@@ -29,237 +29,138 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
 }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
 /* ── Header ── */
 .app-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 18px 28px 0;
-  border-bottom: 1px solid var(--border);
   background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
 }
-
 .header-inner {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  max-width: 1100px;
-  width: 100%;
-  margin: 0 auto;
+  display: flex; align-items: center; gap: 12px;
+  max-width: 1200px; width: 100%; margin: 0 auto;
+  padding: 16px 0 0;
 }
-
 .app-logo {
-  width: 28px; height: 28px;
-  background: var(--accent);
-  border-radius: 7px;
+  width: 28px; height: 28px; background: var(--accent); border-radius: 7px;
   display: flex; align-items: center; justify-content: center;
   font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
   margin-bottom: 14px;
 }
+.app-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; margin-right: 24px; white-space: nowrap; }
 
-.app-title {
-  font-size: 15px; font-weight: 600; color: var(--text);
-  margin-bottom: 14px;
-  margin-right: 24px;
-}
-
-/* ── Month tabs ── */
-.tabs {
-  display: flex;
-  gap: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
-  flex: 1;
-  margin-bottom: -1px;
-}
+/* ── Tabs ── */
+.tabs { display: flex; overflow-x: auto; scrollbar-width: none; flex: 1; margin-bottom: -1px; }
 .tabs::-webkit-scrollbar { display: none; }
-
 .tab {
-  padding: 10px 16px 11px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--muted);
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-  transition: color .15s, border-color .15s;
-  user-select: none;
-  flex-shrink: 0;
+  padding: 10px 15px 11px; font-size: 12px; font-weight: 500; color: var(--muted);
+  cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap;
+  transition: color .15s, border-color .15s; user-select: none; flex-shrink: 0;
 }
 .tab:hover { color: var(--text); }
-.tab.active {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-}
-.tab.obs-tab { color: var(--muted); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 .tab.obs-tab.active { color: #c084fc; border-bottom-color: #c084fc; }
 
-/* ── Main content ── */
-.main {
-  flex: 1;
-  padding: 24px 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  max-width: 1100px;
-  width: 100%;
-  margin: 0 auto;
-  align-self: center;
+/* ── Sync indicator ── */
+.sync-dot {
+  width: 7px; height: 7px; border-radius: 50%; margin-bottom: 14px; flex-shrink: 0;
+  background: var(--hint); transition: background .3s;
 }
+.sync-dot.ok      { background: #4ecb71; }
+.sync-dot.saving  { background: #f0c040; }
+.sync-dot.error   { background: #f06060; }
+
+/* ── Main ── */
+.main {
+  flex: 1; padding: 24px 28px;
+  display: flex; flex-direction: column; gap: 20px;
+  max-width: 1200px; width: 100%; margin: 0 auto; align-self: center;
+}
+
+/* ── Loading overlay ── */
+.loading {
+  text-align: center; padding: 60px 20px; color: var(--muted); font-size: 13px;
+}
+.spinner {
+  width: 24px; height: 24px; border: 2px solid var(--border2);
+  border-top-color: var(--accent); border-radius: 50%;
+  animation: spin .7s linear infinite; margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* ── Toolbar ── */
-.toolbar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
+.toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .btn {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 7px 14px;
-  font-size: 12px; font-weight: 500; font-family: inherit;
-  border-radius: 7px;
-  border: 1px solid var(--border2);
-  cursor: pointer;
-  transition: all .15s;
-  white-space: nowrap;
+  padding: 7px 14px; font-size: 12px; font-weight: 500; font-family: inherit;
+  border-radius: 7px; border: 1px solid var(--border2); cursor: pointer;
+  transition: all .15s; white-space: nowrap;
 }
-.btn-primary {
-  background: var(--accent); color: #fff; border-color: var(--accent);
-}
-.btn-primary:hover { background: #3a7ce8; border-color: #3a7ce8; }
-.btn-ghost {
-  background: var(--surface2); color: var(--muted); border-color: var(--border);
-}
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn-primary:hover { background: #3a7ce8; }
+.btn-ghost { background: var(--surface2); color: var(--muted); border-color: var(--border); }
 .btn-ghost:hover { color: var(--text); border-color: var(--border2); }
 
 .search {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 7px;
-  padding: 7px 12px;
-  font-size: 12px; font-family: inherit;
-  color: var(--text);
-  outline: none;
-  width: 200px;
-  transition: border-color .15s;
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 7px;
+  padding: 7px 12px; font-size: 12px; font-family: inherit; color: var(--text);
+  outline: none; width: 200px; transition: border-color .15s;
 }
 .search::placeholder { color: var(--hint); }
 .search:focus { border-color: var(--accent); }
 
 .filter {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 7px;
-  padding: 7px 10px;
-  font-size: 12px; font-family: inherit;
-  color: var(--muted);
-  outline: none;
-  cursor: pointer;
-  transition: border-color .15s;
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 7px;
+  padding: 7px 10px; font-size: 12px; font-family: inherit; color: var(--muted);
+  outline: none; cursor: pointer;
 }
 .filter:focus { border-color: var(--accent); }
 
 .count-pill {
-  margin-left: auto;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 4px 12px;
-  font-size: 11px; color: var(--muted);
+  margin-left: auto; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 4px 12px; font-size: 11px; color: var(--muted);
 }
 
 /* ── Table ── */
-.table-wrap {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 640px;
-}
-
+.table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+table { width: 100%; border-collapse: collapse; min-width: 700px; }
 thead th {
-  background: var(--surface2);
-  padding: 10px 16px;
-  text-align: left;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-  color: var(--hint);
-  border-bottom: 1px solid var(--border);
-  user-select: none;
-  white-space: nowrap;
+  background: var(--surface2); padding: 10px 16px; text-align: left;
+  font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--hint); border-bottom: 1px solid var(--border); user-select: none; white-space: nowrap;
 }
-
-tbody tr {
-  border-bottom: 1px solid var(--border);
-  transition: background .1s;
-}
+tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
 tbody tr:last-child { border-bottom: none; }
 tbody tr:hover { background: var(--surface2); }
+td { padding: 7px 16px; vertical-align: middle; font-size: 13px; }
 
-td {
-  padding: 8px 16px;
-  vertical-align: middle;
-  font-size: 13px;
-}
+.col-empresa   { width: 120px; }
+.col-funcional { width: 130px; }
+.col-jira      { width: 120px; }
+.col-dias      { width: 65px; }
+.col-status    { width: 148px; }
+.col-obs       { min-width: 180px; }
+.col-del       { width: 40px; }
 
-.col-empresa   { width: 130px; }
-.col-funcional { width: 140px; }
-.col-jira      { width: 130px; }
-.col-dias      { width: 70px; }
-.col-status    { width: 150px; }
-.col-obs       { min-width: 200px; }
-.col-del       { width: 44px; }
-
-/* Inline inputs */
 .cell-input {
-  width: 100%;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 5px;
-  padding: 4px 6px;
-  font-size: 13px; font-family: inherit;
-  color: var(--text);
-  outline: none;
-  transition: border-color .15s, background .15s;
+  width: 100%; background: transparent; border: 1px solid transparent;
+  border-radius: 5px; padding: 4px 6px; font-size: 13px; font-family: inherit;
+  color: var(--text); outline: none; transition: border-color .15s, background .15s;
 }
-.cell-input:hover { border-color: var(--border2); background: var(--surface2); }
+.cell-input:hover { border-color: var(--border2); background: rgba(255,255,255,.03); }
 .cell-input:focus { border-color: var(--accent); background: var(--bg); }
 .cell-input::placeholder { color: var(--hint); }
+.cell-dias { width: 44px; text-align: center; }
 
-.cell-dias { width: 48px; text-align: center; }
-
-/* Status select */
-.status-wrap { position: relative; }
 .status-sel {
-  width: 100%;
-  appearance: none;
-  -webkit-appearance: none;
-  border-radius: 20px;
-  padding: 4px 28px 4px 12px;
+  width: 100%; appearance: none; -webkit-appearance: none;
+  border-radius: 20px; padding: 4px 26px 4px 12px;
   font-size: 11px; font-weight: 600; font-family: inherit;
-  cursor: pointer; outline: none;
-  border: 1px solid;
-  transition: opacity .15s;
+  cursor: pointer; outline: none; border: 1px solid;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238892a4'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
+  background-repeat: no-repeat; background-position: right 9px center;
+  transition: opacity .15s;
 }
 .status-sel:hover { opacity: .85; }
 
@@ -270,48 +171,27 @@ td {
 .s-lancado  { background: var(--s-lancado-bg);  color: var(--s-lancado-cl);  border-color: var(--s-lancado-bd);  }
 .s-parado   { background: var(--s-parado-bg);   color: var(--s-parado-cl);   border-color: var(--s-parado-bd);   }
 
-/* Delete button */
 .del-btn {
-  background: none; border: none;
-  color: var(--hint); cursor: pointer;
-  font-size: 14px; padding: 4px 6px;
-  border-radius: 5px; line-height: 1;
-  transition: color .15s, background .15s;
-  opacity: 0;
+  background: none; border: none; color: var(--hint); cursor: pointer;
+  font-size: 14px; padding: 4px 6px; border-radius: 5px; line-height: 1;
+  transition: color .15s, background .15s; opacity: 0;
 }
 tbody tr:hover .del-btn { opacity: 1; }
 .del-btn:hover { color: #f06060; background: rgba(240,96,96,.1); }
 
-/* Empty */
-.empty {
-  text-align: center;
-  padding: 48px 20px;
-  color: var(--hint);
-  font-size: 13px;
-}
+.empty { text-align: center; padding: 48px 20px; color: var(--hint); font-size: 13px; }
 .empty-icon { font-size: 32px; margin-bottom: 10px; opacity: .4; }
 
-/* ── Observações pane ── */
+/* ── Obs pane ── */
 .obs-pane {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px; display: flex; flex-direction: column; gap: 12px;
 }
 .obs-pane h2 { font-size: 13px; font-weight: 600; color: var(--muted); }
 .obs-textarea {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 14px 16px;
-  font-size: 13px; font-family: inherit; line-height: 1.65;
-  color: var(--text);
-  outline: none;
-  resize: vertical;
-  min-height: 260px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px 16px; font-size: 13px; font-family: inherit; line-height: 1.65;
+  color: var(--text); outline: none; resize: vertical; min-height: 260px;
   transition: border-color .15s;
 }
 .obs-textarea::placeholder { color: var(--hint); }
@@ -322,19 +202,14 @@ tbody tr:hover .del-btn { opacity: 1; }
 .toast {
   position: fixed; bottom: 24px; left: 50%;
   transform: translateX(-50%) translateY(6px);
-  background: var(--surface2);
-  border: 1px solid var(--border2);
-  color: var(--text);
-  font-size: 12px; padding: 8px 18px;
-  border-radius: 20px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  color: var(--text); font-size: 12px; padding: 8px 18px; border-radius: 20px;
   opacity: 0; pointer-events: none; z-index: 999;
-  transition: opacity .2s, transform .2s;
-  white-space: nowrap;
+  transition: opacity .2s, transform .2s; white-space: nowrap;
   box-shadow: 0 4px 20px rgba(0,0,0,.4);
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
@@ -347,17 +222,38 @@ tbody tr:hover .del-btn { opacity: 1; }
     <div class="app-logo">T</div>
     <span class="app-title">Tracker</span>
     <nav class="tabs" id="tabs"></nav>
+    <div class="sync-dot" id="sync-dot" title="Estado da sincronização"></div>
   </div>
 </header>
 
-<main class="main" id="main"></main>
+<main class="main" id="main">
+  <div class="loading"><div class="spinner"></div>A ligar ao Firebase…</div>
+</main>
 
 <div class="toast" id="toast"></div>
 
-<script>
+<!-- Firebase SDK (modular via CDN) -->
+<script type="module">
+import { initializeApp }                          from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getFirestore, doc, getDoc, setDoc,
+         collection, getDocs, addDoc, updateDoc,
+         deleteDoc, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+// ── Firebase init ────────────────────────────────────────────────────────────
+const app = initializeApp({
+  apiKey:            "AIzaSyCQ4tyq754PjD8jcZbNepcYempnAFpL_PE",
+  authDomain:        "maingoal-4a29c.firebaseapp.com",
+  projectId:         "maingoal-4a29c",
+  storageBucket:     "maingoal-4a29c.firebasestorage.app",
+  messagingSenderId: "913534446506",
+  appId:             "1:913534446506:web:cdeb042bd17e8a77a999d3",
+});
+const db = getFirestore(app);
+
 // ── Constants ────────────────────────────────────────────────────────────────
-const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
-                'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const MONTHS    = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+                   'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const MONTH_KEYS = MONTHS.map((_,i) => String(i+1).padStart(2,'0'));
 
 const STATUS = [
   { val:'iniciar',  label:'A iniciar', cls:'s-iniciar'  },
@@ -368,97 +264,135 @@ const STATUS = [
   { val:'parado',   label:'Parado',    cls:'s-parado'   },
 ];
 
-const STATUS_OPTS = STATUS.map(s =>
-  `<option value="${s.val}">${s.label}</option>`
-).join('');
-
-const STORE_KEY   = 'tracker_2024_rows';
-const OBS_KEY     = 'tracker_2024_obs';
-const ACTIVE_KEY  = 'tracker_2024_tab';
-
 // ── State ────────────────────────────────────────────────────────────────────
-let allRows = {};   // { "jan": [{id,empresa,funcional,jira,dias,status},...], ... }
-let obsData = {};   // { "jan": "texto...", ... }
-let activeTab = 'jan';
-let searchQ  = '';
-let filterSt = '';
+let activeTab = MONTH_KEYS[new Date().getMonth()];
+let allRows   = {};   // { "01": [{id, empresa, ...}] }
+let obsData   = {};   // { "01": "texto", "obs": "texto" }
+let searchQ   = '';
+let filterSt  = '';
+let unsub     = null; // firestore listener
 
-const MONTH_KEYS = MONTHS.map((_,i) => String(i+1).padStart(2,'0'));
-// jan=01, feb=02, ...
+// ── Helpers ──────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function statusCls(val) { return STATUS.find(s=>s.val===val)?.cls||'s-iniciar'; }
 
-// ── Persistence ──────────────────────────────────────────────────────────────
-function load() {
-  try {
-    const r = localStorage.getItem(STORE_KEY);
-    allRows = r ? JSON.parse(r) : {};
-  } catch(e) { allRows = {}; }
-  try {
-    const o = localStorage.getItem(OBS_KEY);
-    obsData = o ? JSON.parse(o) : {};
-  } catch(e) { obsData = {}; }
-  try {
-    activeTab = localStorage.getItem(ACTIVE_KEY) || currentMonthKey();
-  } catch(e) { activeTab = currentMonthKey(); }
+function syncDot(state) {
+  const d = document.getElementById('sync-dot');
+  if (!d) return;
+  d.className = 'sync-dot ' + state;
 }
 
-function save() {
+function toast(msg) {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(el._t); el._t = setTimeout(()=>el.classList.remove('show'), 2400);
+}
+
+// ── Firestore paths ──────────────────────────────────────────────────────────
+// rows: tracker/months/{monthKey}/rows/{docId}
+// obs:  tracker/obs/{monthKey}  (single doc with field "text")
+
+function rowsCol(monthKey) {
+  return collection(db, 'tracker', 'months', monthKey, 'rows');
+}
+function obsDocRef(key) {
+  return doc(db, 'tracker', 'obs', key);
+}
+
+// ── Load all data ────────────────────────────────────────────────────────────
+async function loadAll() {
+  syncDot('saving');
   try {
-    localStorage.setItem(STORE_KEY, JSON.stringify(allRows));
-    localStorage.setItem(OBS_KEY,   JSON.stringify(obsData));
-    localStorage.setItem(ACTIVE_KEY, activeTab);
+    // Load all rows for all months in parallel
+    const rowPromises = MONTH_KEYS.map(async k => {
+      const snap = await getDocs(rowsCol(k));
+      allRows[k] = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      allRows[k].sort((a,b) => (a.order||0) - (b.order||0));
+    });
+    // Load obs
+    const obsKeys = [...MONTH_KEYS, 'obs'];
+    const obsPromises = obsKeys.map(async k => {
+      const snap = await getDoc(obsDocRef(k));
+      obsData[k] = snap.exists() ? (snap.data().text || '') : '';
+    });
+    await Promise.all([...rowPromises, ...obsPromises]);
+    syncDot('ok');
   } catch(e) {
-    toast('⚠ Erro ao salvar — localStorage indisponível');
+    console.error(e);
+    syncDot('error');
+    toast('⚠ Erro ao carregar dados');
   }
 }
 
-function currentMonthKey() {
-  return String(new Date().getMonth() + 1).padStart(2,'0');
+// ── Firestore write helpers ──────────────────────────────────────────────────
+async function fsAddRow(monthKey, row) {
+  syncDot('saving');
+  try {
+    const ref = await addDoc(rowsCol(monthKey), {
+      empresa:   row.empresa   || '',
+      funcional: row.funcional || '',
+      jira:      row.jira      || '',
+      dias:      row.dias      || '',
+      status:    row.status    || 'iniciar',
+      obs:       row.obs       || '',
+      order:     Date.now(),
+    });
+    row.id = ref.id;
+    syncDot('ok');
+  } catch(e) { console.error(e); syncDot('error'); toast('⚠ Erro ao guardar'); }
 }
 
-function rowsFor(key) {
-  if (!allRows[key]) allRows[key] = [];
-  return allRows[key];
+async function fsUpdateRow(monthKey, id, fields) {
+  syncDot('saving');
+  try {
+    await updateDoc(doc(db, 'tracker', 'months', monthKey, 'rows', id), fields);
+    syncDot('ok');
+  } catch(e) { console.error(e); syncDot('error'); toast('⚠ Erro ao guardar'); }
 }
 
-function uid() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+async function fsDeleteRow(monthKey, id) {
+  syncDot('saving');
+  try {
+    await deleteDoc(doc(db, 'tracker', 'months', monthKey, 'rows', id));
+    syncDot('ok');
+  } catch(e) { console.error(e); syncDot('error'); toast('⚠ Erro ao apagar'); }
+}
+
+async function fsSaveObs(key, text) {
+  syncDot('saving');
+  try {
+    await setDoc(obsDocRef(key), { text });
+    syncDot('ok');
+  } catch(e) { console.error(e); syncDot('error'); }
 }
 
 // ── Tabs ─────────────────────────────────────────────────────────────────────
 function buildTabs() {
   const nav = document.getElementById('tabs');
-  let html = MONTH_KEYS.map((k, i) => {
-    const cnt = (allRows[k] || []).length;
+  let html = MONTH_KEYS.map((k,i) => {
+    const cnt   = (allRows[k]||[]).length;
     const badge = cnt ? ` <span style="background:var(--accent-bg);color:var(--accent);border-radius:10px;padding:1px 6px;font-size:10px;">${cnt}</span>` : '';
     return `<div class="tab${activeTab===k?' active':''}" data-key="${k}">${MONTHS[i]}${badge}</div>`;
   }).join('');
   html += `<div class="tab obs-tab${activeTab==='obs'?' active':''}" data-key="obs">Observações</div>`;
   nav.innerHTML = html;
-  nav.querySelectorAll('.tab').forEach(el => {
-    el.addEventListener('click', () => switchTab(el.dataset.key));
-  });
+  nav.querySelectorAll('.tab').forEach(el =>
+    el.addEventListener('click', () => switchTab(el.dataset.key))
+  );
 }
 
 function switchTab(key) {
   activeTab = key;
-  save();
   buildTabs();
   renderMain();
 }
 
-// ── Table rendering ──────────────────────────────────────────────────────────
-function esc(s) {
-  return String(s || '')
-    .replace(/&/g,'&amp;').replace(/"/g,'&quot;')
-    .replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-function statusCls(val) {
-  return STATUS.find(s => s.val === val)?.cls || 's-iniciar';
-}
-
+// ── Row HTML ─────────────────────────────────────────────────────────────────
 function rowHTML(r) {
-  const cls = statusCls(r.status);
+  const cls  = statusCls(r.status);
   const opts = STATUS.map(s =>
     `<option value="${s.val}"${r.status===s.val?' selected':''}>${s.label}</option>`
   ).join('');
@@ -472,7 +406,7 @@ function rowHTML(r) {
         data-field="funcional" data-id="${r.id}" />
     </td>
     <td class="col-jira">
-      <input class="cell-input" value="${esc(r.jira)}" placeholder="ex: GFATR-282"
+      <input class="cell-input" value="${esc(r.jira)}" placeholder="GFATR-282"
         data-field="jira" data-id="${r.id}" />
     </td>
     <td class="col-dias">
@@ -480,12 +414,12 @@ function rowHTML(r) {
         data-field="dias" data-id="${r.id}" />
     </td>
     <td class="col-status">
-      <select class="status-sel ${cls}" data-id="${r.id}" data-field="status">
+      <select class="status-sel ${cls}" data-id="${r.id}">
         ${opts}
       </select>
     </td>
     <td class="col-obs">
-      <input class="cell-input" value="${esc(r.obs)}" placeholder="Observação..."
+      <input class="cell-input" value="${esc(r.obs)}" placeholder="Observação…"
         data-field="obs" data-id="${r.id}" />
     </td>
     <td class="col-del">
@@ -494,51 +428,48 @@ function rowHTML(r) {
   </tr>`;
 }
 
+// ── Render table ─────────────────────────────────────────────────────────────
 function renderTable(key) {
-  const rows = rowsFor(key);
-  const q  = searchQ.toLowerCase();
-  const sf = filterSt;
+  const rows = allRows[key] || [];
+  const q    = searchQ.toLowerCase();
+  const sf   = filterSt;
 
   const filtered = rows.filter(r => {
     const hay = [r.empresa,r.funcional,r.jira,r.dias,r.obs].join(' ').toLowerCase();
-    return (!q || hay.includes(q)) && (!sf || r.status === sf);
+    return (!q||hay.includes(q)) && (!sf||r.status===sf);
   });
 
-  const countEl  = document.getElementById('count-pill');
-  if (countEl) countEl.textContent = filtered.length + ' linha' + (filtered.length !== 1 ? 's' : '');
+  const pill = document.getElementById('count-pill');
+  if (pill) pill.textContent = filtered.length + ' linha' + (filtered.length!==1?'s':'');
 
   const tbody = document.getElementById('tbody');
   if (!tbody) return;
 
   tbody.innerHTML = filtered.length
     ? filtered.map(rowHTML).join('')
-    : `<tr><td colspan="7">
-        <div class="empty">
-          <div class="empty-icon">📋</div>
-          Nenhuma linha neste mês. Clique em <strong>+ Adicionar</strong> para começar.
-        </div>
-      </td></tr>`;
+    : `<tr><td colspan="7"><div class="empty">
+        <div class="empty-icon">📋</div>
+        Nenhuma linha neste mês. Clique em <strong>+ Adicionar</strong>.
+      </div></td></tr>`;
 
-  // Bind inputs
+  // Bind cell inputs (debounced save)
   tbody.querySelectorAll('.cell-input').forEach(input => {
-    input.addEventListener('change', onCellChange);
-    input.addEventListener('blur',   onCellChange);
-  });
-  tbody.querySelectorAll('.status-sel').forEach(sel => {
-    sel.addEventListener('change', onStatusChange);
-  });
-  tbody.querySelectorAll('.del-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-      const id = e.currentTarget.dataset.id;
-      deleteRow(key, id);
-    });
-  });
-
-  // Enter key navigation
-  tbody.querySelectorAll('.cell-input').forEach(input => {
+    let timer;
+    const commit = () => {
+      const id    = input.dataset.id;
+      const field = input.dataset.field;
+      const val   = input.value;
+      const row   = (allRows[key]||[]).find(r=>r.id===id);
+      if (!row || row[field] === val) return;
+      row[field] = val;
+      fsUpdateRow(key, id, { [field]: val });
+    };
+    input.addEventListener('input',  () => { clearTimeout(timer); timer = setTimeout(commit, 600); });
+    input.addEventListener('blur',   commit);
     input.addEventListener('keydown', e => {
       if (e.key !== 'Enter') return;
       e.preventDefault();
+      commit();
       const tr   = input.closest('tr');
       const next = tr?.nextElementSibling;
       if (next) {
@@ -548,67 +479,59 @@ function renderTable(key) {
       }
     });
   });
+
+  // Status selects
+  tbody.querySelectorAll('.status-sel').forEach(sel => {
+    sel.addEventListener('change', () => {
+      const id  = sel.dataset.id;
+      const val = sel.value;
+      const row = (allRows[key]||[]).find(r=>r.id===id);
+      if (!row) return;
+      row.status = val;
+      sel.className = 'status-sel ' + statusCls(val);
+      fsUpdateRow(key, id, { status: val });
+      buildTabs();
+    });
+  });
+
+  // Delete buttons
+  tbody.querySelectorAll('.del-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.id;
+      allRows[key] = (allRows[key]||[]).filter(r=>r.id!==id);
+      await fsDeleteRow(key, id);
+      buildTabs();
+      renderTable(key);
+      toast('Linha removida');
+    });
+  });
 }
 
-function onCellChange(e) {
-  const input = e.currentTarget;
-  const id    = input.dataset.id;
-  const field = input.dataset.field;
-  const val   = input.value;
-  const row   = rowsFor(activeTab).find(r => r.id === id);
-  if (!row) return;
-  row[field] = val;
-  save();
-}
-
-function onStatusChange(e) {
-  const sel   = e.currentTarget;
-  const id    = sel.dataset.id;
-  const val   = sel.value;
-  const row   = rowsFor(activeTab).find(r => r.id === id);
-  if (!row) return;
-  row.status  = val;
-  save();
-  sel.className = 'status-sel ' + statusCls(val);
-  buildTabs(); // refresh count badges
-}
-
-function deleteRow(key, id) {
-  allRows[key] = rowsFor(key).filter(r => r.id !== id);
-  save();
-  buildTabs();
-  renderTable(key);
-  toast('Linha removida');
-}
-
-// ── Observations pane ────────────────────────────────────────────────────────
+// ── Obs pane ─────────────────────────────────────────────────────────────────
 function renderObs() {
-  const val = obsData[activeTab] || '';
-  return `
+  const main = document.getElementById('main');
+  const val  = obsData[activeTab] || '';
+  main.innerHTML = `
     <div class="obs-pane">
-      <h2>Observações — ${MONTHS[MONTH_KEYS.indexOf(activeTab)] || 'Geral'}</h2>
-      <textarea class="obs-textarea" id="obs-area" placeholder="Escreva aqui anotações, lembretes, contexto relevante para este mês...">${esc(val)}</textarea>
-      <span class="obs-save-hint">Salvo automaticamente ao digitar.</span>
+      <h2>Observações${activeTab!=='obs' ? ' — ' + MONTHS[MONTH_KEYS.indexOf(activeTab)] : ' Gerais'}</h2>
+      <textarea class="obs-textarea" id="obs-area" placeholder="Anotações, lembretes, contexto…">${esc(val)}</textarea>
+      <span class="obs-save-hint">Guardado automaticamente no Firebase.</span>
     </div>`;
+
+  const area = document.getElementById('obs-area');
+  let timer;
+  area.addEventListener('input', () => {
+    obsData[activeTab] = area.value;
+    clearTimeout(timer);
+    timer = setTimeout(() => fsSaveObs(activeTab, area.value), 800);
+  });
 }
 
 // ── Main render ──────────────────────────────────────────────────────────────
 function renderMain() {
   const main = document.getElementById('main');
 
-  if (activeTab === 'obs') {
-    main.innerHTML = renderObs();
-    const area = document.getElementById('obs-area');
-    let timer;
-    area.addEventListener('input', () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        obsData['obs'] = area.value;
-        save();
-      }, 400);
-    });
-    return;
-  }
+  if (activeTab === 'obs') { renderObs(); return; }
 
   main.innerHTML = `
     <div class="toolbar">
@@ -616,35 +539,33 @@ function renderMain() {
       <input class="search" id="search" placeholder="Buscar…" value="${esc(searchQ)}" />
       <select class="filter" id="filter-status">
         <option value="">Todos</option>
-        ${STATUS.map(s => `<option value="${s.val}"${filterSt===s.val?' selected':''}>${s.label}</option>`).join('')}
+        ${STATUS.map(s=>`<option value="${s.val}"${filterSt===s.val?' selected':''}>${s.label}</option>`).join('')}
       </select>
-      <button class="btn btn-ghost" id="btn-csv" title="Exportar CSV">↓ CSV</button>
+      <button class="btn btn-ghost" id="btn-csv">↓ CSV</button>
       <span class="count-pill" id="count-pill"></span>
     </div>
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th class="col-empresa">Empresa</th>
-            <th class="col-funcional">Funcional</th>
-            <th class="col-jira">Jira</th>
-            <th class="col-dias">Dias</th>
-            <th class="col-status">Status</th>
-            <th class="col-obs">Observação</th>
-            <th class="col-del"></th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th class="col-empresa">Empresa</th>
+          <th class="col-funcional">Funcional</th>
+          <th class="col-jira">Jira</th>
+          <th class="col-dias">Dias</th>
+          <th class="col-status">Status</th>
+          <th class="col-obs">Observação</th>
+          <th class="col-del"></th>
+        </tr></thead>
         <tbody id="tbody"></tbody>
       </table>
     </div>`;
 
   renderTable(activeTab);
 
-  document.getElementById('btn-add').addEventListener('click', () => {
-    rowsFor(activeTab).unshift({
-      id: uid(), empresa:'', funcional:'', jira:'', dias:'', status:'iniciar', obs:''
-    });
-    save();
+  document.getElementById('btn-add').addEventListener('click', async () => {
+    const row = { empresa:'', funcional:'', jira:'', dias:'', status:'iniciar', obs:'' };
+    if (!allRows[activeTab]) allRows[activeTab] = [];
+    allRows[activeTab].unshift(row);
+    await fsAddRow(activeTab, row);
     buildTabs();
     renderTable(activeTab);
     const first = document.querySelector('#tbody tr:first-child .cell-input');
@@ -652,55 +573,38 @@ function renderMain() {
   });
 
   document.getElementById('search').addEventListener('input', e => {
-    searchQ = e.target.value;
-    renderTable(activeTab);
+    searchQ = e.target.value; renderTable(activeTab);
   });
-
   document.getElementById('filter-status').addEventListener('change', e => {
-    filterSt = e.target.value;
-    renderTable(activeTab);
+    filterSt = e.target.value; renderTable(activeTab);
   });
-
   document.getElementById('btn-csv').addEventListener('click', exportCSV);
 }
 
-// ── Export ───────────────────────────────────────────────────────────────────
+// ── Export CSV ───────────────────────────────────────────────────────────────
 function exportCSV() {
-  const rows = rowsFor(activeTab);
+  const rows = allRows[activeTab] || [];
   if (!rows.length) { toast('Nenhuma linha para exportar'); return; }
   const header = ['Empresa','Funcional','Jira','Dias','Status','Observação'];
   const data   = rows.map(r => [
     r.empresa, r.funcional, r.jira, r.dias,
-    STATUS.find(s => s.val === r.status)?.label || r.status,
-    r.obs
+    STATUS.find(s=>s.val===r.status)?.label||r.status, r.obs
   ]);
-  const csv = [header,...data]
-    .map(row => row.map(c => `"${String(c||'').replace(/"/g,'""')}"`).join(','))
-    .join('\n');
-  const blob = new Blob(['﻿'+csv], { type:'text/csv;charset=utf-8;' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `tracker_${MONTHS[MONTH_KEYS.indexOf(activeTab)] || activeTab}.csv`;
+  const csv  = [header,...data].map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8;'});
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `tracker_${MONTHS[MONTH_KEYS.indexOf(activeTab)]||activeTab}.csv`;
   a.click();
   toast('CSV exportado');
 }
 
-// ── Toast ────────────────────────────────────────────────────────────────────
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(el._t);
-  el._t = setTimeout(() => el.classList.remove('show'), 2200);
-}
-
 // ── Init ─────────────────────────────────────────────────────────────────────
-load();
-buildTabs();
-renderMain();
-
-// Confirm data saved on unload
-window.addEventListener('beforeunload', () => save());
+(async () => {
+  await loadAll();
+  buildTabs();
+  renderMain();
+})();
 </script>
 </body>
 </html>
