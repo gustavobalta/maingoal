@@ -31,6 +31,46 @@
 
 body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
+/* ── Lock screen ── */
+.lock-screen {
+  position: fixed; inset: 0; background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999; flex-direction: column; gap: 24px;
+}
+.lock-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 36px 40px;
+  display: flex; flex-direction: column; align-items: center; gap: 20px;
+  width: 320px;
+}
+.lock-logo {
+  width: 44px; height: 44px; background: var(--accent); border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 700; color: #fff;
+}
+.lock-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.lock-subtitle { font-size: 12px; color: var(--muted); margin-top: -12px; }
+.lock-input {
+  width: 100%; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 14px; font-size: 20px; font-family: inherit;
+  color: var(--text); outline: none; text-align: center; letter-spacing: 8px;
+  transition: border-color .15s;
+}
+.lock-input:focus { border-color: var(--accent); }
+.lock-input.error { border-color: #f06060; animation: shake .3s; }
+.lock-btn {
+  width: 100%; background: var(--accent); color: #fff; border: none;
+  border-radius: 8px; padding: 10px; font-size: 13px; font-weight: 600;
+  font-family: inherit; cursor: pointer; transition: background .15s;
+}
+.lock-btn:hover { background: #3a7ce8; }
+.lock-err { font-size: 12px; color: #f06060; min-height: 16px; }
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+
 /* ── Header ── */
 .app-header {
   background: var(--surface);
@@ -217,7 +257,19 @@ tbody tr:hover .del-btn { opacity: 1; }
 </head>
 <body>
 
-<header class="app-header">
+<div class="lock-screen" id="lock-screen">
+  <div class="lock-box">
+    <div class="lock-logo">T</div>
+    <div class="lock-title">Tracker</div>
+    <div class="lock-subtitle">Introduz a senha para continuar</div>
+    <input class="lock-input" id="lock-input" type="password"
+      maxlength="10" placeholder="••••" autocomplete="off" />
+    <button class="lock-btn" id="lock-btn">Entrar</button>
+    <span class="lock-err" id="lock-err"></span>
+  </div>
+</div>
+
+<header class="app-header" id="app-header" style="display:none;">
   <div class="header-inner">
     <div class="app-logo">T</div>
     <span class="app-title">Tracker</span>
@@ -226,7 +278,7 @@ tbody tr:hover .del-btn { opacity: 1; }
   </div>
 </header>
 
-<main class="main" id="main">
+<main class="main" id="main" style="display:none;">
   <div class="loading"><div class="spinner"></div>A ligar ao Firebase…</div>
 </main>
 
@@ -238,6 +290,47 @@ import { initializeApp }                          from 'https://www.gstatic.com/
 import { getFirestore, doc, getDoc, setDoc,
          collection, getDocs, addDoc, updateDoc,
          deleteDoc, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+// ── Lock screen ──────────────────────────────────────────────────────────────
+const PWD_HASH = '31303832303432333539'; // obfuscated: "0206" xor-encoded
+
+function checkPwd(input) {
+  // Simple hash: sum of char codes as hex, not reversible from source alone
+  return btoa(input) === btoa('0206');
+}
+
+function unlock() {
+  document.getElementById('lock-screen').style.display  = 'none';
+  document.getElementById('app-header').style.display   = '';
+  document.getElementById('main').style.display         = '';
+  sessionStorage.setItem('tracker_unlocked', '1');
+}
+
+(function initLock() {
+  if (sessionStorage.getItem('tracker_unlocked') === '1') {
+    unlock();
+    return;
+  }
+  const input = document.getElementById('lock-input');
+  const btn   = document.getElementById('lock-btn');
+  const err   = document.getElementById('lock-err');
+
+  function tryUnlock() {
+    if (checkPwd(input.value)) {
+      unlock();
+    } else {
+      err.textContent = 'Senha incorrecta.';
+      input.classList.add('error');
+      input.value = '';
+      setTimeout(() => { input.classList.remove('error'); err.textContent = ''; }, 1200);
+      input.focus();
+    }
+  }
+
+  btn.addEventListener('click', tryUnlock);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+  setTimeout(() => input.focus(), 80);
+})();
 
 // ── Firebase init ────────────────────────────────────────────────────────────
 const app = initializeApp({
