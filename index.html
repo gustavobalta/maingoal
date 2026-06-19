@@ -398,6 +398,89 @@ tfoot td { padding: 7px 10px; font-size: 11px; color: var(--muted); font-weight:
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 
+/* ── Voice input ── */
+.btn-voice {
+  background: var(--surface2); border: 1px solid var(--border2); border-radius: 7px;
+  color: var(--muted); font-size: 15px; padding: 5px 10px; cursor: pointer;
+  transition: all .15s; line-height: 1; display: inline-flex; align-items: center; gap: 5px;
+  font-family: inherit; font-weight: 500; font-size: 12px;
+}
+.btn-voice:hover { color: var(--text); border-color: #e05080; }
+.btn-voice.recording {
+  background: rgba(224,80,128,.15); border-color: #e05080; color: #e05080;
+  animation: pulse-mic 1s ease-in-out infinite;
+}
+@keyframes pulse-mic {
+  0%,100% { box-shadow: 0 0 0 0 rgba(224,80,128,.4); }
+  50%      { box-shadow: 0 0 0 6px rgba(224,80,128,0); }
+}
+
+/* voice modal */
+.voice-overlay {
+  position: fixed; inset: 0; z-index: 8200;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.55); opacity: 0; pointer-events: none; transition: opacity .15s;
+  padding: 16px;
+}
+.voice-overlay.open { opacity: 1; pointer-events: all; }
+.voice-box {
+  background: var(--surface); border: 1px solid var(--border2); border-radius: 16px;
+  padding: 24px 24px 20px; width: min(480px,100%); display: flex; flex-direction: column; gap: 16px;
+  transform: translateY(8px); transition: transform .15s; box-shadow: 0 10px 40px rgba(0,0,0,.6);
+}
+.voice-overlay.open .voice-box { transform: translateY(0); }
+
+.voice-header { display: flex; align-items: center; gap: 10px; }
+.voice-mic-btn {
+  width: 48px; height: 48px; border-radius: 50%; border: none; cursor: pointer;
+  background: rgba(224,80,128,.15); color: #e05080; font-size: 22px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: background .15s, transform .1s;
+}
+.voice-mic-btn:hover { background: rgba(224,80,128,.25); }
+.voice-mic-btn.active { background: #e05080; color: #fff; animation: pulse-mic 1s infinite; }
+.voice-mic-btn:active { transform: scale(.93); }
+.voice-header-text { display: flex; flex-direction: column; gap: 2px; }
+.voice-title  { font-size: 13px; font-weight: 600; }
+.voice-status { font-size: 11px; color: var(--muted); }
+
+.voice-transcript {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px 14px; min-height: 52px; font-size: 13px; color: var(--text); line-height: 1.5;
+}
+.voice-transcript .interim { color: var(--muted); font-style: italic; }
+.voice-transcript.empty::before { content: 'O que disseres vai aparecer aqui…'; color: var(--hint); font-style: italic; }
+
+.voice-hint {
+  font-size: 11px; color: var(--hint); line-height: 1.6;
+  background: var(--surface2); border-radius: 8px; padding: 10px 12px;
+}
+.voice-hint strong { color: var(--muted); }
+
+/* parsed preview */
+.voice-preview {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;
+}
+.voice-preview-title { font-size: 10px; font-weight: 600; color: var(--hint); text-transform: uppercase; letter-spacing: .05em; }
+.voice-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+.voice-field  { display: flex; flex-direction: column; gap: 2px; }
+.voice-field-label { font-size: 9px; color: var(--hint); text-transform: uppercase; letter-spacing: .04em; }
+.voice-field-val   { font-size: 12px; color: var(--text); font-weight: 500; }
+.voice-field-val.empty { color: var(--hint); font-style: italic; font-weight: 400; }
+.voice-field-val.status-pill {
+  display: inline-block; border-radius: 20px; padding: 1px 8px; font-size: 11px; font-weight: 600;
+}
+
+.voice-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+.voice-actions .btn { font-size: 12px; }
+.voice-actions .btn-success {
+  background: #1a4a20; color: #4ecb71; border-color: #1a4a20;
+  padding: 6px 14px; font-size: 12px; font-weight: 600; font-family: inherit;
+  border-radius: 7px; cursor: pointer; border: 1px solid; transition: background .15s;
+}
+.voice-actions .btn-success:hover { background: #2a6a30; }
+
 /* ── Calendar ── */
 .cal-pane { display: flex; flex-direction: column; gap: 20px; }
 .cal-nav {
@@ -590,6 +673,35 @@ tfoot td { padding: 7px 10px; font-size: 11px; color: var(--muted); font-weight:
       <div class="day-picker-opt opt-clear" id="dp-clear"><span class="day-picker-icon">✕</span>Remover marcação</div>
     </div>
     <button class="day-picker-cancel" id="dp-cancel">Cancelar</button>
+  </div>
+</div>
+
+<!-- Voice input modal -->
+<div class="voice-overlay" id="voice-overlay">
+  <div class="voice-box">
+    <div class="voice-header">
+      <button class="voice-mic-btn" id="voice-mic-btn">🎤</button>
+      <div class="voice-header-text">
+        <span class="voice-title">Entrada por voz</span>
+        <span class="voice-status" id="voice-status">Clica no microfone para começar</span>
+      </div>
+    </div>
+    <div class="voice-transcript empty" id="voice-transcript"></div>
+    <div class="voice-hint">
+      Exemplos:<br>
+      <strong>»</strong> "Empresa JM, funcional Marco, 3 dias, testes, Jira GFATR-282"<br>
+      <strong>»</strong> "Samuel, 0 dias, iniciado, obs Swift"<br>
+      <strong>»</strong> "Capela, pronto, 1 dia, lançado"
+    </div>
+    <div class="voice-preview" id="voice-preview" style="display:none;">
+      <div class="voice-preview-title">Actividade interpretada</div>
+      <div class="voice-fields" id="voice-fields"></div>
+    </div>
+    <div class="voice-actions">
+      <button class="btn" id="voice-cancel">Cancelar</button>
+      <button class="btn" id="voice-retry" style="display:none;">🔄 Repetir</button>
+      <button class="btn-success" id="voice-save" style="display:none;">✓ Guardar actividade</button>
+    </div>
   </div>
 </div>
 
@@ -1609,6 +1721,225 @@ async function renderCalendar() {
   document.getElementById('cal-next').addEventListener('click', ()=>{ calYear++; calDays[calYear]=undefined; renderCalendar(); });
 }
 
+// ── Voice input ───────────────────────────────────────────────────────────────
+
+const VOICE_STATUS_LABELS = {
+  'iniciar':  'A iniciar',
+  'iniciado': 'Iniciado',
+  'testes':   'Testes',
+  'pronto':   'Pronto',
+  'parado':   'Parado',
+};
+
+// Maps spoken words/aliases → internal status value
+const STATUS_ALIASES = {
+  'iniciar': 'iniciar', 'a iniciar': 'iniciar', 'inicio': 'iniciar', 'início': 'iniciar',
+  'iniciado': 'iniciado', 'em curso': 'iniciado', 'andamento': 'iniciado', 'em andamento': 'iniciado',
+  'teste': 'testes', 'testes': 'testes', 'em teste': 'testes', 'em testes': 'testes',
+  'pronto': 'pronto', 'feito': 'pronto', 'concluído': 'pronto', 'concluido': 'pronto', 'done': 'pronto',
+  'parado': 'parado', 'bloqueado': 'parado', 'pausa': 'parado',
+};
+
+function parseVoiceText(text) {
+  const t = text.toLowerCase().trim();
+  const result = {
+    empresa: '', funcional: '', jira: '', dias: '', status: 'iniciar',
+    obs: '', lancado: false,
+  };
+
+  // lançado
+  if (/lan[çc]ado/i.test(t)) result.lancado = true;
+
+  // status — scan for known aliases (longest match first)
+  const sortedAliases = Object.keys(STATUS_ALIASES).sort((a,b)=>b.length-a.length);
+  for (const alias of sortedAliases) {
+    if (t.includes(alias)) { result.status = STATUS_ALIASES[alias]; break; }
+  }
+
+  // dias — "3 dias" / "1 dia" / "zero dias"
+  const diasMatch = t.match(/(\d+|zero|um|uma|dois|duas|tr[eê]s|quatro|cinco|seis|sete|oito|nove|dez)\s*dia[s]?/i);
+  if (diasMatch) {
+    const wordMap = { zero:0,um:1,uma:1,dois:2,duas:2,'três':3,tres:3,quatro:4,cinco:5,seis:6,sete:7,oito:8,nove:9,dez:10 };
+    result.dias = String(wordMap[diasMatch[1].toLowerCase()] ?? parseInt(diasMatch[1], 10));
+  }
+
+  // jira — patterns like GFATR-282, ABC-123, PROJ-1234
+  const jiraMatch = t.match(/\b([a-z]{2,8}[-\s]?\d{1,6})\b/i);
+  if (jiraMatch) result.jira = jiraMatch[1].toUpperCase().replace(/\s/g,'-');
+
+  // empresa — after "empresa" keyword
+  const empresaMatch = t.match(/empresa\s+([a-záéíóúâêîôûãõç\s]+?)(?:\s*,|\s+funcional|\s+jira|\s+\d|\s+dias|\s+obs|$)/i);
+  if (empresaMatch) result.empresa = empresaMatch[1].trim();
+
+  // funcional — after "funcional" keyword OR first word(s) before comma/number if no empresa keyword
+  const funcMatch = t.match(/funcional\s+([a-záéíóúâêîôûãõç\/\s]+?)(?:\s*,|\s+\d|\s+dias|\s+jira|\s+obs|\s+pronto|\s+testes|\s+iniciado|\s+parado|\s+feito|$)/i);
+  if (funcMatch) {
+    result.funcional = funcMatch[1].trim();
+  } else if (!result.empresa) {
+    // first segment before comma or number likely is the funcional
+    const firstSeg = t.split(/,|\s+\d+\s+dia/)[0].trim();
+    // exclude if it's a status word
+    const isStatus = sortedAliases.some(a => firstSeg.toLowerCase() === a);
+    if (firstSeg && !isStatus && firstSeg.length < 40) result.funcional = firstSeg;
+  }
+
+  // obs — after "obs" / "observação" / "nota"
+  const obsMatch = t.match(/(?:obs|observa[çc][aã]o|nota)\s+([^,]+?)(?:\s*,|$)/i);
+  if (obsMatch) result.obs = obsMatch[1].trim();
+
+  return result;
+}
+
+function voiceFieldsHTML(parsed) {
+  const statusInfo = STATUS.find(s=>s.val===parsed.status);
+  const fields = [
+    { label:'Empresa',   val: parsed.empresa   || '—', empty: !parsed.empresa },
+    { label:'Funcional', val: parsed.funcional  || '—', empty: !parsed.funcional },
+    { label:'Jira',      val: parsed.jira       || '—', empty: !parsed.jira },
+    { label:'Dias',      val: parsed.dias!==''  ? parsed.dias+'d' : '—', empty: parsed.dias==='' },
+    { label:'Status',    val: statusInfo ? `<span class="voice-field-val status-pill ${statusInfo.cls}">${statusInfo.label}</span>` : parsed.status, raw: true },
+    { label:'Observação',val: parsed.obs        || '—', empty: !parsed.obs },
+    { label:'Lançado',   val: parsed.lancado    ? '✓ Sim' : 'Não', empty: false },
+  ];
+  return fields.map(f => `
+    <div class="voice-field">
+      <span class="voice-field-label">${f.label}</span>
+      ${f.raw ? f.val : `<span class="voice-field-val${f.empty?' empty':''}">${f.val}</span>`}
+    </div>`).join('');
+}
+
+let voiceRecognition = null;
+let voiceParsed      = null;
+let voiceListening   = false;
+
+function openVoiceModal(key) {
+  const overlay    = document.getElementById('voice-overlay');
+  const micBtn     = document.getElementById('voice-mic-btn');
+  const statusEl   = document.getElementById('voice-status');
+  const transcript = document.getElementById('voice-transcript');
+  const preview    = document.getElementById('voice-preview');
+  const fields     = document.getElementById('voice-fields');
+  const saveBtn    = document.getElementById('voice-save');
+  const retryBtn   = document.getElementById('voice-retry');
+  const cancelBtn  = document.getElementById('voice-cancel');
+
+  // reset
+  voiceParsed = null;
+  voiceListening = false;
+  transcript.textContent = '';
+  transcript.className = 'voice-transcript empty';
+  preview.style.display = 'none';
+  saveBtn.style.display = retryBtn.style.display = 'none';
+  statusEl.textContent = 'Clica no microfone para começar';
+  micBtn.classList.remove('active');
+  overlay.classList.add('open');
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    statusEl.textContent = '⚠ O teu browser não suporta reconhecimento de voz';
+    return;
+  }
+
+  function startListening() {
+    if (voiceListening) { voiceRecognition?.stop(); return; }
+    voiceRecognition = new SpeechRecognition();
+    voiceRecognition.lang = 'pt-PT';
+    voiceRecognition.interimResults = true;
+    voiceRecognition.maxAlternatives = 1;
+    voiceRecognition.continuous = false;
+
+    voiceListening = true;
+    micBtn.classList.add('active');
+    statusEl.textContent = 'A ouvir… fala agora';
+    transcript.className = 'voice-transcript';
+    transcript.textContent = '';
+    preview.style.display = 'none';
+    saveBtn.style.display = retryBtn.style.display = 'none';
+
+    let finalText = '';
+
+    voiceRecognition.onresult = e => {
+      let interim = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        const t = e.results[i][0].transcript;
+        if (e.results[i].isFinal) finalText += t + ' ';
+        else interim += t;
+      }
+      transcript.innerHTML = finalText
+        + (interim ? `<span class="interim">${interim}</span>` : '');
+    };
+
+    voiceRecognition.onend = () => {
+      voiceListening = false;
+      micBtn.classList.remove('active');
+      const full = finalText.trim() || transcript.textContent.trim();
+      if (!full) {
+        statusEl.textContent = 'Nada captado — tenta de novo';
+        retryBtn.style.display = '';
+        return;
+      }
+      transcript.textContent = full;
+      statusEl.textContent = 'Texto captado — a interpretar…';
+      voiceParsed = parseVoiceText(full);
+      fields.innerHTML = voiceFieldsHTML(voiceParsed);
+      preview.style.display = '';
+      saveBtn.style.display = retryBtn.style.display = '';
+      statusEl.textContent = 'Verifica os campos e guarda.';
+    };
+
+    voiceRecognition.onerror = e => {
+      voiceListening = false;
+      micBtn.classList.remove('active');
+      const msgs = { 'not-allowed':'Permissão de microfone negada.', 'no-speech':'Sem fala detectada.', 'network':'Erro de rede.' };
+      statusEl.textContent = msgs[e.error] || `Erro: ${e.error}`;
+      retryBtn.style.display = '';
+    };
+
+    voiceRecognition.start();
+  }
+
+  micBtn.onclick = startListening;
+  retryBtn.onclick = startListening;
+
+  saveBtn.onclick = async () => {
+    if (!voiceParsed) return;
+    const row = {
+      empresa:   voiceParsed.empresa,
+      funcional: voiceParsed.funcional,
+      jira:      voiceParsed.jira,
+      inicio:    todayStr(),
+      dias:      voiceParsed.dias,
+      status:    voiceParsed.status,
+      obs:       voiceParsed.obs,
+      lancado:   voiceParsed.lancado,
+      order:     Date.now(),
+    };
+    closeVoice();
+    if (!allRows[key]) allRows[key] = [];
+    allRows[key].unshift(row);
+    const nid = await fsAdd(key, row);
+    newRowId = nid || null;
+    buildTabs();
+    toast('🎤 Actividade adicionada por voz');
+    setTimeout(()=>{
+      const first = document.querySelector('#tbody tr:first-child .cell-input');
+      if (first) first.focus();
+    }, 120);
+  };
+
+  function closeVoice() {
+    voiceRecognition?.stop();
+    voiceListening = false;
+    overlay.classList.remove('open');
+  }
+
+  cancelBtn.onclick = closeVoice;
+  overlay.addEventListener('click', e => { if (e.target===overlay) closeVoice(); });
+
+  // auto-start
+  setTimeout(startListening, 200);
+}
+
 // ── Main render ───────────────────────────────────────────────────────────────
 async function renderMain() {
   const main = document.getElementById('main');
@@ -1619,6 +1950,7 @@ async function renderMain() {
   main.innerHTML = `
     <div class="toolbar">
       <button class="btn btn-primary" id="btn-add">+ Adicionar</button>
+      <button class="btn-voice" id="btn-voice" title="Entrada por voz (gravar actividade)">🎤 Voz</button>
       <input class="search" id="search" placeholder="Buscar… (N=novo, Esc=limpar)" value="${esc(searchQ)}"/>
       <select class="filter" id="filter-status">
         <option value="">Todos os status</option>
@@ -1660,6 +1992,7 @@ async function renderMain() {
   document.getElementById('filter-lanc').addEventListener('change', e=>{
     filterLanc = e.target.value; renderTable(key);
   });
+  document.getElementById('btn-voice').addEventListener('click', ()=>openVoiceModal(key));
   document.getElementById('btn-csv').addEventListener('click', ()=>exportCSV(key));
   document.getElementById('btn-csv-year').addEventListener('click', exportYearCSV);
 
