@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
 <title>MainGoal</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f8ef7'/><text x='16' y='23' font-size='20' font-weight='700' text-anchor='middle' fill='white' font-family='system-ui'>M</text></svg>"/>
 <style>
@@ -381,17 +381,91 @@ tfoot td { padding: 7px 10px; font-size: 11px; color: var(--muted); font-weight:
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* ── Responsive ── */
+/* ── Responsive: tablet ── */
+@media (max-width: 900px) {
+  .cal-months { grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); }
+}
+
+/* ── Responsive: mobile ── */
 @media (max-width: 640px) {
+  /* header */
   .app-header { padding: 0 10px; }
-  .main { padding: 10px; gap: 10px; }
+  .app-title  { display: none; }          /* esconde "MainGoal" para ganhar espaço */
+  .header-inner { gap: 6px; padding: 8px 0 0; }
+  .year-sel { font-size: 11px; padding: 2px 6px; margin-bottom: 8px; }
+  .sync-dot { margin-bottom: 8px; }
+  .tab { padding: 7px 8px 9px; font-size: 10px; }
+  .tab-badge { font-size: 8px; padding: 0 4px; }
+
+  /* main */
+  .main { padding: 8px; gap: 8px; }
+
+  /* lock */
   .lock-box { padding: 28px 20px; width: calc(100vw - 32px); }
-  .toolbar { gap: 5px; }
-  .btn { padding: 5px 8px; font-size: 11px; }
-  .search { width: 120px; }
+  .lock-input { font-size: 24px; letter-spacing: 12px; }
+
+  /* toolbar — scroll horizontal em vez de wrap */
+  .toolbar {
+    gap: 5px; flex-wrap: nowrap; overflow-x: auto;
+    scrollbar-width: none; padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .toolbar::-webkit-scrollbar { display: none; }
+  .btn { padding: 6px 10px; font-size: 12px; flex-shrink: 0; }
+  .btn-voice { flex-shrink: 0; }
+  .search { width: 130px; flex-shrink: 0; }
   .search:focus { width: 160px; }
-  .col-funcional { width: 90px; }
-  .col-obs { min-width: 80px; }
-  .count-pill { font-size: 10px; padding: 2px 8px; }
+  .filter { font-size: 11px; flex-shrink: 0; }
+  .count-pill { display: none; }           /* ocupa espaço sem grande utilidade em mobile */
+
+  /* table */
+  .table-wrap { border-radius: 8px; }
+  td, thead th { padding: 5px 7px; font-size: 12px; }
+  .col-empresa   { width: 64px; }
+  .col-funcional { width: 80px; }
+  .col-jira      { width: 90px; }
+  .col-inicio    { width: 72px; }
+  .col-dias      { width: 42px; }
+  .col-status    { width: 100px; }
+  .col-obs       { min-width: 70px; }
+  .col-lancado   { width: 44px; }
+  .col-actions   { width: 66px; }
+  .cell-input    { font-size: 12px; padding: 2px 4px; }
+  td.col-jira .cell-input { font-size: 11px; }
+  .status-sel    { font-size: 10px; padding: 3px 18px 3px 7px; }
+
+  /* icon buttons always visible on mobile (no hover) */
+  .icon-btn { opacity: 1; }
+  .drag-handle { opacity: 0; }            /* drag não funciona bem em touch */
+
+  /* confirm + pickers */
+  .confirm-box { padding: 20px; }
+  .voice-box   { padding: 18px 16px 14px; }
+  .voice-fields { grid-template-columns: 1fr; }
+  .day-picker-box { padding: 16px; }
+
+  /* calendar */
+  .cal-months { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cal-month-header { flex-direction: column; gap: 2px; align-items: flex-start; }
+  .cal-month-stats  { font-size: 9px; }
+  .cal-nav-title    { font-size: 13px; }
+  .cal-nav-sub      { font-size: 10px; gap: 8px; }
+  .cal-day          { min-height: 24px; padding: 2px 1px; }
+  .cal-day-num      { font-size: 10px; }
+  .cal-day-label    { display: none; }    /* nomes dos feriados escondem em grelha pequena */
+  .cal-legend       { gap: 8px; font-size: 10px; }
+  .cal-list-row     { padding: 6px 10px; font-size: 11px; }
+
+  /* obs */
+  .obs-pane { padding: 14px; }
+  .obs-textarea { min-height: 180px; font-size: 13px; }
+}
+
+/* ── Responsive: very small (iPhone SE, 375px) ── */
+@media (max-width: 390px) {
+  .cal-months { grid-template-columns: 1fr; }
+  .tab { font-size: 9.5px; padding: 6px 7px 8px; }
+  .btn { padding: 5px 8px; font-size: 11px; }
 }
 
 ::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -629,7 +703,7 @@ tfoot td { padding: 7px 10px; font-size: 11px; color: var(--muted); font-weight:
     <div class="lock-logo">M</div>
     <div class="lock-title">MainGoal</div>
     <div class="lock-subtitle">Introduz a senha para continuar</div>
-    <input class="lock-input" id="lock-input" type="password" maxlength="10" placeholder="••••" autocomplete="off"/>
+    <input class="lock-input" id="lock-input" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="10" placeholder="••••" autocomplete="off"/>
     <button class="lock-btn" id="lock-btn">Entrar</button>
     <span class="lock-err" id="lock-err"></span>
   </div>
