@@ -401,90 +401,125 @@ tfoot td { padding: 7px 10px; font-size: 11px; color: var(--muted); font-weight:
 /* ── Calendar ── */
 .cal-pane { display: flex; flex-direction: column; gap: 20px; }
 .cal-nav {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
 }
 .cal-nav-title { font-size: 15px; font-weight: 600; }
-.cal-nav-btns  { display: flex; gap: 6px; }
+.cal-nav-btns  { display: flex; gap: 6px; align-items: center; }
 .cal-nav-btn {
   background: var(--surface2); border: 1px solid var(--border2); border-radius: 7px;
   color: var(--muted); font-size: 14px; padding: 4px 10px; cursor: pointer;
   transition: color .15s, border-color .15s;
 }
 .cal-nav-btn:hover { color: var(--text); border-color: var(--accent); }
-.cal-months { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.cal-months { display: grid; grid-template-columns: repeat(auto-fill, minmax(268px, 1fr)); gap: 16px; }
 .cal-month {
   background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
   overflow: hidden;
 }
-.cal-month-title {
-  background: var(--surface2); padding: 8px 14px; font-size: 12px; font-weight: 600;
-  color: var(--muted); letter-spacing: .05em; text-transform: uppercase;
+.cal-month-header {
+  background: var(--surface2); padding: 8px 12px 7px;
   border-bottom: 1px solid var(--border);
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
 }
+.cal-month-title {
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  letter-spacing: .06em; text-transform: uppercase;
+}
+.cal-month-stats {
+  display: flex; gap: 8px; align-items: center; font-size: 10px; flex-shrink: 0;
+}
+.cal-stat {
+  display: flex; align-items: center; gap: 3px; white-space: nowrap;
+}
+.cal-stat-val { font-weight: 700; font-size: 12px; }
+.cal-stat-val.work  { color: var(--accent); }
+.cal-stat-val.leave { color: #c084fc; }
+.cal-stat-label { color: var(--hint); }
 .cal-grid {
   display: grid; grid-template-columns: repeat(7, 1fr);
-  padding: 8px;
+  padding: 6px 6px 8px;
   gap: 2px;
 }
 .cal-dow {
   text-align: center; font-size: 9px; font-weight: 600; color: var(--hint);
   letter-spacing: .04em; padding: 4px 0; text-transform: uppercase;
 }
-.cal-dow.weekend { color: rgba(240,96,96,.6); }
+.cal-dow.weekend { color: rgba(240,96,96,.55); }
 .cal-day {
-  text-align: center; font-size: 11px; padding: 5px 2px; border-radius: 6px;
-  cursor: default; position: relative; line-height: 1.2; min-height: 32px;
+  text-align: center; font-size: 11px; padding: 4px 1px; border-radius: 6px;
+  cursor: pointer; position: relative; line-height: 1.2; min-height: 30px;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  transition: background .12s;
+  transition: background .12s, transform .08s;
+  user-select: none;
 }
 .cal-day.empty { opacity: 0; pointer-events: none; }
-.cal-day.weekend { color: rgba(240,96,96,.7); }
+.cal-day.weekend { color: rgba(240,96,96,.65); }
 .cal-day.today {
   background: var(--accent-bg); color: var(--accent); font-weight: 700;
   box-shadow: inset 0 0 0 1px rgba(79,142,247,.4);
 }
 .cal-day.holiday {
-  background: rgba(240,96,96,.12); color: #f06060;
-  font-weight: 600;
+  background: rgba(240,96,96,.12); color: #f06060; font-weight: 600; cursor: default;
 }
 .cal-day.holiday.weekend { color: #f06060; }
-.cal-day.has-activity::after {
-  content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
-  width: 4px; height: 4px; border-radius: 50%; background: var(--accent);
+/* férias / ausência marcada */
+.cal-day.leave {
+  background: rgba(192,132,252,.15);
+  box-shadow: inset 0 0 0 1px rgba(192,132,252,.4);
+  color: #c084fc; font-weight: 600;
 }
-.cal-day.holiday.has-activity::after { background: #f06060; }
-.cal-day:not(.empty):hover { background: var(--surface2); }
-.cal-day.today:hover { background: var(--accent-bg); }
-.cal-day.holiday:hover { background: rgba(240,96,96,.2); }
-.cal-day-num { font-size: 11px; }
-.cal-day-label { font-size: 8px; color: inherit; opacity: .8; max-width: 36px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cal-day.leave.weekend { color: #c084fc; }
+.cal-day.leave.holiday { background: rgba(192,132,252,.2); color: #c084fc; }
+/* dots */
+.cal-day::after {
+  content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+  width: 4px; height: 4px; border-radius: 50%; opacity: 0;
+}
+.cal-day.has-activity::after { opacity: 1; background: var(--accent); }
+.cal-day.leave::after        { opacity: 0; }
+.cal-day:not(.empty):not(.holiday):hover { background: var(--surface2); }
+.cal-day.today:hover      { background: var(--accent-bg); }
+.cal-day.holiday:hover    { background: rgba(240,96,96,.18); }
+.cal-day.leave:hover      { background: rgba(192,132,252,.25); }
+.cal-day:active:not(.holiday) { transform: scale(.88); }
+.cal-day-num   { font-size: 11px; }
+.cal-day-label { font-size: 7.5px; color: inherit; opacity: .8; max-width: 34px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .cal-legend {
-  display: flex; flex-wrap: wrap; gap: 14px; align-items: center;
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
   padding: 4px 0; font-size: 11px; color: var(--muted);
 }
 .cal-legend-item { display: flex; align-items: center; gap: 5px; }
-.cal-legend-dot {
-  width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0;
+.cal-legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+/* holidays + leave list */
+.cal-lists { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 700px) { .cal-lists { grid-template-columns: 1fr; } }
+.cal-list-box {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
 }
-.cal-holidays-list {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-  overflow: hidden;
-}
-.cal-holidays-list h3 {
-  background: var(--surface2); padding: 10px 16px; font-size: 12px; font-weight: 600;
+.cal-list-box h3 {
+  background: var(--surface2); padding: 10px 14px; font-size: 11px; font-weight: 600;
   color: var(--muted); border-bottom: 1px solid var(--border); letter-spacing: .04em; text-transform: uppercase;
+  display: flex; align-items: center; justify-content: space-between;
 }
-.cal-holiday-row {
-  display: flex; align-items: center; gap: 12px; padding: 8px 16px;
+.cal-list-row {
+  display: flex; align-items: center; gap: 10px; padding: 7px 14px;
   border-bottom: 1px solid var(--border); font-size: 12px;
 }
-.cal-holiday-row:last-child { border-bottom: none; }
-.cal-holiday-date { color: var(--muted); width: 80px; flex-shrink: 0; }
-.cal-holiday-name { color: var(--text); }
-.cal-holiday-dow  { color: var(--hint); font-size: 11px; margin-left: auto; }
-.cal-holiday-row.is-today .cal-holiday-name { color: var(--accent); font-weight: 600; }
-.cal-holiday-row.is-past  { opacity: .45; }
+.cal-list-row:last-child { border-bottom: none; }
+.cal-list-date { color: var(--muted); width: 76px; flex-shrink: 0; }
+.cal-list-name { color: var(--text); flex: 1; }
+.cal-list-dow  { color: var(--hint); font-size: 11px; }
+.cal-list-row.is-today .cal-list-name { color: var(--accent); font-weight: 600; }
+.cal-list-row.is-past  { opacity: .42; }
+.cal-list-empty { padding: 20px 14px; font-size: 12px; color: var(--hint); text-align: center; }
+.cal-remove-btn {
+  background: none; border: none; cursor: pointer; color: var(--hint); font-size: 12px;
+  padding: 2px 5px; border-radius: 4px; opacity: 0; transition: opacity .15s, color .15s;
+}
+.cal-list-row:hover .cal-remove-btn { opacity: 1; }
+.cal-remove-btn:hover { color: #f06060; }
 </style>
 </head>
 <body>
@@ -823,7 +858,7 @@ async function switchTab(key) {
   dateSort  = null;
   buildTabs();
   updatePageTitle();
-  if (key === 'cal') { renderCalendar(); return; }
+  if (key === 'cal') { await renderCalendar(); return; }
   const k = activeKey();
   await loadTab(k === 'obs' ? 'obs' : k);
   renderMain();
@@ -1217,70 +1252,115 @@ function renderObs() {
 
 // ── Calendar ──────────────────────────────────────────────────────────────────
 
-// Feriados fixos de Portugal (MM-DD → nome)
 const PT_FIXED = {
   '01-01': 'Ano Novo',
   '04-25': 'Dia da Liberdade',
   '05-01': 'Dia do Trabalho',
   '06-10': 'Dia de Portugal',
-  '08-15': 'Assunção de Nossa Senhora',
+  '08-15': 'Assunção de N. Senhora',
   '10-05': 'Implantação da República',
-  '11-01': 'Dia de Todos os Santos',
+  '11-01': 'Todos os Santos',
   '12-01': 'Restauração da Independência',
   '12-08': 'Imaculada Conceição',
   '12-25': 'Natal',
 };
 
-// Páscoa (algoritmo de Meeus/Jones/Butcher)
 function easterDate(year) {
-  const a = year % 19;
-  const b = Math.floor(year / 100);
-  const c = year % 100;
-  const d = Math.floor(b / 4);
-  const e = b % 4;
-  const f = Math.floor((b + 8) / 25);
-  const g = Math.floor((b - f + 1) / 3);
-  const h = (19 * a + b - d - g + 15) % 30;
-  const i = Math.floor(c / 4);
-  const k = c % 4;
-  const l = (32 + 2 * e + 2 * i - h - k) % 7;
-  const m = Math.floor((a + 11 * h + 22 * l) / 451);
-  const month = Math.floor((h + l - 7 * m + 114) / 31);
-  const day   = ((h + l - 7 * m + 114) % 31) + 1;
-  return new Date(year, month - 1, day);
+  const a=year%19,b=Math.floor(year/100),c=year%100,d=Math.floor(b/4),e=b%4;
+  const f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3);
+  const h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4;
+  const l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451);
+  const month=Math.floor((h+l-7*m+114)/31),day=((h+l-7*m+114)%31)+1;
+  return new Date(year,month-1,day);
 }
 
 function ptHolidays(year) {
-  const map = {};
-  // fixos
-  Object.entries(PT_FIXED).forEach(([mmdd, name]) => {
-    map[`${year}-${mmdd}`] = name;
-  });
-  // móveis baseados na Páscoa
-  const easter = easterDate(year);
-  const addOffset = (offset, name) => {
-    const d = new Date(easter);
-    d.setDate(d.getDate() + offset);
-    const key = d.toISOString().split('T')[0];
-    map[key] = name;
+  const map={};
+  Object.entries(PT_FIXED).forEach(([mmdd,name])=>{ map[`${year}-${mmdd}`]=name; });
+  const easter=easterDate(year);
+  const add=(off,name)=>{
+    const d=new Date(easter); d.setDate(d.getDate()+off);
+    map[d.toISOString().split('T')[0]]=name;
   };
-  addOffset(-47, 'Terça-feira de Carnaval');
-  addOffset(-2,  'Sexta-feira Santa');
-  addOffset(0,   'Páscoa');
-  addOffset(60,  'Corpo de Deus');
+  add(-47,'Carnaval'); add(-2,'Sexta-feira Santa');
+  add(0,'Páscoa');     add(60,'Corpo de Deus');
   return map;
 }
 
-let calYear = activeYear;
+// leaves stored as Set of YYYY-MM-DD strings, persisted to Firebase
+let calLeaves = {};    // { year: Set<string> }
+let calYear   = activeYear;
 
-function renderCalendar() {
+function calLeavesRef(year) { return doc(db,'tracker_cal',`leaves_${year}`); }
+
+async function loadCalLeaves(year) {
+  if (calLeaves[year]) return;
+  try {
+    const snap = await getDoc(calLeavesRef(year));
+    calLeaves[year] = new Set(snap.exists() ? (snap.data().dates||[]) : []);
+  } catch(e) { calLeaves[year] = new Set(); }
+}
+
+async function saveCalLeaves(year) {
+  try {
+    await setDoc(calLeavesRef(year), { dates: [...calLeaves[year]] });
+  } catch(e) { toast('⚠ Erro ao guardar férias'); }
+}
+
+function isWorkday(dateStr, holidays) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const dow = d.getDay();
+  return dow !== 0 && dow !== 6 && !holidays[dateStr];
+}
+
+function monthWorkdays(year, month, holidays) {
+  const last = new Date(year, month + 1, 0).getDate();
+  let count = 0;
+  for (let day = 1; day <= last; day++) {
+    const ds = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    if (isWorkday(ds, holidays)) count++;
+  }
+  return count;
+}
+
+function monthLeaves(year, month) {
+  const last = new Date(year, month + 1, 0).getDate();
+  const leaves = calLeaves[year] || new Set();
+  let count = 0;
+  for (let day = 1; day <= last; day++) {
+    const ds = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    if (leaves.has(ds)) count++;
+  }
+  return count;
+}
+
+async function toggleLeave(dateStr) {
+  const year = parseInt(dateStr.split('-')[0], 10);
+  if (!calLeaves[year]) calLeaves[year] = new Set();
+  if (calLeaves[year].has(dateStr)) {
+    calLeaves[year].delete(dateStr);
+  } else {
+    calLeaves[year].add(dateStr);
+  }
+  await saveCalLeaves(year);
+  renderCalendar();
+}
+
+async function renderCalendar() {
   const main = document.getElementById('main');
-  const holidays = ptHolidays(calYear);
-  const todayFull = todayStr();
-  const DOW_LABELS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-  const isWeekend  = d => d === 0 || d === 6; // 0=Dom, 6=Sáb
+  // show loading briefly if leaves not yet loaded
+  if (!calLeaves[calYear]) {
+    main.innerHTML = `<div class="loading"><div class="spinner"></div>A carregar calendário…</div>`;
+    await loadCalLeaves(calYear);
+  }
 
-  // collect activity dates across all loaded months of calYear
+  const holidays     = ptHolidays(calYear);
+  const todayFull    = todayStr();
+  const leaves       = calLeaves[calYear] || new Set();
+  const DOW_LABELS   = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const isWeekend    = d => d === 0 || d === 6;
+
+  // activity dates from tracker
   const activityDates = new Set();
   MONTH_KEYS.forEach(mk => {
     const k = tabKey(calYear, mk);
@@ -1292,93 +1372,160 @@ function renderCalendar() {
   for (let m = 0; m < 12; m++) {
     const firstDay = new Date(calYear, m, 1);
     const lastDay  = new Date(calYear, m + 1, 0);
-    const startDow = firstDay.getDay(); // 0=Dom
+    const startDow = firstDay.getDay();
+    const totalWork = monthWorkdays(calYear, m, holidays);
+    const totalLeave = monthLeaves(calYear, m);
+    const netWork = totalWork - totalLeave;
 
-    let gridHTML = DOW_LABELS.map((d, i) =>
-      `<div class="cal-dow${isWeekend(i) ? ' weekend' : ''}">${d}</div>`
+    let gridHTML = DOW_LABELS.map((d,i) =>
+      `<div class="cal-dow${isWeekend(i)?' weekend':''}">${d}</div>`
     ).join('');
 
-    // blank cells before 1st
     for (let b = 0; b < startDow; b++) gridHTML += `<div class="cal-day empty"></div>`;
 
-    // days
     for (let day = 1; day <= lastDay.getDate(); day++) {
       const dateStr = `${calYear}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
       const dow     = new Date(calYear, m, day).getDay();
       const holiday = holidays[dateStr];
+      const isLeave = leaves.has(dateStr);
       const isToday = dateStr === todayFull;
       const hasAct  = activityDates.has(dateStr);
       let cls = 'cal-day';
       if (isWeekend(dow)) cls += ' weekend';
       if (isToday)   cls += ' today';
       if (holiday)   cls += ' holiday';
-      if (hasAct)    cls += ' has-activity';
-      const label = holiday ? `<span class="cal-day-label" title="${holiday}">${holiday}</span>` : '';
-      gridHTML += `<div class="${cls}" title="${holiday||dateStr}">
+      if (isLeave)   cls += ' leave';
+      if (hasAct && !isLeave) cls += ' has-activity';
+      const label = holiday
+        ? `<span class="cal-day-label" title="${holiday}">${holiday}</span>`
+        : isLeave
+          ? `<span class="cal-day-label">férias</span>`
+          : '';
+      const title = holiday ? holiday : isLeave ? 'Férias/Ausência (clica para remover)' : 'Clica para marcar férias/ausência';
+      gridHTML += `<div class="${cls}" data-date="${dateStr}" title="${title}">
         <span class="cal-day-num">${day}</span>${label}
       </div>`;
     }
 
     monthsHTML += `<div class="cal-month">
-      <div class="cal-month-title">${MONTHS[m]}</div>
+      <div class="cal-month-header">
+        <span class="cal-month-title">${MONTHS[m]}</span>
+        <div class="cal-month-stats">
+          <span class="cal-stat">
+            <span class="cal-stat-val work">${netWork}</span>
+            <span class="cal-stat-label">dias úteis</span>
+          </span>
+          ${totalLeave > 0 ? `<span class="cal-stat">
+            <span class="cal-stat-val leave">-${totalLeave}</span>
+            <span class="cal-stat-label">férias</span>
+          </span>` : ''}
+        </div>
+      </div>
       <div class="cal-grid">${gridHTML}</div>
     </div>`;
   }
 
-  // sorted holidays list for this year
+  // holidays list
   const holidayList = Object.entries(holidays)
-    .sort(([a],[b]) => a.localeCompare(b))
-    .map(([date, name]) => {
-      const d   = new Date(date + 'T00:00:00');
+    .sort(([a],[b])=>a.localeCompare(b))
+    .map(([date,name])=>{
+      const d   = new Date(date+'T00:00:00');
       const dow = DOW_LABELS[d.getDay()];
       const [,mm,dd] = date.split('-');
       const isToday_ = date === todayFull;
       const isPast   = date < todayFull;
-      let cls = 'cal-holiday-row';
+      let cls = 'cal-list-row';
       if (isToday_) cls += ' is-today';
       if (isPast && !isToday_) cls += ' is-past';
       return `<div class="${cls}">
-        <span class="cal-holiday-date">${dd}/${mm}/${calYear}</span>
-        <span class="cal-holiday-name">${name}</span>
-        <span class="cal-holiday-dow">${dow}</span>
+        <span class="cal-list-date">${dd}/${mm}</span>
+        <span class="cal-list-name">${name}</span>
+        <span class="cal-list-dow">${dow}</span>
       </div>`;
     }).join('');
+
+  // leaves list
+  const leavesSorted = [...leaves].filter(d=>d.startsWith(String(calYear))).sort();
+  const leaveList = leavesSorted.length
+    ? leavesSorted.map(date => {
+        const d   = new Date(date+'T00:00:00');
+        const dow = DOW_LABELS[d.getDay()];
+        const [,mm,dd] = date.split('-');
+        const isPast = date < todayFull;
+        return `<div class="cal-list-row${isPast?' is-past':''}">
+          <span class="cal-list-date">${dd}/${mm}</span>
+          <span class="cal-list-name">Férias / Ausência</span>
+          <span class="cal-list-dow">${dow}</span>
+          <button class="cal-remove-btn" data-date="${date}" title="Remover">✕</button>
+        </div>`;
+      }).join('')
+    : `<div class="cal-list-empty">Nenhuma férias marcada.<br>Clica num dia útil para marcar.</div>`;
+
+  // total summary
+  const totalWorkYear = Array.from({length:12},(_,m)=>monthWorkdays(calYear,m,holidays)).reduce((a,b)=>a+b,0);
+  const totalLeaveYear = leavesSorted.length;
+  const netYear = totalWorkYear - totalLeaveYear;
 
   main.innerHTML = `
     <div class="cal-pane">
       <div class="cal-nav">
-        <span class="cal-nav-title">Feriados de Portugal — ${calYear}</span>
+        <div>
+          <span class="cal-nav-title">Calendário Portugal — ${calYear}</span>
+          <span style="margin-left:14px;font-size:12px;color:var(--muted);">
+            <span style="color:var(--accent);font-weight:700;">${netYear}</span> dias úteis no ano
+            ${totalLeaveYear > 0 ? `<span style="color:#c084fc;"> · ${totalLeaveYear} férias marcadas</span>` : ''}
+          </span>
+        </div>
         <div class="cal-nav-btns">
           <button class="cal-nav-btn" id="cal-prev">‹ ${calYear-1}</button>
           <button class="cal-nav-btn" id="cal-next">${calYear+1} ›</button>
         </div>
       </div>
       <div class="cal-legend">
-        <span class="cal-legend-item"><span class="cal-legend-dot" style="background:rgba(240,96,96,.35);"></span> Feriado</span>
-        <span class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--accent-bg);box-shadow:inset 0 0 0 1px rgba(79,142,247,.4);"></span> Hoje</span>
-        <span class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--accent);border-radius:50%;width:8px;height:8px;"></span> Tem actividade</span>
-        <span class="cal-legend-item" style="color:rgba(240,96,96,.7);">Sáb / Dom = fim de semana</span>
+        <span class="cal-legend-item"><span class="cal-legend-dot" style="background:rgba(240,96,96,.3);box-shadow:none;"></span>Feriado</span>
+        <span class="cal-legend-item"><span class="cal-legend-dot" style="background:rgba(192,132,252,.2);box-shadow:inset 0 0 0 1px rgba(192,132,252,.4);"></span>Férias / Ausência</span>
+        <span class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--accent-bg);box-shadow:inset 0 0 0 1px rgba(79,142,247,.4);"></span>Hoje</span>
+        <span class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--accent);border-radius:50%;width:8px;height:8px;"></span>Tem actividade</span>
+        <span style="font-size:11px;color:var(--hint);">Clica num dia útil para marcar/desmarcar férias</span>
       </div>
       <div class="cal-months">${monthsHTML}</div>
-      <div class="cal-holidays-list">
-        <h3>Lista de feriados ${calYear}</h3>
-        ${holidayList}
+      <div class="cal-lists">
+        <div class="cal-list-box">
+          <h3>Feriados ${calYear} <span style="font-weight:400;color:var(--hint);">(${Object.keys(holidays).length})</span></h3>
+          ${holidayList}
+        </div>
+        <div class="cal-list-box">
+          <h3>Férias / Ausências ${calYear} <span style="font-weight:400;color:var(--hint);">(${totalLeaveYear})</span></h3>
+          ${leaveList}
+        </div>
       </div>
     </div>`;
 
-  document.getElementById('cal-prev').addEventListener('click', () => {
-    calYear--; renderCalendar();
+  // day click → toggle leave (not on holidays)
+  main.querySelectorAll('.cal-day:not(.empty):not(.holiday)').forEach(el => {
+    el.addEventListener('click', () => toggleLeave(el.dataset.date));
   });
-  document.getElementById('cal-next').addEventListener('click', () => {
-    calYear++; renderCalendar();
+
+  // remove leave from list
+  main.querySelectorAll('.cal-remove-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const date = btn.dataset.date;
+      const year = parseInt(date.split('-')[0], 10);
+      calLeaves[year]?.delete(date);
+      await saveCalLeaves(year);
+      renderCalendar();
+    });
   });
+
+  document.getElementById('cal-prev').addEventListener('click', () => { calYear--; calLeaves[calYear]=undefined; renderCalendar(); });
+  document.getElementById('cal-next').addEventListener('click', () => { calYear++; calLeaves[calYear]=undefined; renderCalendar(); });
 }
 
 // ── Main render ───────────────────────────────────────────────────────────────
-function renderMain() {
+async function renderMain() {
   const main = document.getElementById('main');
   if (activeTab === 'obs') { renderObs(); return; }
-  if (activeTab === 'cal') { renderCalendar(); return; }
+  if (activeTab === 'cal') { await renderCalendar(); return; }
   const key = activeKey();
 
   main.innerHTML = `
