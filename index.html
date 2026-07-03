@@ -287,6 +287,8 @@ input[type="date"].cell-input::-webkit-calendar-picker-indicator { opacity: .4; 
 .check-lancado:checked { background: var(--accent); border-color: var(--accent); }
 .check-lancado:checked::after { content: '✓'; color: #fff; font-size: 10px; font-weight: 700; position: absolute; }
 .check-lancado:hover:not(:checked) { border-color: var(--accent); }
+.check-lancado.received:checked { background: #22a84a; border-color: #22a84a; }
+.check-lancado.received:hover:not(:checked) { border-color: #22a84a; }
 
 /* action buttons */
 .icon-btn {
@@ -299,20 +301,6 @@ tbody tr:hover .icon-btn { opacity: 1; }
 .icon-btn.copy-month:hover{ color: #c084fc; background: rgba(192,132,252,.1); }
 .icon-btn.del:hover       { color: #f06060; background: rgba(240,96,96,.1); }
 
-/* copy-to-month dropdown */
-.copy-month-wrap { position: relative; display: inline-block; }
-.copy-month-menu {
-  position: absolute; right: 0; top: 100%; z-index: 500;
-  background: var(--surface); border: 1px solid var(--border2); border-radius: 8px;
-  padding: 4px; min-width: 130px; box-shadow: 0 6px 24px rgba(0,0,0,.5);
-  display: none; max-height: 280px; overflow-y: auto;
-}
-.copy-month-menu.open { display: block; }
-.copy-month-item {
-  padding: 6px 10px; font-size: 11px; color: var(--muted); border-radius: 5px;
-  cursor: pointer; transition: background .12s, color .12s; white-space: nowrap;
-}
-.copy-month-item:hover { background: var(--surface2); color: var(--text); }
 
 /* ── Footer totals ── */
 tfoot tr { border-top: 2px solid var(--border2); background: var(--surface2); }
@@ -1211,16 +1199,11 @@ function rowHTML(r) {
       <input class="cell-input" value="${esc(r.obs)}" placeholder="Observação…" data-field="obs" data-id="${r.id}"/>
     </td>
     <td class="col-lancado">
-      <input type="checkbox" class="check-lancado" data-id="${r.id}" ${r.lancado?'checked':''}/>
+      <input type="checkbox" class="check-lancado${r.received?' received':''}" data-id="${r.id}" ${r.lancado?'checked':''}/>
     </td>
     <td class="col-actions">
       <button class="icon-btn dup" data-id="${r.id}" title="Duplicar">⎘</button>
-      <div class="copy-month-wrap" style="display:inline-block;">
-        <button class="icon-btn copy-month" data-id="${r.id}" title="Copiar para mês">⇢</button>
-        <div class="copy-month-menu" id="cm-${r.id}">
-          ${MONTH_KEYS.map((mk,i)=>`<div class="copy-month-item" data-month="${mk}">${MONTHS[i]}</div>`).join('')}
-        </div>
-      </div>
+      <button class="icon-btn copy-month" data-id="${r.id}">⇢</button>
       <button class="icon-btn del" data-id="${r.id}" title="Remover">✕</button>
     </td>
   </tr>`;
@@ -1421,42 +1404,28 @@ function renderTable(key) {
     });
   });
 
-  // copy to month
+  // copy to next month
   tbody.querySelectorAll('.icon-btn.copy-month').forEach(btn => {
-    btn.addEventListener('click', e => {
+    btn.addEventListener('click', async e => {
       e.stopPropagation();
-      const id   = btn.dataset.id;
-      const menu = document.getElementById('cm-'+id);
-      document.querySelectorAll('.copy-month-menu.open').forEach(m=>{ if(m!==menu) m.classList.remove('open'); });
-      menu.classList.toggle('open');
-    });
-  });
-
-  tbody.querySelectorAll('.copy-month-item').forEach(item => {
-    item.addEventListener('click', async e => {
-      e.stopPropagation();
-      const menu      = item.closest('.copy-month-menu');
-      const id        = menu.id.replace('cm-','');
-      const src       = (allRows[key]||[]).find(r=>r.id===id);
-      const destMonth = item.dataset.month;
-      menu.classList.remove('open');
+      const id  = btn.dataset.id;
+      const src = (allRows[key]||[]).find(r=>r.id===id);
       if (!src) return;
-      if (destMonth === activeTab) { toast('Já estás neste mês'); return; }
-      const destKey = tabKey(activeYear, destMonth);
+      const curIdx   = MONTH_KEYS.indexOf(activeTab);
+      const nextIdx  = (curIdx + 1) % 12;
+      const nextMonth = MONTH_KEYS[nextIdx];
+      const destYear  = nextIdx === 0 ? activeYear + 1 : activeYear;
+      const destKey   = tabKey(destYear, nextMonth);
       if (!loaded[destKey]) await loadTab(destKey);
-      const newRow = { ...src, id: undefined, order: Date.now() };
+      const newRow = { ...src, id: undefined, order: Date.now(), lancado: true, received: true };
       delete newRow.id;
       if (!allRows[destKey]) allRows[destKey] = [];
       await fsAdd(destKey, newRow);
-      const mName = MONTHS[MONTH_KEYS.indexOf(destMonth)];
-      toast(`Copiado para ${mName}`);
+      const mName = MONTHS[nextIdx];
+      toast(`Copiado para ${mName}${destYear !== activeYear ? ' '+destYear : ''}`);
       buildTabs();
     });
   });
-
-  document.addEventListener('click', () => {
-    document.querySelectorAll('.copy-month-menu.open').forEach(m=>m.classList.remove('open'));
-  }, { once: true });
 
   // delete
   tbody.querySelectorAll('.icon-btn.del').forEach(btn => {
