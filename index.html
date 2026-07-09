@@ -299,6 +299,21 @@ input[type="date"].cell-input::-webkit-calendar-picker-indicator { opacity: .4; 
 tbody tr:hover .icon-btn { opacity: 1; }
 .icon-btn.dup:hover       { color: var(--accent); background: var(--accent-bg); }
 .icon-btn.copy-month:hover{ color: #c084fc; background: rgba(192,132,252,.1); }
+
+/* copy-to-month dropdown */
+.copy-month-wrap { position: relative; display: inline-block; }
+.copy-month-menu {
+  position: absolute; right: 0; top: 100%; z-index: 500;
+  background: var(--surface); border: 1px solid var(--border2); border-radius: 8px;
+  padding: 4px; min-width: 130px; box-shadow: 0 6px 24px rgba(0,0,0,.5);
+  display: none; max-height: 280px; overflow-y: auto;
+}
+.copy-month-menu.open { display: block; }
+.copy-month-item {
+  padding: 6px 10px; font-size: 11px; color: var(--muted); border-radius: 5px;
+  cursor: pointer; transition: background .12s, color .12s; white-space: nowrap;
+}
+.copy-month-item:hover { background: var(--surface2); color: var(--text); }
 .icon-btn.del:hover       { color: #f06060; background: rgba(240,96,96,.1); }
 
 
@@ -1203,7 +1218,12 @@ function rowHTML(r) {
     </td>
     <td class="col-actions">
       <button class="icon-btn dup" data-id="${r.id}" title="Duplicar">⎘</button>
-      <button class="icon-btn copy-month" data-id="${r.id}">⇢</button>
+      <div class="copy-month-wrap" style="display:inline-block;">
+        <button class="icon-btn copy-month" data-id="${r.id}" title="Copiar para mês">⇢</button>
+        <div class="copy-month-menu" id="cm-${r.id}">
+          ${MONTH_KEYS.map((mk,i)=>`<div class="copy-month-item" data-month="${mk}">${MONTHS[i]}</div>`).join('')}
+        </div>
+      </div>
       <button class="icon-btn del" data-id="${r.id}" title="Remover">✕</button>
     </td>
   </tr>`;
@@ -1404,28 +1424,45 @@ function renderTable(key) {
     });
   });
 
-  // copy to next month
+  // copy to month
   tbody.querySelectorAll('.icon-btn.copy-month').forEach(btn => {
-    btn.addEventListener('click', async e => {
+    btn.addEventListener('click', e => {
       e.stopPropagation();
-      const id  = btn.dataset.id;
-      const src = (allRows[key]||[]).find(r=>r.id===id);
+      const id   = btn.dataset.id;
+      const menu = document.getElementById('cm-'+id);
+      document.querySelectorAll('.copy-month-menu.open').forEach(m=>{ if(m!==menu) m.classList.remove('open'); });
+      menu.classList.toggle('open');
+    });
+  });
+
+  tbody.querySelectorAll('.copy-month-item').forEach(item => {
+    item.addEventListener('click', async e => {
+      e.stopPropagation();
+      const menu       = item.closest('.copy-month-menu');
+      const id         = menu.id.replace('cm-','');
+      const src        = (allRows[key]||[]).find(r=>r.id===id);
+      const destMonth  = item.dataset.month;
+      menu.classList.remove('open');
       if (!src) return;
       const curIdx   = MONTH_KEYS.indexOf(activeTab);
-      const nextIdx  = (curIdx + 1) % 12;
-      const nextMonth = MONTH_KEYS[nextIdx];
-      const destYear  = nextIdx === 0 ? activeYear + 1 : activeYear;
-      const destKey   = tabKey(destYear, nextMonth);
+      const destIdx  = MONTH_KEYS.indexOf(destMonth);
+      if (destIdx === curIdx) { toast('Já estás neste mês'); return; }
+      const destYear = destIdx < curIdx ? activeYear + 1 : activeYear;
+      const destKey  = tabKey(destYear, destMonth);
       if (!loaded[destKey]) await loadTab(destKey);
       const newRow = { ...src, id: undefined, order: Date.now(), lancado: true, received: true };
       delete newRow.id;
       if (!allRows[destKey]) allRows[destKey] = [];
       await fsAdd(destKey, newRow);
-      const mName = MONTHS[nextIdx];
+      const mName = MONTHS[destIdx];
       toast(`Copiado para ${mName}${destYear !== activeYear ? ' '+destYear : ''}`);
       buildTabs();
     });
   });
+
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.copy-month-menu.open').forEach(m=>m.classList.remove('open'));
+  }, { once: true });
 
   // delete
   tbody.querySelectorAll('.icon-btn.del').forEach(btn => {
