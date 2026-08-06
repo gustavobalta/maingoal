@@ -1025,7 +1025,7 @@ function confirm_(msg) {
 }
 
 // ── Firestore ─────────────────────────────────────────────────────────────────
-async function loadTab(key) {
+async function loadTab(key, { rethrow = false } = {}) {
   if (loaded[key]) return;
   syncDot('saving');
   try {
@@ -1039,7 +1039,11 @@ async function loadTab(key) {
     }
     loaded[key] = true;
     syncDot('ok');
-  } catch(e) { console.error(e); syncDot('error'); toast('⚠ Erro ao carregar dados'); }
+  } catch(e) {
+    console.error(e); syncDot('error');
+    if (rethrow) throw e;
+    toast('⚠ Erro ao carregar dados');
+  }
 }
 
 function startListener(key) {
@@ -2330,13 +2334,27 @@ document.addEventListener('keydown', e => {
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 (async () => {
-  buildYearSel();
-  updatePageTitle();
-  const k = activeKey();
-  await loadTab(k);
-  buildTabs();
-  renderMain();
-  syncDot('ok');
+  try {
+    buildYearSel();
+    updatePageTitle();
+    const k = activeKey();
+    await loadTab(k, { rethrow: true });
+    buildTabs();
+    renderMain();
+    syncDot('ok');
+  } catch (e) {
+    // Nunca deixar o ecrã preso em "A ligar ao Firebase…"
+    console.error(e);
+    syncDot('error');
+    const msg = String(e && e.message || e);
+    const dbGone = /database was deleted|NOT_FOUND|FAILED_PRECONDITION/i.test(msg);
+    document.getElementById('main').innerHTML =
+      `<div class="loading">
+         ⚠ Não foi possível ligar à base de dados.<br/>
+         ${dbGone ? 'A base de dados Firestore não existe — crie-a na consola Firebase.' : 'Verifique a ligação à internet.'}<br/><br/>
+         <button class="btn" onclick="location.reload()">Tentar novamente</button>
+       </div>`;
+  }
 })();
 </script>
 </body>
